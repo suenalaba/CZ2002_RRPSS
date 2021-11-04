@@ -1,6 +1,8 @@
 package group;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 public class TableLayoutManager {
 	private TableLayout manager; 
@@ -85,9 +87,33 @@ public class TableLayoutManager {
 		}
 	}
 	
-	//public void walkIn() {
-	//	
-	//}
+	public void walkIn(int groupSize) {
+		ArrayList<Table> availableTables = new ArrayList<>();
+		ArrayList<Table> arr = new ArrayList<>();
+		arr = manager.getTableLayout(); 
+		Calendar c = new GregorianCalendar();
+		c.add(Calendar.MINUTE, 60);
+		int tableID, index;
+		availableTables = getAvailableTables(); 
+		if(availableTables.isEmpty() == true) {
+			System.out.println("No available tables at the moment"); 
+		}
+		else {
+			for(int i = 0; i<availableTables.size(); i++) {
+				tableID = availableTables.get(i).getTableID(); 
+				if( c.getTime() < resManager.checkReservation(tableID)) {
+					index = findTableIndex(tableID); 
+					arr.get(index).setReservationStatus(true);
+					manager.setTableLayout(arr); 
+					System.out.println("Assigned to table " + arr.get(index).getTableID()); 
+					return ; 
+				}
+			}
+			System.out.println("No available tables at the moment");		
+			
+			
+		}
+	}
 	
 	
 
