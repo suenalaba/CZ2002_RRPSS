@@ -11,11 +11,10 @@ public class RRPSSApp {
         int rrpss_menu_choice;
         Scanner sc = new Scanner(System.in);
         do {
+	    System.out.println("Choice:\n1.Create Menu Item\n2.Remove Menu Item\n3.Update Menu Item\n4.Print Main Menu\n");
             rrpss_menu_choice=sc.nextInt();
-    
             switch(rrpss_menu_choice){
-            case 1:
-		    	System.out.println("Choice:\n1.Create Menu Item\n2.Remove Menu Item\n3.Update Menu Item\n4.Print Main Menu\n");
+		    case 1:
                     MenuManager.createItemQuery();
 		    		break;
 		    case 2:
