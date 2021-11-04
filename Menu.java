@@ -32,7 +32,7 @@ public class Menu {
 	}
 	public void printMenu() {
 		for (int i=0;i<listOfMenuItems.length;i++) {
-			System.out.format("%03d%s",listOfMenuItems[i].getMenuItemID(),listOfMenuItems[i].getMenuItemName());
+			listOfMenuItems[i].printAll();
 		}
 	}
 	public void setListOfMenuItems(MenuItem[] newListOfMenuItems) {
