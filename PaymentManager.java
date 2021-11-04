@@ -40,9 +40,9 @@ public class PaymentManager{
     }
     
     /**
-	 * Retrieving payment id by reservation number
+	 * Retrieving payment id by customerID
 	 * 
-	 * @param reservationNum
+	 * @param customerID
 	 * 				Specifies the reservation number to retrieve payment details
 	 * @return Payment id if found. Else will return 0
 	 */
@@ -61,7 +61,7 @@ public class PaymentManager{
 	 * 
 	 * @param payment
 	 * 				Specifies the payment
-	 * @param roomId
+	 * @param orderID
 	 * 				Specifies the room id
 	 * @return Subtotal
 	 */
@@ -84,7 +84,7 @@ public class PaymentManager{
 	 * 
 	 * @param payment
 	 * 				Specifies the payment
-	 * @param roomId
+	 * @param orderID
 	 * 				Specifies the room id
 	 * @return total
 	 */
@@ -100,11 +100,11 @@ public class PaymentManager{
 	 * 
 	 * @param payment
 	 * 				Specifies the payment
-	 * @param roomId
+	 * @param orderID?
 	 * 				Specifies the room id
 	 * @param paymentmode
 	 * 				Specifies the method of payment
-	 * @param cash
+	 * @param cash?
 	 * 				Specifies the cash amount
 	 */
     
