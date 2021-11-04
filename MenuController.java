@@ -61,7 +61,6 @@ public class MenuController {
 		pcheck=sc.nextInt();
 		if (pcheck!=1 && pcheck!=2) {
 			System.out.println("Invalid choice");
-			sc.close();
 			return;
 		}
 		sc.nextLine();
@@ -107,7 +106,6 @@ public class MenuController {
 		else{
 			createItem(name,description,itemType,price);
 		}
-		sc.close();
 	}
 	public static void removeItemQuery() {
 		int removalIndex;
@@ -115,7 +113,6 @@ public class MenuController {
 		System.out.println("Which item should be removed?");
 		mainMenu.printMenu();
 		removalIndex=mainMenu.ItemIDToIndex(sc.nextInt());
-		sc.close();
 		removeItem(removalIndex);
 	}
 	public static void updateItemQuery() {
@@ -169,11 +166,9 @@ public class MenuController {
 					break;
 				default:
 					System.out.println("Invalid choice. Update Aborted.");
-					sc.close();
 					return;
 				}
 			}
-			sc.close();
 			updateItem(updateIndex,name,description,itemType,price);
 		}
 		else {
@@ -220,11 +215,9 @@ public class MenuController {
 					break;
 				default:
 					System.out.println("Invalid choice. Update Aborted.");
-					sc.close();
 					return;
 				}
 			}
-			sc.close();
 			updateItem(updateIndex,name,description,itemType,price,promoPackItems);
 		}
 	}
