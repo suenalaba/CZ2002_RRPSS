@@ -1,21 +1,16 @@
-package OOP_Project_Package1;
+package restaurant_entity;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
-
-
-
-import OOP_Project_Package1.Staff.Gender;
+//import OOP_Project_Package1.Staff.Gender;
 public class Order {
 	private static int runningCount = 1;
 	
 	private int orderID;
 	private int tableID;
 	private ArrayList<MenuItem> orderitems;
-	private int reservationID;
 	private String orderTime;
 	SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss");
 	
@@ -25,12 +20,11 @@ public class Order {
 	//Staff staff  = new Staff();
 	//createdBy = staff.getStaffID();
 	
-	public Order(int tableID, ArrayList<MenuItem> orderitems, int reservationID,int createdBy)
+	public Order(int tableID, ArrayList<MenuItem> orderitems,int createdBy)
 	{
 		this.orderID = runningCount;
 		this.tableID = tableID;
 		this.orderitems = orderitems;
-		this.reservationID = reservationID;
 		Calendar c = Calendar.getInstance();
         String d = sdf.format(c.getTime());
         this.orderTime = d;
@@ -68,13 +62,7 @@ public class Order {
 	    this.tableID = tableID;
 	}
 	
-	public int getReservationID() {
-		return reservationID;
-	}
-	    
-	public void setReservationID(int reservationID) {
-	    this.reservationID = reservationID;
-	}
+	
 	
 	
 	public String getOrderTime() {
@@ -99,9 +87,9 @@ public class Order {
     public void viewOrder() {
         System.out.println("ID  		TableNum 	 Date");
         System.out.println(toString());
-        System.out.println("=====================================================");
+        System.out.println("===========================================================================");
         System.out.println("ID   Name of Item                          Description                          Price(S$)");
-        System.out.println("===========================================================");
+        System.out.println("===========================================================================");
         
         //review conversion of arraylist to array (may have problem). 
         MenuItem[] items = (MenuItem[]) this.orderitems.toArray();
@@ -113,8 +101,9 @@ public class Order {
     }
     
     public String toString() {
-
-        return (String.format("%-5d%-30s", orderID, orderTime));
+    	Table order = new Table(); 
+    	int tableID = order.getTableID();
+        return (String.format("%-5d%-5d%-30s", orderID,tableID, orderTime));
     }
 	
 	
