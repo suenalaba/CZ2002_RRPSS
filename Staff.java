@@ -1,5 +1,7 @@
 
 
+package restaurant_entity;
+
 public class Staff {
 
 	private int staffID;
@@ -65,3 +67,4 @@ public class Staff {
 	
 	
 }
+
