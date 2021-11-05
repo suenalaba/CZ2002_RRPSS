@@ -1,8 +1,9 @@
-package OOP_Project_Package1;
+package restaurant_entity;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
-import Database.OrderDB;
+
+import restaurant_manager.MenuManager;
 
 public class OrderManager {
 	
@@ -43,11 +44,50 @@ public class OrderManager {
 		 		
 		 	}while(choiceStop==1);
 		 	
+		 	//***let user key in the tableID for that order but check that the tableID keyed in is an occupied table
+		 	System.out.println("Key in the table ID for this new order: ");
 		 	
-		 	int tableID = TableManager.getTableID();
-		 	int reservationID = ReservationManager.getReservationID();
+		 	//check if input for tableID is not an integer to force user to input an integer for tableID 
+		 	while(!sc.hasNextInt())
+		 	{
+		 		System.out.println("TableID should be an integer. Please input again: ");
+		 		
+		 	}
+		 	int tableID = sc.nextInt();
+		 	int countCheck=0;
+		 	//check with table manager if tableID keyed in is an occupied table, if it is NOT return
+		 	/*
+		 	 * 
+		 	 do{
+		 	 for(int i=0; i< TableManager.occupiedTables.size(); i++)
+		 	 {
+		 	 	if(TableManager.occupiedTables.get(i).getTableID() == tableID)
+		 	 	{
+		 	 	 	
+		 	 	   //if table num keyed in exist in list of occupied tables. it should enter this if loop once.
+		 	 	    int countCheck = 1;
+		 	 	    break;
+		 	 	    
+		 	 	}
+		 	 }
+		 	 if(countCheck!=1)
+		 	 {
+		 	  	i=0;
+		 	  	System.out.println("TableID entered is not an occupied table. Please enter again:");
+		 	  	tableID = sc.nextInt();
+		 	  	
+		 	 }
+		 	 
+		 	}while(countCheck!=1)
+		 	
+		 	
+		 	 */
+		 	
+		 	
+		 	//?????????????????????????????????????????????????????????????????????????????????????????
+		 	
 		 	int createdBy = order.getCreatedBy();
-		 	orderList.add(new Order(tableID, tempOrder, reservationID,createdBy));
+		 	orderList.add(new Order(tableID, tempOrder,createdBy));
 		 	
 	      
 	    }	 
@@ -117,7 +157,7 @@ public class OrderManager {
 					 MenuItem newItem = MenuManager.getItem();
 					 
 					
-					 for (int i; i<orderList.get(orderIdUpdate).getMenuItemID().size(); i++)
+					 for (int i=0; i<orderList.get(orderIdUpdate).getMenuItemID().size(); i++)
 					 {
 						 if(orderList.get(orderIdUpdate).getMenuItemID().get(i) == newItem)
 						 {
