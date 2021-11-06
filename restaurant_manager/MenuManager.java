@@ -25,7 +25,33 @@ public class MenuManager {
 		mainMenu.getListOfMenuItems().get(mainMenu.getListOfMenuItems().size()-1).printAll();
 	}
 	private static void removeItem(int removalIndex) {
-		mainMenu.getListOfMenuItems().remove(removalIndex);
+		type typeCheck=mainMenu.getListOfMenuItems().get(removalIndex).getMenuItemType();
+		switch(typeCheck){
+			case APPETIZER:
+				mainMenu.getListOfMenuItems().get(removalIndex).setMenuItemType(type.DELETEDAPPETIZER);
+				break;
+			case MAIN:
+				mainMenu.getListOfMenuItems().get(removalIndex).setMenuItemType(type.DELETEDMAIN);
+				break;
+			case SIDE:
+				mainMenu.getListOfMenuItems().get(removalIndex).setMenuItemType(type.DELETEDSIDE);
+				break;
+			case DESSERT:
+				mainMenu.getListOfMenuItems().get(removalIndex).setMenuItemType(type.DELETEDDESSERT);
+				break;
+			case DRINKS:
+				mainMenu.getListOfMenuItems().get(removalIndex).setMenuItemType(type.DELETEDDRINKS);
+				break;
+			case PROMOTION:
+				mainMenu.getListOfMenuItems().get(removalIndex).setMenuItemType(type.DELETEDPROMOTION);
+				break;
+			case UNCATEGORIZED:
+				mainMenu.getListOfMenuItems().get(removalIndex).setMenuItemType(type.DELETEDUNCATEGORIZED);
+				break;
+			default:
+				mainMenu.getListOfMenuItems().get(removalIndex).setMenuItemType(type.DELETEDUNCATEGORIZED);
+				break;
+		}
 	}
 	public static void createItemQuery() {
 		Scanner sc=new Scanner(System.in);
@@ -35,7 +61,8 @@ public class MenuManager {
 		String name,description;
 		double price=-1;
 		type itemType;
-		if(mainMenu.getAlaCarteMenuItems().size()!=0) {
+		Menu alacarteMenu=new Menu(mainMenu.getAlaCarteMenuItems());
+		if(alacarteMenu.presentSize()!=0) {
 			System.out.println("Do you want to make a promotional package?\n1.Yes\n2.No");
 			while (pcheck==-1) {
 				try {
@@ -127,7 +154,7 @@ public class MenuManager {
 					try {
 						pChoice=sc.nextInt();
 						sc.nextLine();
-						pChoice=alaCarteMenu.ItemIDToIndex(pChoice);
+						pChoice=alaCarteMenu.ItemIDToIndex(pChoice,false);
 						if (pChoice!=-1) {
 							break;
 						}
@@ -152,7 +179,7 @@ public class MenuManager {
 		int removalIndex=-1;
 		int[] cascadeRemove=new int[mainMenu.getListOfMenuItems().size()-mainMenu.getAlaCarteMenuItems().size()];
 		int cRTrack=0;//index cascadeRemove
-		if (mainMenu.getListOfMenuItems().size()<1) {
+		if (mainMenu.presentSize()<1) {
 			System.out.println("Nothing to remove");
 			return;
 		}
@@ -161,7 +188,7 @@ public class MenuManager {
 		mainMenu.printMenu();
 		while (removalIndex==-1) {
 			try {
-				removalIndex=mainMenu.ItemIDToIndex(sc.nextInt());
+				removalIndex=mainMenu.ItemIDToIndex(sc.nextInt(),false);
 				sc.nextLine();
 				if (removalIndex!=-1) {
 					break;
@@ -212,17 +239,12 @@ public class MenuManager {
 		}
 		removeItem(removalIndex);
 		for (int i=0;i<cRTrack;i++) {
-			if (removalIndex<cascadeRemove[0]) {
-				removeItem(cascadeRemove[i]-(1*i)-1);
-			}	
-			else {
-				removeItem(cascadeRemove[i]-(1*i));
-			}
+			removeItem(cascadeRemove[i]);
 		}
 	}
 	public static void updateItemQuery() {
 		int updateIndex=-1,choice=-1,typeChoice=-1,pSize=-1,pChoice=-1;
-		if (mainMenu.getListOfMenuItems().size()<1) {
+		if (mainMenu.presentSize()<1) {
 			System.out.println("Nothing to update");
 			return;
 		}
@@ -231,7 +253,7 @@ public class MenuManager {
 		mainMenu.printMenu();
 		while (updateIndex==-1) {
 			try {
-				updateIndex=mainMenu.ItemIDToIndex(sc.nextInt());
+				updateIndex=mainMenu.ItemIDToIndex(sc.nextInt(),false);
 				sc.nextLine();
 				if (updateIndex!=-1) {
 					break;
@@ -406,7 +428,7 @@ public class MenuManager {
 							try {
 								pChoice=sc.nextInt();
 								sc.nextLine();
-								pChoice=alaCarteMenu.ItemIDToIndex(pChoice);
+								pChoice=alaCarteMenu.ItemIDToIndex(pChoice,false);
 								if (pChoice!=-1) {
 									break;
 								}
@@ -462,16 +484,19 @@ public class MenuManager {
 		int choice;
 		System.out.println("Please select a menu item (By ItemId):");
 		mainMenu.printMenu();
-		choice=mainMenu.ItemIDToIndex(sc.nextInt());
+		choice=mainMenu.ItemIDToIndex(sc.nextInt(),false);
 		return mainMenu.getListOfMenuItems().get(choice);
 	}
 	public static void printMainMenu() {
-		if (mainMenu.getListOfMenuItems().size()<1) {
-			System.out.println("Nothing to print!");
-			return;
+		for (int i=0;i<mainMenu.getListOfMenuItems().size();i++) {
+			if (!mainMenu.getListOfMenuItems().get(i).getMenuItemType().toString().substring(0,3).contains("DEL")){
+				mainMenu.printMenu();
+				return;
+			}
 		}
-		mainMenu.printMenu();
-		}
+		System.out.println("Nothing to print!");
+		return;
+	}
 	
 	public static void saveToDB() {
 		File menuDB=new File("MenuDB.txt");
@@ -483,7 +508,7 @@ public class MenuManager {
 			String pusher="";
 			for (int i=0;i<mainMenu.getListOfMenuItems().size();i++) {
 				MenuItem txMedium=mainMenu.getListOfMenuItems().get(i);
-				if (txMedium.getMenuItemType()==type.PROMOTION) {
+				if (txMedium.getMenuItemType()==type.PROMOTION || txMedium.getMenuItemType()==type.DELETEDPROMOTION) {
 					PromotionPackage txPMedium=(PromotionPackage) txMedium;
 					pusher+=String.valueOf(txPMedium.getMenuItemID())+";";
 					pusher+=txPMedium.getMenuItemName()+";";
@@ -528,7 +553,7 @@ public class MenuManager {
 		        int itemID=Integer.parseInt(data[0]);
 		        String itemName=data[1];
 		        type itemType=type.valueOf(data[2]);
-		        if (itemType==type.PROMOTION) {
+		        if (itemType==type.PROMOTION || itemType==type.DELETEDPROMOTION) {
 		        	continue;
 		        }
 		        double itemPrice=Double.parseDouble(data[3]);
@@ -544,7 +569,7 @@ public class MenuManager {
 		        int itemID=Integer.parseInt(data[0]);
 		        String itemName=data[1];
 		        type itemType=type.valueOf(data[2]);
-		        if (itemType!=type.PROMOTION) {
+		        if (itemType!=type.PROMOTION || itemType!=type.DELETEDPROMOTION) {
 		        	continue;
 		        }
 		        double itemPrice=Double.parseDouble(data[3]);
@@ -553,7 +578,7 @@ public class MenuManager {
 		        Menu loadedAlacarteMenu=new Menu(loadedMenu);
 		        for (int i=5;i<data.length;i++) {
 		        	try {
-		        		promoPackItems.add(loadedAlacarteMenu.getListOfMenuItems().get(loadedAlacarteMenu.ItemIDToIndex(Integer.parseInt(data[i]))));
+		        		promoPackItems.add(loadedAlacarteMenu.getListOfMenuItems().get(loadedAlacarteMenu.ItemIDToIndex(Integer.parseInt(data[i]),true)));
 		        	}
 		        	catch (Exception e) {
 		        		puller=1;
@@ -584,7 +609,7 @@ public class MenuManager {
 		      }
 		      sortedItemId.sort(null);
 		      for(int i=0;i<sortedItemId.size();i++) {
-		    	  sortedMenu.add(mainMenu.getListOfMenuItems().get(mainMenu.ItemIDToIndex(sortedItemId.get(i))));
+		    	  sortedMenu.add(mainMenu.getListOfMenuItems().get(mainMenu.ItemIDToIndex(sortedItemId.get(i),true)));
 		      }
 		      mainMenu.setListOfMenuItems(sortedMenu);
 		      MenuItem.setRunningCount(sortedItemId.get(sortedItemId.size()-1)+1);
@@ -598,4 +623,3 @@ public class MenuManager {
 			} 
 	}
 }
-
