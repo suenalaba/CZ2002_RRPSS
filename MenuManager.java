@@ -152,6 +152,10 @@ public class MenuManager {
 		int removalIndex=-1;
 		int[] cascadeRemove=new int[mainMenu.getListOfMenuItems().size()-mainMenu.getAlaCarteMenuItems().size()];
 		int cRTrack=0;//index cascadeRemove
+		if (mainMenu.getListOfMenuItems().size()<1) {
+			System.out.println("Nothing to remove");
+			return;
+		}
 		Scanner sc=new Scanner(System.in);
 		System.out.println("Which item should be removed?");
 		mainMenu.printMenu();
@@ -218,6 +222,10 @@ public class MenuManager {
 	}
 	public static void updateItemQuery() {
 		int updateIndex=-1,choice=-1,typeChoice=-1,pSize=-1,pChoice=-1;
+		if (mainMenu.getListOfMenuItems().size()<1) {
+			System.out.println("Nothing to update");
+			return;
+		}
 		Scanner sc=new Scanner(System.in);
 		System.out.println("Which item should be updated?");
 		mainMenu.printMenu();
@@ -458,6 +466,10 @@ public class MenuManager {
 		return mainMenu.getListOfMenuItems().get(choice);
 	}
 	public static void printMainMenu() {
+		if (mainMenu.getListOfMenuItems().size()<1) {
+			System.out.println("Nothing to print!");
+			return;
+		}
 		mainMenu.printMenu();
 		}
 	
@@ -499,8 +511,7 @@ public class MenuManager {
 			System.out.println("An error occured when writing to file "+menuDB.getName());
 			e.printStackTrace();
 		}catch (Exception e) {
-			System.out.println("Make sure there is are items in the menu before saving.");
-			e.printStackTrace();
+			System.out.println("No data to save!");
 		}
 	}
 	public static void loadDB() {
@@ -511,6 +522,7 @@ public class MenuManager {
 		    	  alacarteReader.close();
 		    	  throw new Exception("Empty File");
 		      }
+		      ArrayList<MenuItem> loadedMenu=new ArrayList<MenuItem>();
 		      while (alacarteReader.hasNextLine()) {
 		        String[] data = alacarteReader.nextLine().split(";");
 		        int itemID=Integer.parseInt(data[0]);
@@ -522,7 +534,7 @@ public class MenuManager {
 		        double itemPrice=Double.parseDouble(data[3]);
 		        String itemDescription=data[4];
 		        MenuItem.setRunningCount(itemID);
-		        mainMenu.getListOfMenuItems().add(new MenuItem(itemName,itemDescription,itemType,itemPrice));
+		        loadedMenu.add(new MenuItem(itemName,itemDescription,itemType,itemPrice));
 		      }
 		      alacarteReader.close();
 		      Scanner promoReader = new Scanner(menuDB);
@@ -541,9 +553,15 @@ public class MenuManager {
 		        	promoPackItems.add(mainMenu.getListOfMenuItems().get(mainMenu.ItemIDToIndex(Integer.parseInt(data[i]))));
 		        }
 		        MenuItem.setRunningCount(itemID);
-		        mainMenu.getListOfMenuItems().add(new PromotionPackage(itemName,itemDescription,itemType,itemPrice,promoPackItems));
+		        loadedMenu.add(new PromotionPackage(itemName,itemDescription,itemType,itemPrice,promoPackItems));
 		      }
 		      promoReader.close();
+		      if (loadedMenu.size()>0) {
+		    	  mainMenu.setListOfMenuItems(loadedMenu);
+		      }
+		      else {
+		    	  throw new Exception("Empty File");
+		      }
 		      ArrayList <MenuItem> sortedMenu=new ArrayList<MenuItem>();
 		      ArrayList <Integer> sortedItemId=new ArrayList<Integer>();
 		      for (int i=0;i<mainMenu.getListOfMenuItems().size();i++) {
