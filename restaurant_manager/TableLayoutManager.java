@@ -132,6 +132,14 @@ public class TableLayoutManager {
 		}
 	}
 	
+	public static void changeTableStatus(int tableID) {
+		ArrayList<Table> tables = new ArrayList<>(); 
+		tables = manager.getTableLayout();
+		int index = findTableIndex(tableID);
+		tables.get(index).setTableStatus(status.EMPTY);
+		manager.setTableLayout(tables);
+		System.out.println("Table " + tables.get(index).getTableID() + " set to empty"); 
+	}
 
 
 	public static void createReservation() {
