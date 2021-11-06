@@ -496,7 +496,7 @@ public class MenuManager {
 					pusher+="\n";
 				}
 				else {
-					pusher=String.valueOf(txMedium.getMenuItemID())+";";
+					pusher+=String.valueOf(txMedium.getMenuItemID())+";";
 					pusher+=txMedium.getMenuItemName()+";";
 					pusher+=String.valueOf(txMedium.getMenuItemType())+";";
 					pusher+=String.valueOf(txMedium.getMenuItemPrice())+";";
@@ -540,6 +540,7 @@ public class MenuManager {
 		      Scanner promoReader = new Scanner(menuDB);
 		      while (promoReader.hasNextLine()) {
 		        String[] data = promoReader.nextLine().split(";");
+		        int puller=0;
 		        int itemID=Integer.parseInt(data[0]);
 		        String itemName=data[1];
 		        type itemType=type.valueOf(data[2]);
@@ -549,11 +550,22 @@ public class MenuManager {
 		        double itemPrice=Double.parseDouble(data[3]);
 		        String itemDescription=data[4];
 		        ArrayList<MenuItem> promoPackItems=new ArrayList<MenuItem>();
+		        Menu loadedAlacarteMenu=new Menu(loadedMenu);
 		        for (int i=5;i<data.length;i++) {
-		        	promoPackItems.add(mainMenu.getListOfMenuItems().get(mainMenu.ItemIDToIndex(Integer.parseInt(data[i]))));
+		        	try {
+		        		promoPackItems.add(loadedAlacarteMenu.getListOfMenuItems().get(loadedAlacarteMenu.ItemIDToIndex(Integer.parseInt(data[i]))));
+		        	}
+		        	catch (Exception e) {
+		        		puller=1;
+		        	}
 		        }
 		        MenuItem.setRunningCount(itemID);
-		        loadedMenu.add(new PromotionPackage(itemName,itemDescription,itemType,itemPrice,promoPackItems));
+		        if (puller==0) {
+		        	loadedMenu.add(new PromotionPackage(itemName,itemDescription,itemType,itemPrice,promoPackItems));
+		        }
+		        else {
+		        	continue;
+		        }
 		      }
 		      promoReader.close();
 		      if (loadedMenu.size()>0) {
