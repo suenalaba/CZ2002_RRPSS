@@ -1,48 +1,47 @@
 package restaurant_entity;
 
 import restaurant_entity.MenuItem.type;
+import java.util.ArrayList;
 
 public class Menu {
-	private MenuItem[] listOfMenuItems;
-	public Menu(){
-		this.listOfMenuItems=new MenuItem[0];
+	private ArrayList<MenuItem> listOfMenuItems;
+	public Menu(){ //Constructor with no parameters
+		this.listOfMenuItems=new ArrayList<MenuItem>();
 	}
-	public Menu(MenuItem[] listOfMenuItems){
+	public Menu(ArrayList<MenuItem> listOfMenuItems){ //Constructor with parameters
 		this.listOfMenuItems=listOfMenuItems;
 	}
-	public MenuItem[] getListOfMenuItems() {
+	public ArrayList<MenuItem> getListOfMenuItems() { //get method for listOfMenuItems ArrayList
 		return this.listOfMenuItems;
 	}
-	public MenuItem[] getAlaCarteMenuItems() {
+	public ArrayList<MenuItem> getAlaCarteMenuItems() { //get method for AlaCarte Items ArrayList
 		int arrTrack=0;
-		MenuItem[] alaCarteMenu;
-		int[] alaCarteIdentities=new int[listOfMenuItems.length];
-		for (int i=0;i<listOfMenuItems.length;i++) {
-			if (listOfMenuItems[i].getMenuItemType()!=type.PROMOTION) {
+		ArrayList<MenuItem> alaCarteMenu;
+		int[] alaCarteIdentities=new int[listOfMenuItems.size()];
+		for (int i=0;i<listOfMenuItems.size();i++) {
+			if (listOfMenuItems.get(i).getMenuItemType()!=type.PROMOTION) {
 				alaCarteIdentities[arrTrack]=i;
 				arrTrack++;
 			}
 		}
-		alaCarteMenu=new MenuItem[arrTrack];
-		arrTrack=0;
-		for (int i=0;i<alaCarteMenu.length;i++) {
-			alaCarteMenu[i]=listOfMenuItems[alaCarteIdentities[i]];
+		alaCarteMenu=new ArrayList<MenuItem>();
+		for (int i=0;i<arrTrack;i++) {
+			alaCarteMenu.add(listOfMenuItems.get(alaCarteIdentities[i]));
 		}
 		return alaCarteMenu;
 	}
-	public void printMenu() {
-		for (int i=0;i<listOfMenuItems.length;i++) {
-			System.out.println("------------------------------------");
-			listOfMenuItems[i].printAll();
-			System.out.println("------------------------------------");
+	public void printMenu() { //prints all menu items
+		System.out.println("Menu Items:");
+		for (int i=0;i<listOfMenuItems.size();i++) {
+			listOfMenuItems.get(i).printAll();
 		}
 	}
-	public void setListOfMenuItems(MenuItem[] newListOfMenuItems) {
+	public void setListOfMenuItems(ArrayList<MenuItem> newListOfMenuItems) { //set method for listOfMenuItems ArrayList
 		this.listOfMenuItems=newListOfMenuItems;
 	}
-	public int ItemIDToIndex(int ID) {//returns MenuItem array index otherwise -1
-		for (int i=0;i<this.listOfMenuItems.length;i++) {
-			if (this.listOfMenuItems[i].getMenuItemID()==ID) {
+	public int ItemIDToIndex(int ID) {//searches ArrayList for corresponding ID then returns MenuItem ArrayList index otherwise -1
+		for (int i=0;i<this.listOfMenuItems.size();i++) {
+			if (this.listOfMenuItems.get(i).getMenuItemID()==ID) {
 				return i;
 			}
 		}
