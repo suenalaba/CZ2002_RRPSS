@@ -7,14 +7,15 @@ public class MenuItem {
 		SIDE,
 		DESSERT,
 		DRINKS,
-		PROMOTION
+		PROMOTION,
+		UNCATEGORIZED
 	}
 	private int menuItemID;
 	private String menuItemName;
 	private String menuItemDescription;
 	private type menuItemType;
 	private double menuItemPrice;
-	private static int runningCount=0;
+	private static int runningCount=1;
 	public MenuItem(String name,String description, type itemType,double price) { //ADD THIS TO CLASS DIAGRAM (CONSTRUCTOR))
 		this.menuItemName=name;
 		this.menuItemDescription=description;
@@ -59,6 +60,7 @@ public class MenuItem {
 		System.out.format("Item Type: %s\n",this.menuItemType.toString());
 		System.out.format("Price: %.02f\n",this.menuItemPrice);
 		System.out.format("Description: %s\n", this.menuItemDescription);
+		System.out.println("-----------------------------------");
 	}
 	public static int getRunningCount() {
 		return runningCount;
