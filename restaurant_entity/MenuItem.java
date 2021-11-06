@@ -3,12 +3,19 @@ package restaurant_entity;
 public class MenuItem {
 	public enum type{
 		APPETIZER,
+		DELETEDAPPETIZER,
 		MAIN,
+		DELETEDMAIN,
 		SIDE,
+		DELETEDSIDE,
 		DESSERT,
+		DELETEDDESSERT,
 		DRINKS,
+		DELETEDDRINKS,
 		PROMOTION,
-		UNCATEGORIZED
+		DELETEDPROMOTION,
+		UNCATEGORIZED,
+		DELETEDUNCATEGORIZED
 	}
 	private int menuItemID;
 	private String menuItemName;
