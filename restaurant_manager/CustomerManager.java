@@ -261,7 +261,7 @@ public class CustomerManager {
 	 * @param Search for customer details with ID
 	 * @return if customer don't exist null, else customer
 	 */
-	/*public static Guest retrieveGuestWithString(String ID) {
+	public static Customer retrieveCustomerbyIDinput(String ID) {
 		
 		int i;
 		
@@ -270,12 +270,12 @@ public class CustomerManager {
 		for (i = 0; i < customerlist.size(); i++) {
 			Customer validcustomer = (Customer) customerlist.get(i);
 
-			if (!ID.equals(validcustomer.getCustomerID())) {
-				return null;
+			if (ID.equals(validcustomer.getcustomerID())) {
+				return validcustomer;
 			}
 		}
-		return validcustomer;
-	}*/
+		return null;
+	}
 
 	/**
 	 * Update Customer Details by ID
@@ -484,7 +484,7 @@ public class CustomerManager {
 
 
 	/**
-	 * Retrieval of guest's details by ID number
+	 * Retrieval of Customer's details by ID number
 	 * 
 	 * @return Customer details.
 	 */
