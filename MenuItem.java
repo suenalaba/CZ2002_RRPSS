@@ -56,10 +56,10 @@ public class MenuItem {
 	}
 	public void printAll() {
 		System.out.format("ItemID: %03d\n",this.menuItemID);
-		System.out.format("Name: %s\n", this.menuItemName);
-		System.out.format("Item Type: %s\n",this.menuItemType.toString());
-		System.out.format("Price: %.02f\n",this.menuItemPrice);
-		System.out.format("Description: %s\n", this.menuItemDescription);
+		System.out.format("Name: %s\n", this.menuItemName.substring(0,1).toUpperCase()+this.menuItemName.substring(1).toLowerCase());
+		System.out.format("Item Type: %s\n",this.getMenuItemType().toString().substring(0,1).toUpperCase()+this.getMenuItemType().toString().substring(1).toLowerCase());
+		System.out.format("Price: $%.02f\n",this.menuItemPrice);
+		System.out.format("Description: %s\n", this.menuItemDescription.substring(0,1).toUpperCase()+this.menuItemDescription.substring(1).toLowerCase());
 		System.out.println("-----------------------------------");
 	}
 	public static int getRunningCount() {
