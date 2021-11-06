@@ -1,6 +1,7 @@
 package restaurant_application;
 import restaurant_manager.MenuManager;
 import restaurant_manager.OrderManager;
+import restaurant_manager.TableLayoutManager;
 import java.util.Scanner;
 
 public class RRPSSApp {
@@ -70,8 +71,26 @@ public class RRPSSApp {
 		    case 4:
 		    		int table_choice;
 		    		do {
-		    			System.out.println("Choice: (1) Create table\n (2) Remove table\n g")
-		    		}
+		    			System.out.println("Choice:\n1.Add Table\n2.Remove Table\n3.View Empty Tables\n4.View Occupied Tables\n");
+		    			Scanner table_scanner = new Scanner(System.in);
+                    	table_choice = table_scanner.nextInt();
+                    	switch(table_choice) {
+                    	case 1: 
+                    		TableLayoutManager.createTableQuery();
+                    		break;
+                    	case 2: 
+                    		TableLayoutManager.removeTableQuery();
+                    		break;
+                    	case 3: 
+                    		TableLayoutManager.printEmptyTables();
+                    		break;
+                    	case 4:
+                    		TableLayoutManager.printOccupiedTables();
+                    		break;
+                    	default:
+                    		break;
+                    	}
+		    		} while(table_choice>=1 && table_choice <=4);
 		    		break;
             }
         } while (rrpss_main_choice < 5);
