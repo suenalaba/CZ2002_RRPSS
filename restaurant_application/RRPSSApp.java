@@ -19,7 +19,7 @@ public class RRPSSApp {
             case 1:
             		int menu_choice;    
             		do {
-                    	System.out.println("Choice:\n1.Create Menu Item\n2.Remove Menu Item\n3.Update Menu Item\n4.Print Main Menu\n");
+                    	System.out.println("Choice:\n1.Create Menu Item\n2.Remove Menu Item\n3.Update Menu Item\n4.Print Main Menu\n5.Save Menu Data\n6.Load Menu Data");
                     	Scanner menu_scanner = new Scanner(System.in);
                     	menu_choice = menu_scanner.nextInt();
                     	switch(menu_choice) {
@@ -35,10 +35,16 @@ public class RRPSSApp {
                     	case 4:
                     		MenuManager.printMainMenu();
                     		break;
+			case 5:
+                    		MenuManager.saveDB();
+                    		break;
+			case 6:
+                    		MenuManager.loadDB();
+                    		break;
                     	default:
                     		break;
                     	}
-                    } while(menu_choice>=1 && menu_choice<=4);
+                    } while(menu_choice>=1 && menu_choice<=6);
 		    		
 		    		break;
 		    case 2:
