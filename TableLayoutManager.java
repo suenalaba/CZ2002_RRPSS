@@ -3,15 +3,16 @@ package group;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Scanner;
+
+import restaurant_entity.Table;
+import restaurant_entity.TableLayout;
+import restaurant_entity.Table.status;
 
 public class TableLayoutManager {
-	private TableLayout manager; 
+	private static TableLayout manager = new TableLayout();
 	
-	public TableLayoutManager(TableLayout tableLayout) {
-		this.manager = tableLayout;
-	}
-	
-	public int findTableIndex(int tableID) {
+	public static int findTableIndex(int tableID) {
 		ArrayList<Table> arr = new ArrayList<>();
 		arr = manager.getTableLayout();
 		for(int i =0; i<arr.size(); i++) {
@@ -21,22 +22,47 @@ public class TableLayoutManager {
 		}
 		return -1;
 	}
-	
-	public void createTable(int tableID, int tableCapacity, boolean reservationStatus) {
+	public static void createTableQuery() {
+		Scanner sc=new Scanner(System.in);
+		int tableID, tableCapacity; 
+		System.out.println("Enter table ID of new table: ");
+		tableID = sc.nextInt(); 
 		if(findTableIndex(tableID) == -1) {
-			ArrayList<Table> arr = new ArrayList<>();
-			arr = manager.getTableLayout();
-			arr.add(new Table(tableID, tableCapacity, reservationStatus));
-			manager.setTableLayout(arr);
+			System.out.println("Select desired table capacity: ");
+			System.out.println("2/4/6/8/10");
+			tableCapacity = sc.nextInt(); 
+			if(tableCapacity == 2 || tableCapacity == 4 || tableCapacity == 6 || tableCapacity == 8 || tableCapacity ==10) {
+				createTable(tableID, tableCapacity); 
+				System.out.println("Table " + tableID + " with table capacity of " + tableCapacity + " created");
+				return;
+			}
+			else {
+				System.out.println("Invalid table capacity");
+				return;
+			}
 		}
-		else {
-			System.out.println("Table already exists!"); 
+		else{
+			System.out.println("Table already exists!");
 		}
-		
+	} 
+	
+	public static void createTable(int tableID, int tableCapacity) {
+		ArrayList<Table> arr = new ArrayList<>();
+		arr = manager.getTableLayout();
+		arr.add(new Table(tableID, tableCapacity));
+		manager.setTableLayout(arr);
 	}
 	
+	public static void removeTableQuery() {
+		Scanner sc = new Scanner(System.in); 
+		int tableID; 
+		System.out.println("Enter table ID of table to be removed"); 
+		tableID = sc.nextInt(); 
+		removeTable(tableID); 
+		
+	}
 
-	public void removeTable(int tableID) {
+	public static void removeTable(int tableID) {
 		int index = findTableIndex(tableID); 
 		if(index == -1) {
 			System.out.println("Table does not exist");
@@ -49,72 +75,58 @@ public class TableLayoutManager {
 			System.out.println("Table " + tableID + " removed");
 		}
 	}
+	public static ArrayList<Table> getOccupiedTables(){
+		ArrayList<Table> tables = new ArrayList<>(); 
+		ArrayList<Table> occupiedTables = new ArrayList<>();
+		tables = manager.getTableLayout(); 
+		for(int i = 0; i<tables.size(); i++) {
+			if(tables.get(i).getTableStatus() == status.OCCUPIED) {
+				occupiedTables.add(tables.get(i)); 
+			}
+		}
+		return occupiedTables; 
+	}
 	
-	public ArrayList<Table> getReservedTables() {
+	public static ArrayList<Table> getReservedTables(){
+		ArrayList<Table> tables = new ArrayList<>(); 
 		ArrayList<Table> reservedTables = new ArrayList<>();
-		reservedTables = manager.getTableLayout();
-		for(int i = 0; i<reservedTables.size(); i++) {
-			if(reservedTables.get(i).getReservationStatus() == false) {
-				reservedTables.remove(i);
-				i--;
+		tables = manager.getTableLayout(); 
+		for(int i = 0; i<tables.size(); i++) {
+			if(tables.get(i).getTableStatus() == status.RESERVED) {
+				reservedTables.add(tables.get(i)); 
 			}
 		}
 		return reservedTables; 
 	}
-	
-	public ArrayList<Table> getAvailableTables() {
-		ArrayList<Table> availableTables = new ArrayList<>(); 
-		availableTables = manager.getTableLayout(); 
-		for(int i = 0; i<availableTables.size(); i++) {
-			if(availableTables.get(i).getReservationStatus() == true) {
-				availableTables.remove(i);
-				i--;
-			}
-		} 
-		return availableTables;
-	}
-	
-	public void reserveTable(int tableID) {
-		int index = findTableIndex(tableID);
-		if(index == -1) {
-			System.out.println("Table does not exist");
-		}
-		else {
-			ArrayList <Table> arr = new ArrayList<>();
-			arr.get(index).setReservationStatus(true);
-			manager.setTableLayout(arr); 
-			System.out.println("Table " + tableID + " successfully reserved!");
-		}
-	}
-	
-	public void walkIn(int groupSize) {
-		ArrayList<Table> availableTables = new ArrayList<>();
-		ArrayList<Table> arr = new ArrayList<>();
-		arr = manager.getTableLayout(); 
-		Calendar c = new GregorianCalendar();
-		c.add(Calendar.MINUTE, 60);
-		int tableID, index;
-		availableTables = getAvailableTables(); 
-		if(availableTables.isEmpty() == true) {
-			System.out.println("No available tables at the moment"); 
-		}
-		else {
-			for(int i = 0; i<availableTables.size(); i++) {
-				tableID = availableTables.get(i).getTableID(); 
-				if( c.getTime() < resManager.checkReservation(tableID)) {
-					index = findTableIndex(tableID); 
-					arr.get(index).setReservationStatus(true);
-					manager.setTableLayout(arr); 
-					System.out.println("Assigned to table " + arr.get(index).getTableID()); 
-					return ; 
-				}
-			}
-			System.out.println("No available tables at the moment");		
-			
-			
-		}
-	}
-	
-	
 
+	public static ArrayList<Table> getEmptyTables(){
+		ArrayList<Table> tables = new ArrayList<>(); 
+		ArrayList<Table> emptyTables = new ArrayList<>();
+		tables = manager.getTableLayout(); 
+		for(int i = 0; i<tables.size(); i++) {
+			if(tables.get(i).getTableStatus() == status.EMPTY) {
+				emptyTables.add(tables.get(i)); 
+			}
+		}
+		return emptyTables; 
+	}
+	
+	public static void printOccupiedTables() {
+		ArrayList<Table> occupiedTables = new ArrayList<>();
+		occupiedTables = getOccupiedTables();
+		System.out.println("Occupied Tables: ");
+		for(int i = 0; i<occupiedTables.size(); i++) {
+			System.out.println("TableID : " + occupiedTables.get(i).getTableID() + " Table Capacity : " + occupiedTables.get(i).getTableCapacity());
+		}
+	}
+	
+	public static void printEmptyTables() {
+		ArrayList<Table> emptyTables = new ArrayList<>();
+		emptyTables = getEmptyTables();
+		System.out.println("Empty Tables: ");
+		for(int i = 0; i<emptyTables.size(); i++) {
+			System.out.println("TableID : " + emptyTables.get(i).getTableID() + " Table Capacity : " + emptyTables.get(i).getTableCapacity());
+		}
+	}
+	
 }
