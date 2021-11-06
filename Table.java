@@ -1,17 +1,25 @@
-package group;
-
+package restaurant_entity;
+import java.time.LocalDateTime;
+import java.util.*;
 public class Table {
+	
 	private int tableID; 
 	private int tableCapacity; 
-	private boolean reservationStatus; 
+	private status tableStatus;
+	private HashMap<LocalDateTime, Reservation> reservations; 
 	
 	public Table() {
 	}
 	
-	public Table(int tableID, int tableCapacity, boolean reservationStatus) {
+	public Table(int tableID, int tableCapacity) {
 		this.tableID = tableID; 
 		this.tableCapacity = tableCapacity; 
-		this.reservationStatus = false; 
+		this.tableStatus = status.EMPTY; 
+		this.reservations = new HashMap<>();
+	}
+	
+	public enum status{
+		EMPTY, OCCUPIED, RESERVED
 	}
 	
 	public int getTableID() {
@@ -26,12 +34,17 @@ public class Table {
 	public void setTableCapacity(int tableCapacity) {
 		this.tableCapacity = tableCapacity; 
 	}
-	public boolean getReservationStatus() {
-		return reservationStatus; 
+	public status getTableStatus(){
+		return tableStatus; 
 	}
-	public void setReservationStatus(boolean reservationStatus) {
-		this.reservationStatus = reservationStatus; 
+	public void setTableStatus(status tableStatus) {
+		this.tableStatus = tableStatus; 
+	}
+	public HashMap<LocalDateTime, Reservation> getReservations(){
+		return this.reservations;
+	}
+	public void setReservations(HashMap<LocalDateTime, Reservation> reservations) {
+		this.reservations= reservations; 
 	}
 
 }
-
