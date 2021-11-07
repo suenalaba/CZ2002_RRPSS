@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import restaurant_database.ReservationDatabase;
 import restaurant_entity.Customer;
 import restaurant_entity.Reservation;
 import restaurant_entity.Table.status;
@@ -461,7 +462,18 @@ public class ReservationManager {
 		}
 	}
 	
+	public static void saveDB(String fileName) {
+		ReservationDatabase.fwrite(fileName);
+	}
+	
+	public static void loadDB(String fileName) {
+		listOfReservations=ReservationDatabase.fread(fileName);
+	}
+	
+
+	
 }
+
 // public class ReservationManager {
 	
 // 	//Reservaton[] r = {s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12}; //array of reservation objects
