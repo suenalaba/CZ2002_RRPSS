@@ -9,9 +9,10 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.InputMismatchException;
 import java.util.Scanner;
-
 import restaurant_entity.Reservation;
+
 
 public class TableLayoutManager {
 	private static TableLayout manager = new TableLayout();
@@ -34,7 +35,13 @@ public class TableLayoutManager {
 		if(findTableIndex(tableID) == -1) {
 			System.out.println("Select desired table capacity: ");
 			System.out.println("2/4/6/8/10");
-			tableCapacity = sc.nextInt(); 
+			try {
+			tableCapacity = sc.nextInt();
+			}
+			catch(InputMismatchException e) {
+				System.out.println("Invalid input");
+				return;
+			}
 			if(tableCapacity == 2 || tableCapacity == 4 || tableCapacity == 6 || tableCapacity == 8 || tableCapacity ==10) {
 				createTable(tableID, tableCapacity); 
 				System.out.println("Table " + tableID + " with table capacity of " + tableCapacity + " created");
@@ -60,8 +67,14 @@ public class TableLayoutManager {
 	public static void removeTableQuery() {
 		Scanner sc = new Scanner(System.in); 
 		int tableID; 
-		System.out.println("Enter table ID of table to be removed"); 
-		tableID = sc.nextInt(); 
+		System.out.println("Enter table ID of table to be removed");
+		try {
+		tableID = sc.nextInt();
+		}
+		catch(InputMismatchException e) {
+			System.out.println("Invalid input");
+			return;
+		}
 		removeTable(tableID); 
 		
 	}
@@ -133,7 +146,7 @@ public class TableLayoutManager {
 		}
 	}
 	
-	// for payment controller
+	//For payment manager
 	public static void changeTableStatus(int tableID) {
 		ArrayList<Table> tables = new ArrayList<>(); 
 		tables = manager.getTableLayout();
@@ -144,7 +157,6 @@ public class TableLayoutManager {
 	}
 
 
-
 	public static void createReservation() {
 		ArrayList<Table> tables = new ArrayList<>();
 		tables = manager.getTableLayout();		
@@ -152,6 +164,7 @@ public class TableLayoutManager {
 		Scanner sc = new Scanner(System.in);
 		String reservationDate = sc.nextLine(); 
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH");
+		int numPax;
 		try {
 			LocalDateTime resDate = LocalDateTime.parse(reservationDate, formatter);
 		}
@@ -164,7 +177,13 @@ public class TableLayoutManager {
 			return; 
 		}
 		System.out.println("Enter number of people"); 
-		int numPax = sc.nextInt(); 
+		try {
+			numPax = sc.nextInt();
+		}
+		catch(InputMismatchException e) {
+			System.out.println("Invalid input");
+			return;
+		}
 		if(numPax >10) {
 			System.out.println("Group size too large");
 			return;
@@ -195,11 +214,25 @@ public class TableLayoutManager {
 
 	public static void removeReservation() {
 		Scanner sc = new Scanner(System.in); 
+		int tableID;
+		int index;
 		ArrayList <Table> tables = new ArrayList<>(); 
 		tables = manager.getTableLayout(); 
 		System.out.println("Enter tableID ");
-		int tableID = sc.nextInt(); 
-		int index = findTableIndex(tableID); 
+		try {
+		tableID = sc.nextInt();
+		}
+		catch(InputMismatchException e) {
+			System.out.println("Invalid input");
+			return;
+		}
+		try {
+		index = findTableIndex(tableID);
+		}
+		catch(InputMismatchException e) {
+			System.out.println("Invalid input");
+			return;
+		}
 		if(index == -1) {
 			System.out.println("Table does not exist");
 		}
@@ -228,4 +261,8 @@ public class TableLayoutManager {
 		}
 		
 	}
+}
+
+	
+	
 }
