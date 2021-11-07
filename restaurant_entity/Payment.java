@@ -13,41 +13,39 @@ public class Payment {
 	private int paymentID;
 	private String paymentDate;
 	private double paymentafterTax;
-	private double totalPayment;
-	private int customerID;
-	private int orderID;
+	private double paymentbeforeTax;
+	//private int customerID;
+	//private int orderID;
 	private ArrayList<Order> orderlist;
 	private int reservationNumber;
-	private int tableNumber;
+	//private int tableNumber;
 	boolean membershipApplied;
     private static int runningCount = 1;
     //private String date;
     //SimpleDateFormat date_formatting = new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss");
     //int paymentId, ArrayList<Order> orders, String reservationNum, String date
     
-    public Payment(int reservationNumber, int tableNumber, ArrayList<Order> orderlist) {
+    public Payment(int reservationNumber, ArrayList<Order> orderlist) {
     	this.paymentID = runningCount;
     	runningCount++;
-    	this.reservationNumber = reservationNumber;
-    	this.tableNumber = tableNumber;
+    	//this.reservationNumber = reservationNumber;
+    	//this.tableNumber = tableNumber;
         this.orderlist = orderlist;
         LocalDateTime datetimenow = LocalDateTime.now();
         DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
         String paymentDate = datetimenow.format(format);
         this.paymentDate = paymentDate;
     }
-    LocalDateTime datetime1 = LocalDateTime.now();  
-    DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");  
-    String formatDateTime = datetime1.format(format);   
+
     
-    public Payment(int paymentID, ArrayList<Order> orderlist, int reservationNumber, int tableNumber,boolean membershipApplied, String paymentDate) {
+    public Payment(int paymentID, ArrayList<Order> orderlist, boolean membershipApplied, String paymentDate) {
     	this.paymentID = runningCount;
     	//Calendar c = Calendar.getInstance();
     	//this.paymentDate = paymentDate;
     	//this.customerID = customerID;
         this.orderlist = orderlist;
-        this.reservationNumber = reservationNumber;
-        this.tableNumber = tableNumber;
+        //this.reservationNumber = reservationNumber;
+        //this.tableNumber = tableNumber;
         this.membershipApplied = membershipApplied;
         this.paymentDate = paymentDate;
         //String d = sdf.format(c.getTime());
@@ -74,22 +72,22 @@ public class Payment {
     	this.paymentafterTax = paymentafterTax;
     }
     
-    public double gettotalPayment() {
-    	return totalPayment;
+    public double getpaymentsbeforeTax() {
+    	return paymentbeforeTax;
     }
     
-    public void settotalPayment(double totalPayment) {
-    	this.totalPayment = totalPayment;
+    public void setpaymentsbeforeTax(double paymentbeforeTax) {
+    	this.paymentbeforeTax = paymentbeforeTax;
     }
 
-    public int getcustomerID() {
+    /*public int getcustomerID() {
     	return customerID;
-    }
+    }*/
     //no need set customerid, this is not done here, should be in customer class??
     
-    public int getorderID() {
+    /*public int getorderID() {
     	return orderID;
-    }
+    }*/
     
     //no need set order id, this is not done here, should be in order class??
     
@@ -101,10 +99,10 @@ public class Payment {
     	return reservationNumber;
     }//need reservation class
     
-    public int gettableNumber() {
+    /*public int gettableNumber() {
     	return tableNumber;
     }
-    
+    */
     public boolean getmembershipApplied () {
     	return membershipApplied;
     }
