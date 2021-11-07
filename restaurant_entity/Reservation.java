@@ -1,22 +1,30 @@
 package RRPSS;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class Reservation {
 	
-	private int reservationID;
-	private int tableID;
+	private static int counter = 0;
+	
+	private int reservationID; //auto generated in system.
+	private int tableID; 
 	private int pax;
 	
+	private String customerID;
 	private String customerName;
 	private String customerContactNum;
 	
-	private Date reservationDate;
-	private Date reservationStartTime;
-	private Date reservationEndTime;
+	//private LocalDateTime reservationDate;
+	private LocalDateTime reservationStartTime;
+	private LocalDateTime reservationEndTime;
+	
+	private boolean isFinished; //status finished 
 	
 	
-	public Reservation(int reservationID) {
+	public Reservation() {
+		this.reservationID = counter;
+		counter++;
 		/*
 		this.reservationID = reservationID;
 		this.customerName = name;
@@ -54,27 +62,20 @@ public class Reservation {
 		this.customerContactNum = customerContactNum;
 	}
 	
-	public Date getReservationDate(){
-		return reservationDate;
-	}
 	
-	public void setReservationDate(Date reservationDate) {
-		this.reservationDate = reservationDate;
-	}
-	
-	public Date getReservationStartTime(){
+	public LocalDateTime getReservationStartTime(){
 		return reservationStartTime;
 	}
 	
-	public void setReservationStartTime(Date reservationStartTime) {
-		this.reservationStartTime = reservationStartTime;
+	public void setReservationStartTime(LocalDateTime startDateTime) {
+		this.reservationStartTime = startDateTime;
 	}
 	
-	public Date getReservationEndTime(){
+	public LocalDateTime getReservationEndTime(){
 		return reservationEndTime;
 	}
 	
-	public void setReservationEndTime(Date reservationEndTime) {
+	public void setReservationEndTime(LocalDateTime reservationEndTime) {
 		this.reservationEndTime = reservationEndTime;
 	}
 	
@@ -93,5 +94,35 @@ public class Reservation {
 	public void setPax(int pax) {
 		this.pax = pax;
 	}
+
+
+	public boolean getIsFinished() {
+		return isFinished = false;
+	}
+
+
+	public void setIsFinished(boolean status) {
+		this.isFinished = status;
+	}
+	
+	public int getCounter() {
+		return counter;
+	}
+	
+	public static void setCounter(int newCounter) {
+		counter = newCounter;
+	}
+
+
+	public String getCustomerID() {
+		return customerID;
+	}
+
+
+	public void setCustomerID(String customerID) {
+		this.customerID = customerID;
+	}
+	
+	
 	
 }
