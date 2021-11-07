@@ -1,6 +1,12 @@
 package restaurant_manager;
 import java.io.*;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.Scanner;
 
 //import restaurant_entity.Customer;
 //import restaurant_entity.Order;
@@ -221,7 +227,111 @@ public class PaymentManager{
     }
     
     
-    //Generate sales report
+    public void printSaleReport() {
+    	retrieveallpaymentdetailsfromdatabase();
+    	System.out.println("(1) Print sale revenue report by day\n(2) Print sale revenue report by month");
+    	Scanner sc = new Scanner(System.in); 
+    	int choice, i;
+    	String period; 
+		double totalRevenueBeforeTax = 0;
+		double totalRevenueAfterTax = 0;
+    	try {
+    		choice = sc.nextInt();
+    		if(choice != 1 || choice != 2) {
+    			System.out.println("Invalid input");
+    			return; 
+    		}
+    	}
+		catch(InputMismatchException e) {
+			System.out.println("Invalid input");
+			return;
+		}
+    	switch(choice) {
+    	case 1:
+    		System.out.println("Enter day in following format dd/MM/yyyy"); 
+    		period = sc.nextLine();
+    		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    		try {
+    			LocalDate date = LocalDate.parse(period, formatter);
+    			if(LocalDate.now().isBefore(date)) {
+    				System.out.println("Future date!");
+    				break; 
+    			}
+    			
+    		}
+    		catch(DateTimeParseException exe) {
+    			System.out.println("Invalid date"); 
+    			break; 
+    		} 
+    		for (Payment payment : paymentinvoices) {
+    			if(payment.getpaymentDate().equals(period)){
+    				// prints out payment date and payment ID
+    				System.out.println("Date: " + payment.getpaymentDate() + "       " + "Payment ID: " + payment.getpaymentID());
+    				Order order = payment.getOrder(); 
+    				ArrayList<MenuItem> orderItems = order.getOrderItems();
+    				for(i =0; i<orderItems.size(); i++) { // prints out all orders, menu type and price without gst
+    					System.out.println("Menu Item: " + orderItems.get(i).getMenuItemName() + "\t" + orderItems.get(i).getMenuItemType().name() +
+    							"\t" + orderItems.get(i).getMenuItemPrice());
+    				}
+    				totalRevenueBeforeTax += payment.getpaymentsbeforeTax();
+    				totalRevenueAfterTax += payment.getpaymentafterTax();  
+    			}
+    		}
+    		// if == 0, no payment found
+    		if(totalRevenueBeforeTax == 0) {
+    			System.out.println("No payment records found");
+    		}
+    		else {
+    			System.out.println("Total revenue before tax: $" + totalRevenueBeforeTax);
+    			System.out.println("Total revenue after tax: $" + totalRevenueBeforeTax);
+    		}
+    		break; 
+    		
+    	case 2: 
+    		System.out.println("Enter the month and year in the following format MM/yyyy");
+    		period = sc.nextLine();
+    		DateTimeFormatter formatterMonth = DateTimeFormatter.ofPattern("MM/yyyy");
+    		try {
+    			YearMonth date = YearMonth.parse(period, formatterMonth);
+    			if(YearMonth.now().isBefore(date)) {
+    				System.out.println("Future date!");
+    				break; 
+    			}
+    			
+    		}
+    		catch(DateTimeParseException exe) {
+    			System.out.println("Invalid date"); 
+    			break; 
+    		}
+    		for (Payment payment : paymentinvoices) {
+    			if(payment.getpaymentDate().startsWith(period, 3)){
+    				// prints out payment date and payment ID
+    				System.out.println("Date: " + payment.getpaymentDate() + "       " + "Payment ID: " + payment.getpaymentID());
+    				Order order = payment.getOrder(); 
+    				ArrayList<MenuItem> orderItems = order.getOrderItems();
+    				for(i =0; i<orderItems.size(); i++) { // prints out all orders, menu type and price without gst
+    					System.out.println("Menu Item: " + orderItems.get(i).getMenuItemName() + "\t" + orderItems.get(i).getMenuItemType().name() +
+    							"\t" + orderItems.get(i).getMenuItemPrice());
+    				}
+    				totalRevenueBeforeTax += payment.getpaymentsbeforeTax();
+    				totalRevenueAfterTax += payment.getpaymentafterTax();  
+    			}
+    		}
+    		// if == 0, no payment found
+    		if(totalRevenueBeforeTax == 0) {
+    			System.out.println("No payment records found");
+    		}
+    		else {
+    			System.out.println("Total revenue before tax: $" + totalRevenueBeforeTax);
+    			System.out.println("Total revenue after tax: $" + totalRevenueBeforeTax);
+    		}
+    		break;     		
+    		
+    		
+    		
+    	}
+    	
+    }
     
     
 } 
