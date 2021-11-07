@@ -220,6 +220,7 @@ public class PaymentManager{
 		}
 		finally {
 			System.out.println("Payment Transaction Completed.");
+			TableLayoutManager.freeTableStatus(tableID);
 		}	
 			/*catch (IOException e) {
 		}
