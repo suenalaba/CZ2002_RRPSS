@@ -10,10 +10,9 @@ import java.util.StringTokenizer;
 import restaurant_entity.Table;
 
 
-public class TableLayoutDatabase implements DatabaseFunction {
+public class TableLayoutDatabase {
 	public static final String DELIMITER = ",";
 	
-	@Override
 	public static ArrayList<Table> fread(String textfilename) throws IOException {
 
 		ArrayList fileasstring = (ArrayList) FileRead.fread(textfilename);
@@ -36,8 +35,7 @@ public class TableLayoutDatabase implements DatabaseFunction {
 
 	}
 	
-	@Override
-	public void fwrite(String textfilename, ArrayList<Table> mainLayout) throws IOException {
+	public static void fwrite(String textfilename, ArrayList<Table> mainLayout) throws IOException {
 
 		List tablelist = new ArrayList();// array list to store customer data
 		for (int i = 0; i < mainLayout.size(); i++) {
@@ -52,3 +50,4 @@ public class TableLayoutDatabase implements DatabaseFunction {
 		FileRead.fwrite(tablelist,textfilename);
 	}
 }
+
