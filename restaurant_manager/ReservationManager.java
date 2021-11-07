@@ -154,7 +154,7 @@ public class ReservationManager {
 		
 	}
 	
-	public ArrayList<Reservation> checkReservationByTableID(int tableID) {
+	public Reservation checkReservationByTableID(int tableID, LocalDateTime currentDateTime) {
 		/*
 		for (Reservation s : r) {
 			if (s.getTableID() == tableID) {
@@ -179,15 +179,33 @@ public class ReservationManager {
 		}
 		*/
 		
-		ArrayList<Reservation> t = new ArrayList<Reservation>(); //create new array to store all reservation objects that match.
+		/*
+		 * Check if reservation exists for the table. Then check if the current date is correct with the date given.
+		 */
+		
+		ArrayList<Reservation> t = new ArrayList<Reservation>(); //create new array to store all reservation objects for the given table.
 		
 		for (Reservation s : r) {
 			if(s.getTableID() == tableID) {
-				t.add(s);
+				t.add(s); //reservations for given table
 			}
 		}
 		
-		return t;
+		/*
+		Date start, end;   // assume these are set to something
+		Date current;      // the date in question
+
+		return start.compareTo(current) * current.compareTo(end) > 0;
+		*/
+		
+		for (Reservation v : t) {
+			if(v.getReservationStartTime().compareTo(currentDateTime)*currentDateTime.compareTo(v.getReservationEndTime()) > 0) { //compare checking out time to booking timeslot to see if it is in the slot
+				return v;
+			}
+		}
+		
+		return null;
+		
 		
 		
 		
