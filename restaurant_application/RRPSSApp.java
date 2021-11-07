@@ -9,7 +9,7 @@ public class RRPSSApp {
     public static void main(String[] args) {
 		// TODO Auto-generated method stub
         System.out.println("welcome to rrpss pls input ur choice");
-        System.out.println("(1) Manage Menu\n (2) Manage Order\n (3) Make reservation\n (4) Manage Table\n");
+        System.out.println("(1) Manage Menu\n (2) Manage Order\n (3) Make reservation\n (4) Manage Table\n  (5) Manage Staff\n");
         int rrpss_main_choice;
         Scanner rrpss_scanner = new Scanner(System.in);
         do {
@@ -98,8 +98,26 @@ public class RRPSSApp {
                     	}
 		    		} while(table_choice>=1 && table_choice <=4);
 		    		break;
+			case 5: 
+		    		int staff_choice;
+		    		
+		    		do {
+		    			System.out.println("Choice:\n1. Create a Staff\n");
+		    			Scanner staff_scanner = new Scanner(System.in);
+		    			staff_choice = staff_scanner.nextInt();
+		    			staff_scanner.nextLine();
+		    			
+		    			switch(staff_choice) {
+		    			case 1: 
+		    				StaffManager.createStaffMemberQuery();
+		    				break;
+		    			default:
+		    				break;
+		    			}
+		    		}while(staff_choice==1);
+		    		break;
             }
-        } while (rrpss_main_choice < 5);
+        } while (rrpss_main_choice < 6);
 
 	}
 
