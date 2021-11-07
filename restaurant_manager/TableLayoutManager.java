@@ -259,8 +259,35 @@ public class TableLayoutManager {
 		int checkIndex=findTableIndex(tableID);
 		return mainLayout.getTableLayout().get(checkIndex).getTableStatus();
 	}
+	
+	public static ArrayList<Integer> getMinTableList(int pax) {
+		int leastCap=11;
+		ArrayList<Integer> capList=new ArrayList<Integer>();
+		for (int i=2;i<=10;i+=2) {
+			if (i>=pax) {
+				capList.add(i);
+			}
+		}
+ 		ArrayList<Integer> minTables=new ArrayList<Integer>();
+ 		for (int k=0;k<capList.size();k++) {
+ 			for (int i=0;i<mainLayout.getTableLayout().size();i++) {
+ 				if (mainLayout.getTableLayout().get(i).getTableCapacity()==capList.get(k)) {//to sort
+ 					minTables.add(mainLayout.getTableLayout().get(i).getTableID());
+ 				}
+ 			}
+ 		}
+ 		return minTables;
+	}
+	public static void saveDB(String saveFile){
+		
+	}
+	public static ArrayList<Table> loadDB(String loadFile){
+		
+	}
+	
 }
 
+	
 
 
 // public class TableLayoutManager {
