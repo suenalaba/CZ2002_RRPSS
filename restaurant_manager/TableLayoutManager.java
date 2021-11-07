@@ -42,6 +42,22 @@ public class TableLayoutManager {
 		}
 		return -1;
 	}
+	
+	public static int hourlyTimeToIndex(int Hourlytime) {
+		int[] hours=new int[13];
+		int hourInc=9;
+		for (int i=0;i<hours.length;i++) { //09 00 to 2100
+			hours[i]=hourInc;
+			hourInc++;
+		}
+		for (int i=0;i<hours.length;i++) {
+			if (Hourlytime==hours[i]) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
 	public static void createTableQuery() { //creates table with tableID and pax of 2 increment
 		Scanner sc=new Scanner(System.in);
 		int tableID, tableCapacity; 
@@ -103,6 +119,12 @@ public class TableLayoutManager {
 			System.out.println("Table " + tableID + " removed");
 		}
 	}
+	
+	
+	public static ArrayList<Table> getAllTables(){
+		return mainLayout.getTableLayout();
+	}
+	
 	public static ArrayList<Table> getOccupiedTables(){
 		ArrayList<Table> tables = new ArrayList<>(); 
 		ArrayList<Table> occupiedTables = new ArrayList<>();
@@ -115,6 +137,8 @@ public class TableLayoutManager {
 		return occupiedTables; 
 	}
 	
+	
+	
 	public static ArrayList<Table> getReservedTables(){
 		ArrayList<Table> tables = new ArrayList<>(); 
 		ArrayList<Table> reservedTables = new ArrayList<>();
@@ -126,6 +150,17 @@ public class TableLayoutManager {
 		}
 		return reservedTables; 
 	}
+	
+	public static ArrayList<Table> getReservedTables(int hour){//overloading for specific time slot
+		int hourBlock=hourlyTimeToIndex(hour);
+		ArrayList<Table> ReservedTables = new ArrayList<>();
+		for (int i=0;i<mainLayout.getTableLayout().size();i++) {
+			if (mainLayout.getTableLayout().get(i).getHourBlock()[hourBlock]==status.RESERVED)
+				ReservedTables.add(mainLayout.getTableLayout().get(i));
+		}
+		return ReservedTables; 
+	}
+	
 
 	public static ArrayList<Table> getEmptyTables(){
 		ArrayList<Table> tables = new ArrayList<>(); 
@@ -180,10 +215,10 @@ public class TableLayoutManager {
 
 	public static int getEmptyTableAtHour(int pax, int Hourlytime) { //return tableID of with apt start time and pax otherwise -1
 		int Hour=hourlyTimeToIndex(Hourlytime);
-		ArrayList<Table> emptyTables=getEmptyTables(Hour);
+		ArrayList<Table> emptyTables=getEmptyTables(Hourlytime);
 		ArrayList<Table> emptyPaxApt=new ArrayList<Table>();
 		for (int i=0;i<emptyTables.size();i++) {
-			if (emptyTables.get(i).getTableCapacity()>pax) {
+			if (emptyTables.get(i).getTableCapacity()>=pax) {
 				emptyPaxApt.add(emptyTables.get(i));
 			}
 		}
@@ -207,26 +242,13 @@ public class TableLayoutManager {
 		int updateIndex=findTableIndex(tableID);
 		mainLayout.getTableLayout().get(updateIndex).setTableStatus(newStatus);
 	}
-	public static int hourlyTimeToIndex(int Hourlytime) {
-		int[] hours=new int[13];
-		int hourInc=9;
-		for (int i=0;i<hours.length;i++) { //09 00 to 2100
-			hours[i]=hourInc;
-			hourInc++;
-		}
-		for (int i=0;i<hours.length;i++) {
-			if (Hourlytime==hours[i]) {
-				return i;
-			}
-		}
-		return -1;
-	}
 	
 	public static status getTableStatusNow(int tableID) {
 		int checkIndex=findTableIndex(tableID);
 		return mainLayout.getTableLayout().get(checkIndex).getTableStatus();
 	}
 }
+
 
 
 // public class TableLayoutManager {
