@@ -13,8 +13,47 @@ public class OrderManager {
 	//private static Order 
 	//private static final String filename = "Order.txt";
 	//private static OrderManager instance = null;
-	//private static int runningCount = 0;
+	
 	private static ArrayList<Order> orderList = new ArrayList<Order>();
+	
+
+	//return a list of all orders that haven't been paid
+	public static ArrayList<Order> getUnpaidOrders() {
+
+		
+		ArrayList<Order> unpaidOrderList  = new ArrayList<Order>();
+		
+		for(int i=0; i<orderList.size(); i++)
+		{
+			if(orderList.get(i).getPaidStatus()==false)
+			{
+				unpaidOrderList.add(orderList.get(i));
+			}
+		}
+		
+		return unpaidOrderList;
+	}
+	
+	
+	
+	
+	public static int orderIdToIndex(int orderId) {
+		
+		
+		for(int i=0; i<orderList.size(); i++)
+		{
+			if(orderList.get(i).getOrderID() == orderId)
+			{
+				return i;
+			}
+		}
+		
+		return -1;
+		
+	}
+	
+	
+	
 	
 	
 	public OrderManager() {
@@ -33,7 +72,7 @@ public class OrderManager {
 	    
 	 */
 	 
-	 //in main menu call create order query, updateorderquery or delete whole order query.
+	 //in main menu call create order query, update order query or delete whole order query.
 	 public static void createOrderQuery() {
 		 Scanner sc = new Scanner(System.in);
 		 System.out.println("Enter table ID: ");
@@ -336,6 +375,10 @@ public class OrderManager {
 		 orderList.get(updateIndex).setOrderItems(newOrderItems);
 	 }
 	    
+	 
+	
+	 
+	 
 	    //retrieve all orders from database
 	    public void loadinDB() {
 	    	
