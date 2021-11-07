@@ -41,7 +41,13 @@ public class Table {
 		LocalDateTime timeHolder=LocalDateTime.now();
 		String time = timeHolder.toString().substring(11,13);
 		int hour=Integer.parseInt(time);
-		tableStatus=this.hourBlock[hour];
+		hour=TableLayoutManager.hourlyTimeToIndex(hour);
+		if (hour==-1) {
+			this.tableStatus=status.EMPTY;
+		}
+		else {
+			this.tableStatus=this.hourBlock[hour];
+		}
 		return tableStatus; 
 	}
 	public void setTableStatus(status tableStatus) {
