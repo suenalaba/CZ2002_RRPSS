@@ -128,6 +128,16 @@ public class TableLayoutManager {
 		return emptyTables; 
 	}
 	
+	public static ArrayList<Table> getAllTables(){
+		  ArrayList<Table> tables = new ArrayList<>(); 
+		  ArrayList<Table> allTables = new ArrayList<>();
+		  tables = manager.getTableLayout(); 
+		  for(int i = 0; i<tables.size(); i++) {
+		    allTables.add(tables.get(i));  
+		  }
+		  return allTables; 
+	}
+	
 	public static void printOccupiedTables() {
 		ArrayList<Table> occupiedTables = new ArrayList<>();
 		occupiedTables = getOccupiedTables();
