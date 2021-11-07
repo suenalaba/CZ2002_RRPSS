@@ -28,7 +28,6 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 import restaurant_entity.Reservation;
 
-
 public class TableLayoutManager {
 	private static TableLayout mainLayout = new TableLayout();
 	
@@ -201,18 +200,6 @@ public class TableLayoutManager {
 			System.out.println("TableID : " + emptyTables.get(i).getTableID() + " Table Capacity : " + emptyTables.get(i).getTableCapacity());
 		}
 	}
-	
-
-	//For payment mainLayout
-	public static void freeTableStatus(int tableID) {
-		ArrayList<Table> tables = new ArrayList<>(); 
-		tables = mainLayout.getTableLayout();
-		int index = findTableIndex(tableID);
-		tables.get(index).setTableStatus(status.EMPTY);
-		mainLayout.setTableLayout(tables);
-		System.out.println("Table " + tables.get(index).getTableID() + " set to empty"); 
-	}
-
 	public static int getEmptyTableAtHour(int pax, int Hourlytime) { //return tableID of with apt start time and pax otherwise -1
 		int Hour=hourlyTimeToIndex(Hourlytime);
 		ArrayList<Table> emptyTables=getEmptyTables(Hourlytime);
@@ -225,7 +212,7 @@ public class TableLayoutManager {
 		int smallestCap=10;
 		int tableID=-1;
 		for (int i=0;i<emptyPaxApt.size();i++) {
-			if (emptyPaxApt.get(i).getTableCapacity()<smallestCap) {
+			if (emptyPaxApt.get(i).getTableCapacity()<=smallestCap) {
 				smallestCap=emptyPaxApt.get(i).getTableCapacity();
 				tableID=emptyPaxApt.get(i).getTableID();
 			}
@@ -239,8 +226,33 @@ public class TableLayoutManager {
 		mainLayout.getTableLayout().get(updateIndex).getHourBlock()[Hour]=newStatus;
 	}
 	public static void updateTable(int tableID, status newStatus) { //current status
+		LocalDateTime timeHolder=LocalDateTime.now();
+		String time = timeHolder.toString().substring(11,13);
+		int hour=Integer.parseInt(time);
+		hour=TableLayoutManager.hourlyTimeToIndex(hour);
 		int updateIndex=findTableIndex(tableID);
 		mainLayout.getTableLayout().get(updateIndex).setTableStatus(newStatus);
+		if (hour==-1) {
+			return;
+		}
+		else {
+			mainLayout.getTableLayout().get(updateIndex).getHourBlock()[hour]=newStatus;
+		}
+	}
+	
+	public static void freeTableStatus(int tableID) { //update current table to empty
+		LocalDateTime timeHolder=LocalDateTime.now();
+		String time = timeHolder.toString().substring(11,13);
+		int hour=Integer.parseInt(time);
+		hour=TableLayoutManager.hourlyTimeToIndex(hour);
+		int updateIndex=findTableIndex(tableID);
+		mainLayout.getTableLayout().get(updateIndex).setTableStatus(status.EMPTY);
+		if (hour==-1) {
+			return;
+		}
+		else {
+			mainLayout.getTableLayout().get(updateIndex).getHourBlock()[hour]=status.EMPTY;
+		}
 	}
 	
 	public static status getTableStatusNow(int tableID) {
