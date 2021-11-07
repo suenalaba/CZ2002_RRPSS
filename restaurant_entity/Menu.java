@@ -30,7 +30,7 @@ public class Menu {
 		}
 		return alaCarteMenu;
 	}
-	public void printMenu() { //prints all menu items
+	public void printMenu() { //prints all menu items in format specified within MenuItems/PromotionPackage class
 		System.out.println("Menu Items:");
 		for (int i=0;i<listOfMenuItems.size();i++) {
 			if (!listOfMenuItems.get(i).getMenuItemType().toString().substring(0,3).contains("DEL")) {
@@ -41,7 +41,7 @@ public class Menu {
 			}
 		}
 	}
-	public int presentSize() { //size of non-deleted item array
+	public int presentSize() { //Size of non-deleted items
 		int sizeTrack=0;
 		for (int i=0;i<listOfMenuItems.size();i++) {
 			if (!listOfMenuItems.get(i).getMenuItemType().toString().substring(0,3).contains("DEL")) {
@@ -68,3 +68,4 @@ public class Menu {
 		return -1;
 	}
 }
+
