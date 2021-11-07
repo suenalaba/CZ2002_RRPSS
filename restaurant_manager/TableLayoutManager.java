@@ -6,6 +6,7 @@ import restaurant_manager.ReservationManager;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -143,6 +144,7 @@ public class TableLayoutManager {
 	}
 
 
+
 	public static void createReservation() {
 		ArrayList<Table> tables = new ArrayList<>();
 		tables = manager.getTableLayout();		
@@ -150,9 +152,15 @@ public class TableLayoutManager {
 		Scanner sc = new Scanner(System.in);
 		String reservationDate = sc.nextLine(); 
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH");
+		try {
+			LocalDateTime resDate = LocalDateTime.parse(reservationDate, formatter);
+		}
+		catch (DateTimeParseException exc) {
+			System.out.println("Invalid date time format");
+		}
 		LocalDateTime resDate = LocalDateTime.parse(reservationDate, formatter);
-		if(resDate.isBefore(LocalDateTime.now())) {
-			System.out.println("Enter date after today!");
+		if(resDate.isBefore(LocalDateTime.now().plusDays(1))) {
+			System.out.println("Enter date time 24hours later");
 			return; 
 		}
 		System.out.println("Enter number of people"); 
@@ -182,5 +190,42 @@ public class TableLayoutManager {
 			}
 		}
 		System.out.println("No available tables"); 
+	}
+
+
+	public static void removeReservation() {
+		Scanner sc = new Scanner(System.in); 
+		ArrayList <Table> tables = new ArrayList<>(); 
+		tables = manager.getTableLayout(); 
+		System.out.println("Enter tableID ");
+		int tableID = sc.nextInt(); 
+		int index = findTableIndex(tableID); 
+		if(index == -1) {
+			System.out.println("Table does not exist");
+		}
+		else {
+			HashMap<LocalDateTime, Reservation> reservations = new HashMap<>();
+			reservations = tables.get(index).getReservations();
+			System.out.println("Enter reservation date and time in the following format dd/MM/yyyy HH");
+			String reservationDate = sc.nextLine(); 
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH");
+			try {
+				LocalDateTime resDate = LocalDateTime.parse(reservationDate, formatter);
+			}
+			catch (DateTimeParseException exc) {
+				System.out.println("Invalid date time format");
+			}
+			LocalDateTime resDate = LocalDateTime.parse(reservationDate, formatter);
+			if(reservations.containsKey(resDate)) {
+				reservations.remove(resDate);
+				tables.get(index).setReservations(reservations);
+				manager.setTableLayout(tables);
+				System.out.println("Reservation removed");
+			}
+			else {
+				System.out.println("Reservation not found");
+			}
+		}
+		
 	}
 }
