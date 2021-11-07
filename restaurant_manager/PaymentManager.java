@@ -10,11 +10,15 @@ import restaurant_entity.MenuItem;
 import restaurant_database.PaymentDatabase;
 import restaurant_entity.Customer;
 import restaurant_manager.CustomerManager;
+import restaurant_entity.Table;
+import restaurant_entity.Table.status;
+import restaurant_manager.ReservationManager;
+import restaurant_entity.Reservation;
 //import restaurant_entity.Reservation;
 //import restaurant_database.PaymentDatabase;
 
 //import other restaurant classes...
-
+import restaurant_manager.TableLayoutManager;
 public class PaymentManager{
     private static final double serviceCharge = 0.10;
     private static final double GST = 0.07;
@@ -79,17 +83,17 @@ public class PaymentManager{
 	 * @return total payment before tax
 	 */
     public double retrievetotalPayment(Payment payment, int orderID) {
-    	double totalPayment = 0;
+    	double paymentbeforeTax = 0;
     	ArrayList<Order> orderlist = payment.getOrderList();
     	if(orderlist != null) {
             for(Order order : orderlist) {
-            	for (MenuItem menuitem : order.getMenuItemID()) { //i need a function to  get the list of order item
-            		totalPayment += menuitem.getMenuItemPrice();
+            	for (MenuItem menuitem : order.getOrderItems()) { //i need a function to  get the list of order item
+            		paymentbeforeTax += menuitem.getMenuItemPrice();
             	}
             }
     	}
-        payment.settotalPayment(totalPayment);
-        return totalPayment;
+        payment.setpaymentsbeforeTax(paymentbeforeTax);
+        return paymentbeforeTax;
     }
     
     /**
@@ -166,23 +170,24 @@ public class PaymentManager{
 
 
     
-    public void printReceipt(Payment payment, int tableID, int orderID, String customerid, double amount_tendered) {
-    	//double total = retrievetotalPayment(payment, orderID);
-    	//double service_charge = total * serviceCharge;
-    	//double goods_service_tax = total * GST;
+    public void printReceipt(Payment payment, int tableID, int orderID,double amount_tendered) {
+
     	double total_paymentaftertax = retrievepaymentafterTax(payment, orderID);
     	double total_paymentbeforetax = retrievetotalPayment(payment,orderID);
     	double service_charge = total_paymentbeforetax * serviceCharge;
     	double goods_service_tax = total_paymentbeforetax * GST;
-    	//Table t;
+    	double discount = 0.00; //default no discount
 		try {
-			//o = OrderManager.retrieveorderID(orderID);
-			//String customerid = Customer.getcustomerID();
+			Reservation reservation = ReservationManager.checkReservationByTableID(tableID,payment.getpaymentDate());
+			/*if (TableLayoutManager.getTableStatusNow(tableID) != status.OCCUPIED) {
+				System.out.println("Payment for this table has already been made!");
+				return;
+			}*/
+			String customerid = reservation.getCustomerID();
 			Customer customer = CustomerManager.retrieveCustomerbyIDinput(customerid);
-			//CreditCard credit = CreditController.retrieveCreditByGuestId(gid);
-			System.out.printf("                                     Date                      #%s              \n", payment.getpaymentDate());
+			System.out.printf("                                     Date:                     #%s              \n", payment.getpaymentDate());
 			System.out.println("---------------------------------------------------------------------------------");
-			System.out.printf("                                     Payment                   #%d              \n", payment.gettableNumber());
+			System.out.printf("                                     Table Number:             #%d              \n", reservation.getReservationID());
 			System.out.println("---------------------------------------------------------------------------------");
 			System.out.printf("Customer Name: %s                                                               \n", customer.getcustomerName());
 	    	System.out.println("---------------------------------------------------------------------------------");
@@ -194,11 +199,15 @@ public class PaymentManager{
 		        	orderlist.get(i).viewOrder();
 		    	}
 	    	}
-	        System.out.printf("SUBTOTAL                                                                 %.2f\n", total_paymentbeforetax);
+	        System.out.printf("TOTAL BEFORE TAX:                                                        %.2f\n", total_paymentbeforetax);
 	        System.out.printf("10%% SVC CHG                                                             %.2f\n", service_charge);
 	        System.out.printf("7%% GST                                                                  %.2f\n", goods_service_tax);
 	        System.out.println("---------------------------------------------------------------------------------");
-	        System.out.printf("TOTAL                                                                   %.2f\n", total_paymentaftertax);
+	        if (payment.getmembershipApplied() == true) {
+	        	discount = 0.10 * total_paymentaftertax; //if membership discount present, 10% discount
+	        	System.out.printf("10% MEMBERSHIP DISCOUNT                                              %.2f\n",discount);
+	        }
+	        System.out.printf("TOTAL                                                                   %.2f\n", total_paymentaftertax-discount);
 	        System.out.printf("AMOUNT TENDERED                                                                    %.2f\n", amount_tendered);
 	        System.out.printf("CHANGE                                                                  %.2f\n", amount_tendered - total_paymentaftertax);
 	        System.out.println("---------------------------------------------------------------------------------");
@@ -210,6 +219,9 @@ public class PaymentManager{
 		}
 		}*/
     }
+    
+    
+    //Generate sales report
     
     
 } 
