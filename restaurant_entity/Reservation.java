@@ -23,15 +23,26 @@ public class Reservation {
 		this.isFinished=false;
 	}
 	
-	public Reservation(String customerID,int pax, LocalDateTime startTime,int tableID) {
+	public Reservation(int tableID,int pax,String customerID, LocalDateTime startTime) {
 		this.reservationID = counter;
 		counter++;
-		this.customerID=customerID;
+		this.tableID=tableID;
 		this.pax=pax;
+		this.customerID=customerID;
 		this.reservationStartTime=startTime;
 		this.reservationEndTime=startTime.plusHours(1);
-		this.tableID=tableID;
 		this.isFinished=false;
+	}
+	
+	public Reservation(int tableID,int pax,String customerID, LocalDateTime startTime,LocalDateTime endTime,Boolean isFinished) {
+		this.reservationID = counter;
+		counter++;
+		this.tableID=tableID;
+		this.pax=pax;
+		this.customerID=customerID;
+		this.reservationStartTime=startTime;
+		this.reservationEndTime=endTime;
+		this.isFinished=isFinished;
 	}
 	
 	//methods
