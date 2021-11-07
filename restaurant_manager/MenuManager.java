@@ -24,7 +24,7 @@ public class MenuManager {
 		mainMenu.getListOfMenuItems().add(new PromotionPackage(name,description,itemType,price,promoPackItems));
 		mainMenu.getListOfMenuItems().get(mainMenu.getListOfMenuItems().size()-1).printAll();
 	}
-	private static void removeItem(int removalIndex) {
+	private static void removeItem(int removalIndex) { //removes item by marking in enum type DELETED prefix
 		type typeCheck=mainMenu.getListOfMenuItems().get(removalIndex).getMenuItemType();
 		switch(typeCheck){
 			case APPETIZER:
@@ -53,7 +53,10 @@ public class MenuManager {
 				break;
 		}
 	}
-	public static void createItemQuery() {
+	public static Menu getMenuInstance() { //returns a Menu object of the current mainMenu
+		return mainMenu;
+	}
+	public static void createItemQuery() { //Queries user for item to create. either alacarte item or promo pack
 		Scanner sc=new Scanner(System.in);
 		Menu alaCarteMenu=new Menu(mainMenu.getAlaCarteMenuItems());
 		ArrayList<MenuItem> promoPackItems;
@@ -62,7 +65,7 @@ public class MenuManager {
 		double price=-1;
 		type itemType;
 		Menu alacarteMenu=new Menu(mainMenu.getAlaCarteMenuItems());
-		if(alacarteMenu.presentSize()!=0) {
+		if(alacarteMenu.presentSize()!=0) { //if no ala carte items then don't branch here
 			System.out.println("Do you want to make a promotional package?\n1.Yes\n2.No");
 			while (pcheck==-1) {
 				try {
@@ -86,7 +89,7 @@ public class MenuManager {
 		name=sc.nextLine();
 		System.out.println("What is the description?");
 		description=sc.nextLine();
-		if (pcheck==2) {
+		if (pcheck==2) { //enum type with uncategorized as default
 			System.out.println("What is the type of the item?\n1.Appetizer\n2.Main\n3.Side\n4.Dessert\n5.Drinks");
 			while (typeChoice==-1) {
 				try {
@@ -145,7 +148,7 @@ public class MenuManager {
 					System.out.println("Not an Integer. Try Again:");
 				}
 			}
-			promoPackItems=new ArrayList<MenuItem>(); 
+			promoPackItems=new ArrayList<MenuItem>();  //ArrayList of Menu item to hold promo package items before creation of PromotioPackage object in mainMenu arraylist
 			for (int i=0;i<pSize;i++) {
 				System.out.println("Which alaCarte item should be included? (type itemID then enter):");
 				alaCarteMenu.printMenu();
@@ -175,10 +178,10 @@ public class MenuManager {
 			createItem(name,description,itemType,price);
 		}
 	}
-	public static void removeItemQuery() {//improved 5pm the removal of promo items on removal of components
+	public static void removeItemQuery() {// Remove item based on itemid. print statement to show user before making selection. Removal of alacarte also removes promopack containing it
 		int removalIndex=-1;
 		int[] cascadeRemove=new int[mainMenu.getListOfMenuItems().size()-mainMenu.getAlaCarteMenuItems().size()];
-		int cRTrack=0;//index cascadeRemove
+		int cRTrack=0;//tracker for promo packs to remove if alacarte item is contained within
 		if (mainMenu.presentSize()<1) {
 			System.out.println("Nothing to remove");
 			return;
@@ -242,7 +245,7 @@ public class MenuManager {
 			removeItem(cascadeRemove[i]);
 		}
 	}
-	public static void updateItemQuery() {
+	public static void updateItemQuery() { //Updates either name/price/description/type or if promo pack
 		int updateIndex=-1,choice=-1,typeChoice=-1,pSize=-1,pChoice=-1;
 		if (mainMenu.presentSize()<1) {
 			System.out.println("Nothing to update");
@@ -479,7 +482,7 @@ public class MenuManager {
 		System.out.println("To:");
 		mainMenu.getListOfMenuItems().get(updateIndex).printAll();
 	}
-	public static MenuItem getItem() {
+	public static MenuItem getItem() { 
 		Scanner sc=new Scanner(System.in);
 		int choice;
 		System.out.println("Please select a menu item (By ItemId):");
@@ -498,128 +501,13 @@ public class MenuManager {
 		return;
 	}
 	
-	public static void saveToDB() {
-		File menuDB=new File("MenuDB.txt");
-		try {
-			if (mainMenu.getListOfMenuItems().size()==0) {
-				throw new Exception("Nothing to save.");
-			}
-			FileWriter myWriter = new FileWriter("MenuDB.txt");
-			String pusher="";
-			for (int i=0;i<mainMenu.getListOfMenuItems().size();i++) {
-				MenuItem txMedium=mainMenu.getListOfMenuItems().get(i);
-				if (txMedium.getMenuItemType()==type.PROMOTION || txMedium.getMenuItemType()==type.DELETEDPROMOTION) {
-					PromotionPackage txPMedium=(PromotionPackage) txMedium;
-					pusher+=String.valueOf(txPMedium.getMenuItemID())+";";
-					pusher+=txPMedium.getMenuItemName()+";";
-					pusher+=String.valueOf(txPMedium.getMenuItemType())+";";
-					pusher+=String.valueOf(txPMedium.getMenuItemPrice())+";";
-					pusher+=txPMedium.getMenuItemDescription()+";";
-					for (int k=0;k<txPMedium.getPromotionPackageItems().size();k++) {
-						pusher+=String.valueOf(txPMedium.getPromotionPackageItems().get(k).getMenuItemID())+";";
-					}
-					pusher+="\n";
-				}
-				else {
-					pusher+=String.valueOf(txMedium.getMenuItemID())+";";
-					pusher+=txMedium.getMenuItemName()+";";
-					pusher+=String.valueOf(txMedium.getMenuItemType())+";";
-					pusher+=String.valueOf(txMedium.getMenuItemPrice())+";";
-					pusher+=txMedium.getMenuItemDescription()+";";
-					pusher+="\n";
-				}
-			}
-			myWriter.write(pusher);
-		    myWriter.close();
-		    System.out.println("Successfully wrote to the file.");
-		}catch (IOException e) {
-			System.out.println("An error occured when writing to file "+menuDB.getName());
-			e.printStackTrace();
-		}catch (Exception e) {
-			System.out.println("No data to save!");
-		}
+	public static void saveToDB(String textFileName) {
+		MenuDatabase.fwrite(textFileName);
 	}
-	public static void loadDB() {
-		try {
-		      File menuDB = new File("menuDB.txt");
-		      Scanner alacarteReader = new Scanner(menuDB);
-		      if (!alacarteReader.hasNextLine()) {
-		    	  alacarteReader.close();
-		    	  throw new Exception("Empty File");
-		      }
-		      ArrayList<MenuItem> loadedMenu=new ArrayList<MenuItem>();
-		      while (alacarteReader.hasNextLine()) {
-		        String[] data = alacarteReader.nextLine().split(";");
-		        int itemID=Integer.parseInt(data[0]);
-		        String itemName=data[1];
-		        type itemType=type.valueOf(data[2]);
-		        if (itemType==type.PROMOTION || itemType==type.DELETEDPROMOTION) {
-		        	continue;
-		        }
-		        double itemPrice=Double.parseDouble(data[3]);
-		        String itemDescription=data[4];
-		        MenuItem.setRunningCount(itemID);
-		        loadedMenu.add(new MenuItem(itemName,itemDescription,itemType,itemPrice));
-		      }
-		      alacarteReader.close();
-		      Scanner promoReader = new Scanner(menuDB);
-		      while (promoReader.hasNextLine()) {
-		        String[] data = promoReader.nextLine().split(";");
-		        int puller=0;
-		        int itemID=Integer.parseInt(data[0]);
-		        String itemName=data[1];
-		        type itemType=type.valueOf(data[2]);
-		        if (itemType!=type.PROMOTION || itemType!=type.DELETEDPROMOTION) {
-		        	continue;
-		        }
-		        double itemPrice=Double.parseDouble(data[3]);
-		        String itemDescription=data[4];
-		        ArrayList<MenuItem> promoPackItems=new ArrayList<MenuItem>();
-		        Menu loadedAlacarteMenu=new Menu(loadedMenu);
-		        for (int i=5;i<data.length;i++) {
-		        	try {
-		        		promoPackItems.add(loadedAlacarteMenu.getListOfMenuItems().get(loadedAlacarteMenu.ItemIDToIndex(Integer.parseInt(data[i]),true)));
-		        	}
-		        	catch (Exception e) {
-		        		puller=1;
-		        	}
-		        }
-		        MenuItem.setRunningCount(itemID);
-		        if (puller==0) {
-		        	loadedMenu.add(new PromotionPackage(itemName,itemDescription,itemType,itemPrice,promoPackItems));
-		        }
-		        else {
-		        	continue;
-		        }
-		      }
-		      promoReader.close();
-		      if (loadedMenu.size()>0) {
-		    	  mainMenu.setListOfMenuItems(loadedMenu);
-		      }
-		      else {
-		    	  throw new Exception("Empty File");
-		      }
-		      ArrayList <MenuItem> sortedMenu=new ArrayList<MenuItem>();
-		      ArrayList <Integer> sortedItemId=new ArrayList<Integer>();
-		      for (int i=0;i<mainMenu.getListOfMenuItems().size();i++) {
-		    	  if (sortedItemId.contains(mainMenu.getListOfMenuItems().get(i).getMenuItemID())) {
-		    		  continue;
-		    	  }
-		    	  sortedItemId.add(mainMenu.getListOfMenuItems().get(i).getMenuItemID());
-		      }
-		      sortedItemId.sort(null);
-		      for(int i=0;i<sortedItemId.size();i++) {
-		    	  sortedMenu.add(mainMenu.getListOfMenuItems().get(mainMenu.ItemIDToIndex(sortedItemId.get(i),true)));
-		      }
-		      mainMenu.setListOfMenuItems(sortedMenu);
-		      MenuItem.setRunningCount(sortedItemId.get(sortedItemId.size()-1)+1);
-		      System.out.println("MenuDB.txt file contents loaded successfully.");
-		    } catch (FileNotFoundException e) {
-		      System.out.println("File is missing.");
-		      e.printStackTrace();
-		    } catch (Exception e) {
-				System.out.println("File is empty. Save data to DataBase before loading.");
-				e.printStackTrace();
-			} 
+	public static void loadDB(String textFileName) {
+		ArrayList<MenuItem> loadedMenuItemsList;
+		loadedMenuItemsList=MenuDatabase.fread(textFileName);
+		mainMenu.setListOfMenuItems(loadedMenuItemsList);
 	}
 }
+
