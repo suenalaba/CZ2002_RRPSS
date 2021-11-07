@@ -16,7 +16,7 @@ public class Payment {
 	private double paymentbeforeTax;
 	//private int customerID;
 	//private int orderID;
-	private ArrayList<Order> orderlist;
+	private Order order;
 	private int reservationNumber;
 	//private int tableNumber;
 	boolean membershipApplied;
@@ -25,12 +25,12 @@ public class Payment {
     //SimpleDateFormat date_formatting = new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss");
     //int paymentId, ArrayList<Order> orders, String reservationNum, String date
     
-    public Payment(int reservationNumber, ArrayList<Order> orderlist) {
+    public Payment(int reservationNumber, Order order) {
     	this.paymentID = runningCount;
     	runningCount++;
     	//this.reservationNumber = reservationNumber;
     	//this.tableNumber = tableNumber;
-        this.orderlist = orderlist;
+        this.order = order;
         LocalDateTime datetimenow = LocalDateTime.now();
         DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
         String paymentDate = datetimenow.format(format);
@@ -38,12 +38,12 @@ public class Payment {
     }
 
     
-    public Payment(int paymentID, ArrayList<Order> orderlist, boolean membershipApplied, String paymentDate) {
+    public Payment(int paymentID, Order order, boolean membershipApplied, String paymentDate) {
     	this.paymentID = runningCount;
     	//Calendar c = Calendar.getInstance();
     	//this.paymentDate = paymentDate;
     	//this.customerID = customerID;
-        this.orderlist = orderlist;
+        this.order = order;
         //this.reservationNumber = reservationNumber;
         //this.tableNumber = tableNumber;
         this.membershipApplied = membershipApplied;
@@ -91,9 +91,13 @@ public class Payment {
     
     //no need set order id, this is not done here, should be in order class??
     
-    public ArrayList<Order> getOrderList(){
-    	return orderlist;
+    public Order getOrder(){
+    	return order;
     } //need order class
+    
+    public void setOrder(Order order) {
+    	this.order = order; 
+    }
     
     public int getreservationNumber() {
     	return reservationNumber;
