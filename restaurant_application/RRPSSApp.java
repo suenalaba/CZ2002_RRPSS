@@ -50,21 +50,21 @@ public class RRPSSApp {
 		    case 2:
 		    		int order_choice;
 		    		do {
-                    	System.out.println("Choice:\n1.Create Order\n2.Update Order\n3.View Orders\n4.Print All Orders\n");
+                    	System.out.println("Choice:\n1.Create Order\n2.Delete Order\n3.Update Order\n4.Print All Orders\n");
                     	Scanner order_scanner = new Scanner(System.in);
                     	order_choice = order_scanner.nextInt();
                     	switch(order_choice) {
                     	case 1:
-                    		OrderManager.createOrder());
+                    		OrderManager.createOrderQuery();
                     		break;
                     	case 2:
-                    		OrderManager.updateOrder();
+                    		OrderManager.deleteWholeOrderQuery();
                     		break;
                     	case 3: 
-                    		OrderManager.viewOrder();
+                    		OrderManager.updateOrderQuery();
                     		break;
                     	case 4:
-                    		OrderManager.printOrder();
+                    		OrderManager.displayOrderList();
                     		break;
                     	default:
                     		break;
