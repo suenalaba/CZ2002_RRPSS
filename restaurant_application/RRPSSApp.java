@@ -1,3 +1,4 @@
+
 package restaurant_application;
 
 
@@ -21,6 +22,18 @@ import restaurant_manager.PaymentManager;
 import restaurant_manager.ReservationManager;
 import restaurant_manager.TableLayoutManager;
 
+import restaurant_manager.MenuManager;
+import restaurant_manager.OrderManager;
+import restaurant_manager.ReservationManager;
+import restaurant_manager.StaffManager;
+import restaurant_manager.TableLayoutManager;
+
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Scanner;
+
+
 
 public class RRPSSApp {
 
@@ -41,9 +54,17 @@ public class RRPSSApp {
 		
 		
 		//read in all databases.
-		//MenuManager.getMenuInstance().loadDB(); //get instance of menumanager
+		final String menuFile="menuDB.txt";
+		MenuManager.loadDB(menuFile); //load menu database
+		final String tableFile="tableLayoutDB.txt";
+		TableLayoutManager.loadDB(tableFile); //Load table database
+		final String reservationFile="reservationDB.txt";
+		ReservationManager.loadDB(reservationFile); //load reservation database
+		//Customer Database is probed in classManager
+		
+		
 		//OrderManager.getInstance().loadinDB(); //get instance of ordermanager
-		PaymentManager.getpaymentInstance().retrieveallpaymentdetailsfromdatabase();
+		//PaymentManager.getpaymentInstance().retrieveallpaymentdetailsfromdatabase();
 		//get instance of customermanager
 		//get instance of reservationmanager
 		//get instance of tablelayout manager
@@ -71,7 +92,7 @@ public class RRPSSApp {
 					System.out.println("==================================================");
 					System.out.println("(1) Edit Menu Items\t(2) Edit Customer Details");
 					System.out.println("(3) Edit Table Details\t(4) Edit Staff Details"); 
-					System.out.println("(5) Nothing else to edit");
+					System.out.println("(5) Sales Report\t(6) Saves Data and exits system.");
 					System.out.println("Enter your choice:");
 					restaurant_select = sc.nextInt();
 					switch (restaurant_select) {
@@ -123,7 +144,7 @@ public class RRPSSApp {
 							switch (customer_select) {
 							case 1:
 								// Create new Customer function
-								CustomerManager.createCustomer();
+								CustomerManager.createCustomer(true,0); //Jacques - false-> solo/walkin/reservation true->multi option.
 								break;
 							case 2:
 								CustomerManager.deleteCustomerdetailsbyID();
@@ -156,8 +177,8 @@ public class RRPSSApp {
 							System.out.println(" Editing Table Details: ");
 							System.out.println("==================================================");
 							System.out.println("(1) Create Table\t\t(2) Remove Table");
-							System.out.println("(3) Display Occupied Tables\t\t(4) Display Vacant Tables");
-							System.out.println("(5) Done editing table details!");
+							System.out.println("(3) Display Table Status");
+							System.out.println("(4) Done editing table details!");
 							System.out.println("Enter your choice:");
 							table_select = sc.nextInt();
 							switch (table_select) {
@@ -168,12 +189,8 @@ public class RRPSSApp {
 								TableLayoutManager.removeTableQuery(); // function to remove Table
 								break;
 							case 3:
-								TableLayoutManager.printOccupiedTables(); //function to print occupied table
-								break;
+								TableLayoutManager.getInstance().printTableLayout();
 							case 4:
-								TableLayoutManager.printEmptyTables(); //function to print vacant tables
-								break;
-							case 5:
 								System.out.println("Exiting now, Table Details have been updated!");
 								break;
 							default:
@@ -181,7 +198,7 @@ public class RRPSSApp {
 								System.out.println("Please enter a valid option.");
 								break;
 							}
-						} while (table_select >=0 && table_select <=4);
+						} while (table_select >=0 && table_select <=3);
 
 						break; //break out of table select
 					case 4:
@@ -278,20 +295,19 @@ public class RRPSSApp {
 					reservationwalkin_select = sc.nextInt();
 					switch (reservationwalkin_select) {
 					case 1:
-						//make reservation query here
+						ReservationManager.createReservationQuery();
 						break;
-	
 					case 2:
-						//remove reservation query here
+						ReservationManager.removeReservationQuery();
 						break;
 					case 3:
-						//update reservation query here
+						ReservationManager.updateReservationQuery();
 						break;
 					case 4:
-						//check reservation based on id here
+						ReservationManager.checkReservationQuery();
 						break;
 					case 5:
-						//display all reservations here
+						ReservationManager.printAllUnfinishedReservation();
 						break;
 					case 6:
 						System.out.println("Exiting now, Reservations Details have been updated!");
@@ -351,6 +367,9 @@ public class RRPSSApp {
 			case 6:
 				System.out.println("Have a good day fellow staff!");
 				System.out.println("Program terminating, please hold while data is being saved ..."); // Save records into database and textfile
+				TableLayoutManager.saveDB(tableFile);
+				MenuManager.saveToDB(menuFile);
+				ReservationManager.saveDB(reservationFile);
 				break;
 			default:
 				rrpss_select = 0;
@@ -362,7 +381,7 @@ public class RRPSSApp {
 		//writing to all databases when program terminates
 		//MenuManager.retrieveInstance().savetoDB(); //get menu manager instance
 		//OrderManager.getInstance().savetoDB(); //get order manager instance
-		PaymentManager.getpaymentInstance().writeallpaymentdetailstodatabase();
+		//PaymentManager.getpaymentInstance().writeallpaymentdetailstodatabase();
 		//customer manager instance
 		//reservation manager instance
 		//table layout manager instance
