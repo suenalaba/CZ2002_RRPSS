@@ -1,3 +1,4 @@
+
 package restaurant_database;
 
 // import relevant java libraries to be updated as we go..
@@ -13,12 +14,12 @@ public class CustomerDatabase implements DatabaseFunction {
 	public static final String DELIMITER = ",";
 
 	@Override
-	public ArrayList fread(String textfilename) throws IOException {
+	public ArrayList<Customer> fread(String textfilename) throws IOException { //Jacques-specified type of ArrayList return
 
 		ArrayList fileasstring = (ArrayList) FileRead.fread(textfilename);
 		
 		//array to store customer data
-		ArrayList customerlist = new ArrayList();
+		ArrayList<Customer> customerlist = new ArrayList<Customer>();
 
 		for (int i = 0; i < fileasstring.size(); i++) {
 
@@ -48,14 +49,14 @@ public class CustomerDatabase implements DatabaseFunction {
 	}
 
 	@Override
-	public void fwrite(String textfilename, List arraylist) throws IOException {
+	public void fwrite(String textfilename, List arrayList) throws IOException { //Jacques-fixed empty file creation
 
 		List customerlist = new ArrayList();// array list to store customer data
 
-		for (int i = 0; i < customerlist.size(); i++) {
-			Customer customer = (Customer) customerlist.get(i);
+		for (int i = 0; i < arrayList.size(); i++) {
+			Customer customer = (Customer) arrayList.get(i);
 			StringBuilder customerstring = new StringBuilder();
-			customerstring.append(customer.getcustomerID().trim());
+			customerstring.append(customer.getcustomerID().trim()); //Jacques-causes error in customer creation. 
 			customerstring.append(DELIMITER);
 			customerstring.append(customer.getcustomerName().trim());
 			customerstring.append(DELIMITER);
