@@ -1,5 +1,6 @@
 package restaurant_manager;
 import java.io.*;
+import java.util.*;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -12,7 +13,7 @@ public class OrderManager {
 	
 	//private static Order 
 	//private static final String filename = "Order.txt";
-	//private static OrderManager instance = null;
+	private static OrderManager instance = null;
 	
 	private static ArrayList<Order> orderList = new ArrayList<Order>();
 	
@@ -61,17 +62,20 @@ public class OrderManager {
 		orderList = new ArrayList<Order>();
 	}
 	
-	/*
+	
+	
 	//create new instance of OrderManager
-	 public static OrderManager getInstance() {
-	        if (instance == null) {
-	            instance = new OrderManager();
-	        }
-	        return instance;
-	    }
-	    
-	 */
+//	 public static OrderManager getInstance() {
+//	        if (instance == null) {
+//	            instance = new OrderManager();
+//	        }
+//	        return instance;
+//	    }
+//	    
 	 
+//	public static Order getOrderInstance() { 
+//		return;
+//	}
 	 //in main menu call create order query, update order query or delete whole order query.
 	 public static void createOrderQuery() {
 		 Scanner sc = new Scanner(System.in);
@@ -121,7 +125,7 @@ public class OrderManager {
 	 		//add item to orderitems list
 		 	do{
 		 		System.out.println("Add item to order");
-		 		MenuItem newItem = MenuManager.getItemQuery();
+		 		MenuItem newItem = MenuManager.getItem();
 		 		orderItems.add(newItem);
 		 		
 		 		System.out.println("Want to add another item? 1 - yes, 2 - No ");
@@ -178,11 +182,11 @@ public class OrderManager {
 	      
 	    }	 
 	 
-	 	public static void displayOrderList() {
+	 public static void displayOrderList() {
 	 		System.out.println("List of orders (by orderID):");
 	 		
 	 		for(int i=0; i<orderList.size(); i++) {
-	 			System.out.format("orderID:  %d \n", orderList.get(i).getOrderID());
+	 			System.out.format("orderID: %d          staffID(who created the order): %d\n", orderList.get(i).getOrderID(),orderList.get(i).getStaffId());
 	 		}
 	 		
 	 		
@@ -194,10 +198,26 @@ public class OrderManager {
 	 		System.out.println("Enter orderId you want to delete: ");
 	 		displayOrderList();
 	 		 Scanner sc = new Scanner(System.in);
-	 		int orderIdToDelete = sc.nextInt();
+	 		int orderIdToDelete = -1;
+	 		//error handle if orderId entered not an integer. 
 	 		
-	 		sc.nextLine();
 	 		
+			
+			while (orderIdToDelete==-1)
+			{
+				try {
+					orderIdToDelete = sc.nextInt();
+					sc.nextLine();
+					
+				}
+				
+				catch(InputMismatchException e) {
+					sc.nextLine();
+					System.out.println("Not an Integer. Try Again:");
+				}
+			}
+			
+	 		//check if orderId is in system and go to that particular order to delete from orderList (arraylist)
 	 		for(int i=0; i<orderList.size(); i++)
 	 		{
 	 			if(orderList.get(i).getOrderID()==orderIdToDelete)
@@ -227,8 +247,25 @@ public class OrderManager {
 		 System.out.println("Enter orderID that you want to update: ");
 		 Scanner sc = new Scanner(System.in);
 		 
-		 int orderIdUpdate = sc.nextInt();
+		 int orderIdUpdate = -1;
+		 //error handling if order id to update entered is not an integer. 
+		
+			
+			while (orderIdUpdate==-1)
+			{
+				try {
+					orderIdUpdate = sc.nextInt();
+					sc.nextLine();
+					
+				}
+				
+				catch(InputMismatchException e) {
+					sc.nextLine();
+					System.out.println("Not an Integer. Try Again:");
+				}
+			}
 		 
+		 //check if orderId exists in orderlist and assign orderId to update to that order Id entered
 		 for(int i=0; i<orderList.size(); i++ ) {
 			 if(orderList.get(i).getOrderID() == orderIdUpdate)
 			 {
@@ -241,7 +278,24 @@ public class OrderManager {
 		 ArrayList<MenuItem> newOrderItems = orderList.get(orderIdUpdate).getOrderItems();
 		 
 		 System.out.println("Which do you want to update? TableID (1) or orderitems (2)?");
-		 int choice = sc.nextInt();
+		 int choice = -1;
+		 
+		 //check for non integer input for choice of updating tableId or orderitems
+		 
+			
+			while (choice==-1)
+			{
+				try {
+					choice = sc.nextInt();
+					sc.nextLine();
+					
+				}
+				
+				catch(InputMismatchException e) {
+					sc.nextLine();
+					System.out.println("Not an Integer. Try Again:");
+				}
+			}
 		 
 		 if(choice==1)
 		 {
@@ -291,8 +345,24 @@ public class OrderManager {
 			 int deleteOrAdd = 0;
 			 do {
 				 System.out.format("Make a choice:\n 1. Delete Item\n 2. Add Item\n 3.Quit");
-				 deleteOrAdd = sc.nextInt();
-				 sc.nextLine();
+//				 deleteOrAdd = sc.nextInt();
+//				 sc.nextLine();
+				 
+				
+					
+					while (deleteOrAdd==0)
+					{
+						try {
+							deleteOrAdd = sc.nextInt();
+							sc.nextLine();
+							
+						}
+						
+						catch(InputMismatchException e) {
+							sc.nextLine();
+							System.out.println("Not an Integer. Try Again:");
+						}
+					}
 				 ArrayList<MenuItem> tempconvert= orderList.get(orderIdUpdate).getOrderItems();
 				 Menu orderItems=new Menu(tempconvert);
 				 orderItems.printMenu();
@@ -316,7 +386,7 @@ public class OrderManager {
 				 case 2:
 					 System.out.println("Enter index of order you want to add items to: ");
 					 //returns menu items from Menu
-					 MenuItem newItem = MenuManager.getItemQuery();
+					 MenuItem newItem = MenuManager.getItem();
 					 
 					 //
 					 int addedCheck=0;
@@ -376,9 +446,118 @@ public class OrderManager {
 	 }
 	    
 	 
+	 public static void displayOrderBasedOnTableIdQuery() {
+		 Scanner sc = new Scanner(System.in);
+		 System.out.println("Enter tableID of order you want to display:");
+		 
+		 //check if tableID input valid. check if tableID is an occupied table
+		 //check if tableID is occupied. 
+		 ArrayList <Integer> occupiedTableId = new ArrayList<Integer>();
+		 
+		 
+		 //check that table Id entered is valid
+		 //add all tableIDs of occupied tables into arraylist occipiedTableId
+		 for (int i=0; i<TableLayoutManager.getOccupiedTables().size() ; i++)
+		 {
+			 occupiedTableId.add(TableLayoutManager.getOccupiedTables().get(i).getTableID());
+		 }
+		 
+		 int newTableId = -1;
+		 
+		 while (newTableId==-1) {
+	            try {
+	            	
+	              newTableId=sc.nextInt();
+	              sc.nextLine();
+	              
+	              if(occupiedTableId.contains(newTableId))
+	              {
+	            	  break;
+	              }
+	              
+	              else
+	              {
+	            	  newTableId=-1;
+	            	  System.out.println("table Id entered is not occupied. Input again: ");
+	            	  
+	              }
+	              
+	            }
+	            catch(InputMismatchException e) {
+	              sc.nextLine();
+	              System.out.println("Not an Integer. Try Again:");
+	            }
+	          }
+		 
+		 //loop through order list to retrieve order based on table ID
+		 for(int i=0; i<orderList.size();i++)
+		 {
+			 
+			 if(orderList.get(i).getTableID()==newTableId && orderList.get(i).getPaidStatus()==false)
+			 {
+				 //print details of order
+				 System.out.println("OrderID  		TableNum		StaffId");
+				 System.out.println("===============================================================");
+				 
+				 System.out.format("%d				%d 				%d\n", orderList.get(i).getOrderID(), orderList.get(i).getTableID(), orderList.get(i).getStaffId());
+				 
+				 System.out.println("OrderItems");
+				 System.out.println("===============================================================");
+				 //????????????????????????????????????????????can do this to print all item in a particular order?
+				 
+				 ArrayList<MenuItem> orderDuplicates = new ArrayList<MenuItem>();
+				 System.out.println("Name           Price			Quantity");	
+				 for(int j=0;j<orderList.get(i).getOrderItems().size(); j++)
+				 {
+					 if(orderDuplicates.contains(orderList.get(i).getOrderItems().get(j))){
+						 continue;
+					 }
+					 MenuItem orderItem = orderList.get(i).getOrderItems().get(j);
+					 
+					 
+					 System.out.format("%s			%f				       ", orderItem.getMenuItemName(),orderItem.getMenuItemPrice());
+					 
+					 int counter=1;
+					 for(int k=j+1; k<orderList.get(i).getOrderItems().size(); k++)
+					 {
+						 if(orderItem==orderList.get(i).getOrderItems().get(k))
+						 {
+							 
+							 
+							 counter++;
+						 }
+						 
+					 }
+					 
+					 System.out.format(" x " + counter);
+					 
+					 orderDuplicates.add(orderItem);
+					 
+				 }
+				 //System.out.format("%s \n", Arrays.toString(orderList.get(i).getOrderItems().toArray()));
+				 
+				 
+				 //print all items of a particular order.
+				 
+				 
+				 
+				 
+			 }
+		 }
+		 
+		 
+	 }
 	
 	 
-	 
+//	 public static void displayOrderList() {
+//	 		System.out.println("List of orders (by orderID):");
+//	 		
+//	 		for(int i=0; i<orderList.size(); i++) {
+//	 			System.out.format("orderID:  %d \n", orderList.get(i).getOrderID());
+//	 		}
+//	 		
+//	 		
+//	 	}
 	    //retrieve all orders from database
 	    public void loadinDB() {
 	    	
@@ -391,5 +570,6 @@ public class OrderManager {
 	    }
 	 
 	 
+	    
 	
 }

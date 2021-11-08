@@ -1,5 +1,6 @@
 package restaurant_manager;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -15,6 +16,7 @@ public class StaffManager {
 	
 	//public static final String delimiter = ";";
 
+	
 	private static ArrayList<Staff> listOfStaffMembers = new ArrayList<Staff>();
 	
 	public void setListOfStaffMembers(ArrayList<Staff> listOfStaffMembers) {
@@ -227,13 +229,30 @@ public class StaffManager {
 		System.out.println("Staff details updated");
 	}
 	
-//	public static void saveStaffDB() {
-//		
-//	}
-//	
-//	public static void loadStaffDB() {
-//		
-//	}
+	public static void saveStaffDB(String saveFileName)  {
+		
+		try{
+			StaffDatabase.fwrite(saveFileName,listOfStaffMembers);
+		}
+		catch(IOException e)
+		{
+			System.out.format("File %s write failed", saveFileName);
+			return;
+		}
+		
+		
+	}
+	
+	public static void loadStaffDB(String loadFileName) {
+		try {
+			listOfStaffMembers = StaffDatabase.fread(loadFileName);
+		}
+		
+		catch(IOException e) {
+			System.out.format("File %s read failed", loadFileName);
+			return;
+		}
+	}
 	
 
 	
