@@ -37,8 +37,9 @@ public class OrderDatabase {
 			
 			
 			//ordertime
-			DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss")
-			Date orderTime = dateFormat.parse(str_tokenizer.nextToken().trim());
+			//DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss")
+			//Date orderTime = dateFormat.parse(str_tokenizer.nextToken().trim());
+			String orderTime = str_tokenizer.nextToken().trim();
 			
 			int staffId = Integer.parseInt(str_tokenizer.nextToken().trim());
 			boolean isPaid = Boolean.parseBoolean(str_tokenizer.nextToken().trim());
