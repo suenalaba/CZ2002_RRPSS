@@ -25,7 +25,7 @@ public class MenuDatabase{
 			if (MenuManager.getMenuInstance().getListOfMenuItems().size()==0) {
 				throw new Exception("Nothing to save.");
 			}
-			FileWriter myWriter = new FileWriter("MenuDB.txt");
+			FileWriter myWriter = new FileWriter(saveFileName);
 			String pusher="";
 			for (int i=0;i<MenuManager.getMenuInstance().getListOfMenuItems().size();i++) {
 				MenuItem txMedium=MenuManager.getMenuInstance().getListOfMenuItems().get(i);
