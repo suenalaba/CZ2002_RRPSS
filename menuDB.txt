@@ -1,0 +1,6 @@
+1;Hamburger;MAIN;5.0;Yummy yummy for my tummy;
+2;Coca-cola;DRINKS;1.8;Fizzy pop;
+3;Apple pie rip-off;APPETIZER;100.0;What does this mean;
+4;Foie Gras;MAIN;5000.0;Liver fever;
+5;Slipper;UNCATEGORIZED;0.01;1 part of a pair;
+7;Squid;MAIN;5.0;Squids are cool;
