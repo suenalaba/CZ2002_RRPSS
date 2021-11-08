@@ -1,38 +1,83 @@
 package restaurant_manager;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
+
+import restaurant_database.StaffDatabase;
 import restaurant_entity.Staff.Gender;
 import restaurant_entity.MenuItem;
 import restaurant_entity.Staff;
 
 
+
 public class StaffManager {
+	
+	//public static final String delimiter = ";";
 
 	private static ArrayList<Staff> listOfStaffMembers = new ArrayList<Staff>();
+	
+	public void setListOfStaffMembers(ArrayList<Staff> listOfStaffMembers) {
+		this.listOfStaffMembers = listOfStaffMembers;
+	}
 	
 	public static ArrayList<Staff> getListOfStaffMembers(){
 		return listOfStaffMembers;
 	}
 	
 	
+	//create a staff member and add to system
 	public static void createStaffMemberQuery() {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Enter staff ID: ");
-		int staffId = sc.nextInt();
-		sc.nextLine();
+		int staffId = -1;
+				
+				while (staffId==-1)
+				{
+					try {
+						staffId = sc.nextInt();
+						sc.nextLine();
+						
+					}
+					
+					catch(InputMismatchException e) {
+						sc.nextLine();
+						System.out.println("Not an Integer. Try Again:");
+					}
+				}
+				
+		
 		
 		System.out.println("Enter staff Name: ");
+		
+		
 		String staffName = sc.nextLine();
+		
+		
 		
 		
 		System.out.println("Enter staff title: ");
 		String staffTitle = sc.nextLine();
 		
-		System.out.println("Enter staff gender: (1) MALE, (2) FEMALE: ");
+		System.out.println("Enter staff gender: Enter 1 for MALE, 2 for FEMALE: ");
 		
-		int genderChoice = sc.nextInt();
-		sc.nextLine();
+		
+		
+		int genderChoice = -1;
+		
+		while (genderChoice==-1)
+		{
+			try {
+				genderChoice = sc.nextInt();
+				sc.nextLine();
+				
+			}
+			
+			catch(InputMismatchException e) {
+				sc.nextLine();
+				System.out.println("Not an Integer. Try Again:");
+			}
+		}
 		
 		Gender staffGender;
 		switch(genderChoice) {
@@ -49,12 +94,14 @@ public class StaffManager {
 		}
 		
 		
-		
+//		listOfStaffMembers.set(genderChoice, null)
 		createStaffMember(staffId, staffName,staffTitle,staffGender);
 	}
 	
 	private static void createStaffMember(int staffId, String staffName, String staffTitle, Gender staffGender) {
 		listOfStaffMembers.add(new Staff(staffId,staffName, staffTitle,staffGender));
+		
+		
 	}
 	
 	//display staffs in the system
@@ -75,8 +122,25 @@ public class StaffManager {
 		//find staffID inside array list
 		System.out.println("Enter staff ID of staff you want to remove: ");
 		displayStaffList();
-		int staffId = sc.nextInt();
-		sc.nextLine();
+		
+		
+		//error handling if input for staffId not an integer
+		int staffId = -1;
+		
+		while (staffId==-1)
+		{
+			try {
+				staffId = sc.nextInt();
+				sc.nextLine();
+				
+			}
+			
+			catch(InputMismatchException e) {
+				sc.nextLine();
+				System.out.println("Not an Integer. Try Again:");
+			}
+		}
+		
 		
 		//check if staffID exists in listOfStaffMembers
 		for(int i=0;i<listOfStaffMembers.size(); i++)
@@ -109,9 +173,24 @@ public class StaffManager {
 		
 		System.out.println("Enter the staff ID of the staff that you want to update details to:");
 		displayStaffList();
-		int staffIdUpdate = sc.nextInt();
 		
-		sc.nextLine();
+		
+		int staffIdUpdate = -1;
+		
+		while (staffIdUpdate==-1)
+		{
+			try {
+				staffIdUpdate = sc.nextInt();
+				sc.nextLine();
+				
+			}
+			
+			catch(InputMismatchException e) {
+				sc.nextLine();
+				System.out.println("Not an Integer. Try Again:");
+			}
+		}
+		
 		
 		//check if staff Id entered exists in the list of staff members
 		for(int i=0; i<listOfStaffMembers.size(); i++) {
@@ -148,14 +227,15 @@ public class StaffManager {
 		System.out.println("Staff details updated");
 	}
 	
-	public static void saveStaffDB() {
-		
-	}
+//	public static void saveStaffDB() {
+//		
+//	}
+//	
+//	public static void loadStaffDB() {
+//		
+//	}
 	
-	public static void loadStaffDB() {
-		
-	}
-	
+
 	
 	
 }
