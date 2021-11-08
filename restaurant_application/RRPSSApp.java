@@ -54,12 +54,17 @@ public class RRPSSApp {
 		
 		
 		//read in all databases.
+		final String staffFile = "staffDB.txt";
+		StaffManager.loadStaffDB(staffFile);//load staff database
 		final String menuFile="menuDB.txt";
 		MenuManager.loadDB(menuFile); //load menu database
 		final String tableFile="tableLayoutDB.txt";
 		TableLayoutManager.loadDB(tableFile); //Load table database
 		final String reservationFile="reservationDB.txt";
 		ReservationManager.loadDB(reservationFile); //load reservation database
+		final String orderFile = "orderDB.txt";
+		OrderManager.loadOrderDB(orderFile);
+		
 		//Customer Database is probed in classManager
 		
 		
@@ -215,19 +220,24 @@ public class RRPSSApp {
 							switch(staff_select) {
 							case 1:
 								//create staff
+								StaffManager.createStaffMemberQuery();
 								break;
 							
 							case 2:
 								//remove staff
+								StaffManager.removeStaffMemberQuery();
 								break;
 							case 3: 
 								//update staff
+								StaffManager.updateStaffMemberQuery();
 								break;
 							case 4: 
 								//display all staff
+								StaffManager.displayStaffList();
 								break;
 							case 5:
 								System.out.println("Exiting now, Staff Details have been updated!");
+								break;
 							default:
 								staff_select = 0;
 								System.out.println("Please enter a valid option.");
@@ -258,18 +268,23 @@ public class RRPSSApp {
 					switch (order_select) {
 					case 1:
 						//create order here
+						OrderManager.createOrderQuery();
 						break;
 					case 2:
 						//remove order here
+						OrderManager.deleteWholeOrderQuery();
 						break;
 					case 3:
 						//update order here
+						OrderManager.updateOrderQuery();
 						break;
 					case 4:
 						//display all orders
+						OrderManager.displayOrderList();
 						break;
 					case 5:
 						//display specific order given a table input
+						OrderManager.displayOrderBasedOnTableIdQuery();
 						break;
 					case 6: 
 						System.out.println("Exiting now, Order Details have been updated!");
@@ -368,6 +383,7 @@ public class RRPSSApp {
 				System.out.println("Have a good day fellow staff!");
 				System.out.println("Program terminating, please hold while data is being saved ..."); // Save records into database and textfile
 				TableLayoutManager.saveDB(tableFile);
+				StaffManager.saveStaffDB(staffFile);
 				MenuManager.saveToDB(menuFile);
 				ReservationManager.saveDB(reservationFile);
 				break;
