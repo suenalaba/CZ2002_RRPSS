@@ -22,6 +22,11 @@ public class Order {
 	//Staff staff  = new Staff();
 	//staffId = staff.getStaffID();
 	
+	private boolean isPaid; 
+	
+	
+
+	
 	public Order(int tableID, ArrayList<MenuItem> orderItems,int staffId)
 	{
 		this.orderID = runningCount;
@@ -31,6 +36,7 @@ public class Order {
         String d = sdf.format(c.getTime());
         this.orderTime = d;
         this.staffId = staffId;
+        this.isPaid = false;
 		runningCount++;
 	}
 	
@@ -43,6 +49,7 @@ public class Order {
 		runningCount = count;
 	}
 	
+	//get array list of menu items inside the order
 	public ArrayList<MenuItem> getOrderItems(){
 		return orderItems;
 		
@@ -82,14 +89,24 @@ public class Order {
     
     
 
-    public int getCreatedBy() {
+    //get staffId who created the order.
+    public int getStaffId() {
 		return staffId;
 	}
 	    
-	public void setCreatedBy(int staffId) {
+	public void setStaffId(int staffId) {
 	    this.staffId= staffId;
 	}
 	
+	
+	
+	public boolean getPaidStatus() {
+		return isPaid;
+	}
+	
+	public void setPaidStatus(boolean isPaid) {
+		this.isPaid = isPaid;
+	}
 
     public void viewOrder() {
         System.out.println("ID  		TableNum 	 Date");

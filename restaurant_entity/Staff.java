@@ -1,12 +1,16 @@
 package restaurant_entity;
 
+import java.util.ArrayList;
+
 public class Staff {
 
 	private int staffID;
 	private String staffName;
 	private String staffTitle;
 	
-	//default gender
+	
+	
+
 	private Gender staffGender;
 	
 	
@@ -14,6 +18,7 @@ public class Staff {
 		MALE,
 		FEMALE
 	}
+	
 	
 
 	public Staff() {
