@@ -249,9 +249,9 @@ public class PaymentManager{
 		}
     	switch(choice) {
     	case 1:
-    		System.out.println("Enter day in following format dd/MM/yyyy"); 
+    		System.out.println("Enter day in following format dd-MM-yyyy"); 
     		period = sc.nextLine();
-    		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     		try {
     			LocalDate date = LocalDate.parse(period, formatter);
     			if(LocalDate.now().isBefore(date)) {
@@ -265,7 +265,7 @@ public class PaymentManager{
     			break; 
     		} 
     		for (Payment payment : paymentinvoices) {
-    			if(payment.getpaymentDate().equals(period)){
+    			if(payment.getpaymentDate().regionMatches(3, period, 0, 7)){
     				// prints out payment date and payment ID
     				System.out.println("Date: " + payment.getpaymentDate() + "       " + "Payment ID: " + payment.getpaymentID());
     				Order order = payment.getOrder(); 
@@ -284,7 +284,7 @@ public class PaymentManager{
     		}
     		else {
     			System.out.println("Total revenue before tax: $" + totalRevenueBeforeTax);
-    			System.out.println("Total revenue after tax: $" + totalRevenueBeforeTax);
+    			System.out.println("Total revenue after tax: $" + totalRevenueAfterTax);
     		}
     		break; 
     		
@@ -324,7 +324,7 @@ public class PaymentManager{
     		}
     		else {
     			System.out.println("Total revenue before tax: $" + totalRevenueBeforeTax);
-    			System.out.println("Total revenue after tax: $" + totalRevenueBeforeTax);
+    			System.out.println("Total revenue after tax: $" + totalRevenueAfterTax);
     		}
     		break;     		
     		
