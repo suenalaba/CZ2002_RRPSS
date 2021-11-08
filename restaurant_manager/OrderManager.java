@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import restaurant_database.OrderDatabase;
+import restaurant_database.StaffDatabase;
 import restaurant_entity.Menu;
 import restaurant_entity.MenuItem;
 import restaurant_entity.Order;
@@ -549,27 +551,33 @@ public class OrderManager {
 	 }
 	
 	 
-//	 public static void displayOrderList() {
-//	 		System.out.println("List of orders (by orderID):");
-//	 		
-//	 		for(int i=0; i<orderList.size(); i++) {
-//	 			System.out.format("orderID:  %d \n", orderList.get(i).getOrderID());
-//	 		}
-//	 		
-//	 		
-//	 	}
-	    //retrieve all orders from database
-	    public void loadinDB() {
-	    	
-	    }
+
 	    
-	    //save all orders to database
-	    public void savetoDB() {
-	    	
+	 	//save orders to order database
+		public static void saveOrderDB(String saveFileName)  {
 			
-	    }
-	 
-	 
+			try{
+				OrderDatabase.fwrite(saveFileName,orderList);
+			}
+			catch(IOException e)
+			{
+				System.out.format("File %s write failed", saveFileName);
+				return;
+			}
+			
+			
+		}
+		//retrieve all orders from order database
+		public static void loadOrderDB(String loadFileName) {
+			try {
+				orderList = OrderDatabase.fread(loadFileName);
+			}
+			
+			catch(IOException e) {
+				System.out.format("File %s read failed", loadFileName);
+				return;
+			}
+		}
 	    
 	
 }
