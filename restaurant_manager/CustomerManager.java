@@ -28,7 +28,7 @@ public class CustomerManager {
 	 */
 
 	
-	public static void createGuest() throws IOException {
+	public static void createCustomer() throws IOException {
 		String Name = "";
 		String Gender = "";
 		String phone_number = "";
