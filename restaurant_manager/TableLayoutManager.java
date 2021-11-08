@@ -200,7 +200,7 @@ public class TableLayoutManager {
 		return emptyTables; 
 	}
 	
-	public static ArrayList<Table> getEmptyTables(int hour){//overloading for specific time slot
+	public static ArrayList<Table> getEmptyTables  (int hour){//overloading for specific time slot
 		int hourBlock=hourlyTimeToIndex(hour);
 		ArrayList<Table> emptyTables = new ArrayList<>();
 		for (int i=0;i<mainLayout.getTableLayout().size();i++) {
@@ -227,21 +227,6 @@ public class TableLayoutManager {
 			}
 		}
 		return tableID; //defaults to -1 if no empty table
-	}
-	
-	public static void freeTableStatus(int tableID) { //update current table to empty
-		LocalDateTime timeHolder=LocalDateTime.now();
-		String time = timeHolder.toString().substring(11,13);
-		int hour=Integer.parseInt(time);
-		hour=TableLayoutManager.hourlyTimeToIndex(hour);
-		int updateIndex=findTableIndex(tableID);
-		mainLayout.getTableLayout().get(updateIndex).setTableStatus(status.EMPTY);
-		if (hour==-1) {
-			return;
-		}
-		else {
-			mainLayout.getTableLayout().get(updateIndex).getHourBlock()[hour]=status.EMPTY;
-		}
 	}
 	
 	public static status getTableStatusNow(int tableID) {

@@ -4,6 +4,9 @@ import restaurant_entity.Menu;
 import restaurant_entity.MenuItem;
 import restaurant_entity.PromotionPackage;
 import java.util.Scanner;
+
+import restaurant_database.MenuDatabase;
+
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.io.File;
