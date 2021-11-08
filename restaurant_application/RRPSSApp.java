@@ -75,6 +75,7 @@ public class RRPSSApp {
 		//get instance of tablelayout manager
 		
 		do {
+			ReservationManager.autoUpdate();
 
 			System.out.println("Welcome to Zhang Jie and Li Fang's Sichuan Delights");
 
