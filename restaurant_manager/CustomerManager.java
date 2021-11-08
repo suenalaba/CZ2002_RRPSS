@@ -4,6 +4,8 @@ package restaurant_manager;
 import java.util.Scanner;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.Random;
 import java.util.StringTokenizer;
 import java.io.File;
 import java.io.FileReader;
@@ -28,14 +30,15 @@ public class CustomerManager {
 	 */
 
 	
-	public static void createCustomer() throws IOException {
+	public static void createCustomer(boolean multiEntry,int walkIn) throws IOException { //Jacques-when checking in or reserving. Only one customer entry. set multiEntry according to use case.//walkIn 1=true walkIn !1=normal;
 		String Name = "";
-		String Gender = "";
-		String phone_number = "";
-		String rest_membership = ""; //default is no restaurant membership
-		String partner_membership = ""; //default is no partner membership
+		int Gender = 0; //Jacques - couldnt match strings for some reason. so changed the Gender data type. Can consider integer parsing but messy
+		String phone_number = ""; //Jacques - Walk in will have option to give this detail or not
+		int rest_membership = 0; //default is no restaurant membership //Jacques - String match failing. Changed to int. 
+		int partner_membership = 0; //default is no partner membership //Jacques - String match failing. Changed to int. 
 
-		String createcustomer = "";
+		int createcustomer = 0;//Jacques - String match failing. Changed to int. //default will exit do-while after 1 pass.
+		
 
 
 		// To be used for data validation
@@ -45,6 +48,7 @@ public class CustomerManager {
 		
 		// input customer details 
 		//all the details will go to customer object
+		
 		do {
 			Customer customer = new Customer();
 
@@ -52,10 +56,12 @@ public class CustomerManager {
 			System.out.println(" Enter Customer Details ");
 			System.out.println("==================================================");
 			Scanner sc = new Scanner(System.in);
+			
+			
 			// input customer name
 			do {
 				
-				System.out.print("\nEnter Customer Name: ");
+				System.out.print("\nEnter Customer Name: "); 
 				Name = sc.nextLine();
 				
 				if(Name.matches(alpha) && !Name.equals("")) {
@@ -73,23 +79,46 @@ public class CustomerManager {
 				System.out.println("\nPlease choose Gender");
 				System.out.println("(1) Female");
 				System.out.println("(2) Male ");
-				Gender = sc.nextLine();
-				if (Gender == "1") {
+				Gender = sc.nextInt();
+				sc.nextLine();
+				if (Gender == 1) { 
 					customer.setcustomerGender("Female");
 					break;
 				}
-				else if(Gender == "2") {
+				else if(Gender == 2) {
 					customer.setcustomerGender("Male");
 					break;
 				}
 				else {
 					System.out.println("Invalid Gender!");
 				}
-			} while (Gender != "1" || Gender != "2");
+			} while (Gender != 1 || Gender != 2);
 			
 			// Guest PhoneNumber
 			do {
-				System.out.print("Enter customer's Contact Number: ");
+				if (walkIn==1) {
+					System.out.println("Does customer want to provide Contact Number?");
+					System.out.println("(1) Yes");
+					System.out.println("(2) No ");
+					int anonChoice=0;
+					while (anonChoice==0) {
+						try {
+							anonChoice=sc.nextInt();
+							sc.nextLine();
+							if(anonChoice!=1&&anonChoice!=2) {
+								anonChoice=0;
+								System.out.println("Invalid Input. Try Again: ");
+							}
+						}catch(InputMismatchException e) {
+							System.out.println("Invalid Input. Try Again: ");
+						}
+					}
+					if (anonChoice==2) { //defaults and breaks out of providence of contact question //if anonymous customer in data base and phone number is anon, reservationManager will update with new one
+						customer.setphoneNumber("XXXXXXXX");
+						break;
+					}
+				}
+				System.out.print("Enter customer's Contact Number (8 Digits): ");
 				phone_number = sc.nextLine();
 				if (phone_number.matches(phonenumber) && !phone_number.equals("")) {
 					customer.setphoneNumber(phone_number);
@@ -105,45 +134,65 @@ public class CustomerManager {
 				System.out.println("\nDoes customer have restaurant membership?");
 				System.out.println("(1) Yes");
 				System.out.println("(2) No ");
-				rest_membership = sc.nextLine();
-				if (rest_membership == "1") {
+				rest_membership = sc.nextInt();
+				if (rest_membership == 1) {
 					customer.setrestaurantMembership(true);
 					break;
 				}
-				else if(rest_membership == "2") {
+				else if(rest_membership == 2) {
 					customer.setrestaurantMembership(false);
 					break;
 				}
 				else {
 					System.out.println("Invalid entry, depending on membership status enter 1 or 2");
 				}
-			} while (rest_membership != "1" || rest_membership != "2");
+			} while (rest_membership != 1 || rest_membership != 2);
 
 			// input whether customer has partner membership
 			do {
 				System.out.println("\nDoes customer have partner membership?");
 				System.out.println("(1) Yes");
 				System.out.println("(2) No ");
-				partner_membership = sc.nextLine();
-				if (partner_membership == "1") {
+				partner_membership = sc.nextInt();
+				if (partner_membership == 1) {
 					customer.setpartnerMembership(true);
 					break;
 				}
-				else if(partner_membership == "2") {
+				else if(partner_membership == 2) {
 					customer.setpartnerMembership(false);
 					break;
 				}
 				else {
 					System.out.println("Invalid entry, depending on membership status enter 1 or 2");
 				}
-			} while (partner_membership != "1" || partner_membership != "2");
+			} while (partner_membership != 1 || partner_membership != 2);
 			
+			ArrayList<Customer> customerinfo=new ArrayList<Customer>(); //Jacques-fread fails without text file. Moved ArrayList Declaration
+			CustomerDatabase customerDatabase = new CustomerDatabase(); //Instantiate database
 			
-			CustomerDatabase customerDatabase = new CustomerDatabase();
-			ArrayList customerinfo = customerDatabase.fread(textfilename); //read form database 
+			try {
+				customerinfo = customerDatabase.fread(textfilename); //read from database 
+			}catch(IOException e) {
+				System.out.println("First instance of customer recorded.");
+			}
+			
+			//Jacques-to generate randomized 5 digit Customer ID 
+			Random rnd = new Random();
+			int n;
+			ArrayList<Integer> listOfCustomerId=new ArrayList<Integer>(); //for duplicate check loop
+			for (Customer o:customerinfo) { //Jacques-Integer comparison is more reliable than string comparison imo
+				listOfCustomerId.add(Integer.parseInt(o.getcustomerID()));
+			}
+			do {
+				n= 10000 + rnd.nextInt(90000); //rnd.nextInt(90000) at most returns 89999
+			}while(listOfCustomerId.contains(n));
+			customer.setcustomerID(String.valueOf(n));//CustomerId set
+			
+			System.out.println("CustomerID of new customer is: "+n);
+			
 			customerinfo.add(customer);
 
-			try {
+			try { //Jacques-CustomerID needs to be created before this
 				// Write Customer records to file
 				customerDatabase.fwrite(textfilename, customerinfo);
 
@@ -152,12 +201,13 @@ public class CustomerManager {
 			} catch (IOException e) {
 				System.out.println("IOException > " + e.getMessage());
 			}
-			System.out.println("Do you want to add another customer?");
-			System.out.println("(1) Yes");
-			System.out.println("(2) No");
-			createcustomer = sc.nextLine(); 
-			sc.close();
-		} while (createcustomer == "1"); 
+			if (multiEntry==true) { //defaults to 0 and exits. 
+				System.out.println("Do you want to add another customer?");
+				System.out.println("(1) Yes");
+				System.out.println("(2) No");
+				createcustomer = sc.nextInt();
+			} //Jacques- removed sc.close, if this method is closed. subsequent Scanner objects of System.in will not work
+		} while (createcustomer == 1); 
 
 	}
 
@@ -521,8 +571,8 @@ public class CustomerManager {
 	 * 
 	 * @return ArrayList of all customers from the database
 	 */
-	public static ArrayList retrieveallcustomerdetailsfromdatabase() {
-		ArrayList customerlist = null;
+	public static ArrayList<Customer> retrieveallcustomerdetailsfromdatabase() { //Jacques - specified data type of ArrayList to <Customer>
+		ArrayList<Customer> customerlist = null;
 		try {
 			// read file containing Guest records
 			CustomerDatabase customerdatabase = new CustomerDatabase();
