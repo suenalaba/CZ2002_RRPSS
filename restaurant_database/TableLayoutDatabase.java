@@ -37,7 +37,7 @@ public class TableLayoutDatabase {
 	
 	public static void fwrite(String textfilename, ArrayList<Table> mainLayout) throws IOException {
 
-		List tablelist = new ArrayList();// array list to store customer data
+		List tablelist = new ArrayList();// array list to store table data
 		for (int i = 0; i < mainLayout.size(); i++) {
 			Table table = (Table) mainLayout.get(i);
 			StringBuilder tablestring = new StringBuilder();
