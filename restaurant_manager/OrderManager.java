@@ -20,45 +20,6 @@ public class OrderManager {
 	private static ArrayList<Order> orderList = new ArrayList<Order>();
 	
 
-	//return a list of all orders that haven't been paid
-	public static ArrayList<Order> getUnpaidOrders() {
-
-		
-		ArrayList<Order> unpaidOrderList  = new ArrayList<Order>();
-		
-		for(int i=0; i<orderList.size(); i++)
-		{
-			if(orderList.get(i).getPaidStatus()==false)
-			{
-				unpaidOrderList.add(orderList.get(i));
-			}
-		}
-		
-		return unpaidOrderList;
-	}
-	
-	
-	
-	
-	public static int orderIdToIndex(int orderId) {
-		
-		
-		for(int i=0; i<orderList.size(); i++)
-		{
-			if(orderList.get(i).getOrderID() == orderId)
-			{
-				return i;
-			}
-		}
-		
-		return -1;
-		
-	}
-	
-	
-	
-	
-	
 	public OrderManager() {
 		//empty array list to store orders
 		orderList = new ArrayList<Order>();
@@ -550,6 +511,40 @@ public class OrderManager {
 		 
 	 }
 	
+		//return a list of all orders that haven't been paid
+		public static ArrayList<Order> getUnpaidOrders() {
+
+			
+			ArrayList<Order> unpaidOrderList  = new ArrayList<Order>();
+			
+			for(int i=0; i<orderList.size(); i++)
+			{
+				if(orderList.get(i).getPaidStatus()==false)
+				{
+					unpaidOrderList.add(orderList.get(i));
+				}
+			}
+			
+			return unpaidOrderList;
+		}
+		
+		
+		
+		
+		public static int orderIdToIndex(int orderId) {
+			
+			
+			for(int i=0; i<orderList.size(); i++)
+			{
+				if(orderList.get(i).getOrderID() == orderId)
+				{
+					return i;
+				}
+			}
+			
+			return -1;
+			
+		}
 	 
 
 	    
