@@ -153,19 +153,35 @@ public class StaffDatabase{
 	
 	
 	
-	public static ArrayList<Staff> fread(String saveFileName){
-		try {
-			File staffDB = new File(saveFileName);
+	public static ArrayList<Staff> fread(String saveFileName) throws IOException{
+		ArrayList fileasstring = (ArrayList) FileRead.fread(saveFileName);
+		
+		//arraylist to store staff
+		
+		ArrayList<Staff> listOfStaffMembers = new ArrayList<>();
+		
+		for(int i=0; i<fileasstring.size(); i++)
+		{
+			String data = (String) fileasstring.get(i);
+			
+			// get individual 'fields' of the string separated by the delimiter ';'
+			StringTokenizer str_tokenizer = new StringTokenizer(data, DELIMITER);
+			
+			int staffId = Integer.parseInt(str_tokenizer.nextToken().trim());															
+			String staffName = str_tokenizer.nextToken().trim();
+			String staffTitle = str_tokenizer.nextToken().trim();
+			
+			//get an enum type
+			Staff.Gender staffGender = Staff.Gender.valueOf(str_tokenizer.nextToken().trim());
+			
+			
+			Staff staff = new Staff(staffId, staffName, staffTitle, staffGender);
+			listOfStaffMembers.add(staff);
 			
 			
 		}
+		
+		return listOfStaffMembers;
 	}
-	
-	
-	
-	
-	
-	
-	
 	
 }
