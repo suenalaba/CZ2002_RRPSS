@@ -24,9 +24,9 @@ public class ReservationManager {
 		//2. if not> create customer and retrieve customerID
 		//3. if not> anonymous> assume not a case. Otherwise, input anonymous name in customer creation and ask Joshua for ability to decline providing phone number.
 		Scanner sc = new Scanner(System.in);
-		System.out.println("Walk-in customer?");
-		System.out.println("(1) Yes");
-		System.out.println("(2) No ");
+		System.out.println("Walk-in or making reservation??");
+		System.out.println("(1) Walk-in/Complete Reservation");
+		System.out.println("(2) Making new reservation ");
 		int walkIn=0;
 		while (walkIn==0) {
 			try {
@@ -39,6 +39,11 @@ public class ReservationManager {
 			}catch(InputMismatchException e) {
 				System.out.println("Invalid Input. Try Again: ");
 			}
+		}
+		if (walkIn==1&&(Integer.parseInt(LocalDateTime.now().toString().substring(11, 13))>21||Integer.parseInt(LocalDateTime.now().toString().substring(11, 13))<9)){
+			System.out.println("Opening hours are 9am to 10pm daily. Cannot accept customers now.");
+			System.out.println("Returning to main menu.");
+			return;
 		}
 		System.out.println("Registered with us?(Has CustomerID)\n1.Yes\n2.No");
 		int customerCheck=-1;
@@ -91,6 +96,24 @@ public class ReservationManager {
 				}
 			}
 		}
+		if(customerCheck==1&&walkIn==1) {
+			ArrayList<Reservation> allReservationsToday=getListOfReservationsToday();
+			ArrayList<Reservation> unfinishedReservationsToday=new ArrayList<Reservation>();
+			for (int i=0;i<allReservationsToday.size();i++) {
+				if (allReservationsToday.get(i).getIsFinished()==false 
+						&& allReservationsToday.get(i).getReservationStartTime().toString().substring(11,13).equals(LocalDateTime.now().toString().substring(11,13))
+						&& (allReservationsToday.get(i).getReservationStartTime().toString().substring(11,13).equals(LocalDateTime.now().minusHours(1).toString().substring(11,13))
+								&& Integer.parseInt(LocalDateTime.now().toString().substring(14,16))>=45)) { //consider reservation even if customer shows up 15 minutes in advance
+					unfinishedReservationsToday.add(allReservationsToday.get(i));
+				}
+			}
+			for (int i=0;i<unfinishedReservationsToday.size();i++) {
+				if (unfinishedReservationsToday.get(i).getCustomerID()==customerID) {
+					completeReservation(unfinishedReservationsToday.get(i).getReservationID());
+					return;
+				}
+			}
+		}
 		
 		Customer targetCustomer=CustomerManager.retrieveCustomerbyIDinput(customerID);
 		String phonenumber = "\\d{8}";
@@ -130,6 +153,12 @@ public class ReservationManager {
 				System.out.println("Invalid input. Try again:");
 			} 
 		}
+		//walk in branch
+		if (walkIn==1) {
+			createWalkIn(pax,customerID);
+			return;
+		}
+		//create reservation branch
 		System.out.println("\n Enter start date and time (in the format: yyyy-MM-dd HH):");
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH");
 		String date;
@@ -162,7 +191,6 @@ public class ReservationManager {
 		
 		int tableID;
 		if (!compareDate.equals(currentDate) ) { //runs if given date is future date.
-			System.out.println("Future");
 			for(Reservation s : getListOfUnfinishedReservations()) {
 				if(compareDate.equals(s.getReservationStartTime().toString().substring(0,10)) ) {
 					if(compareHr.equals(s.getReservationStartTime().toString().substring(11,13))) {
@@ -204,7 +232,6 @@ public class ReservationManager {
 		Reservation newReservationObject = new Reservation();
 		listOfReservations.add(newReservationObject); //add new reservation empty object into arraylist
 		System.out.println("Creating reservation...");
-		
 		//set all the user inputs into the reservation
 		newReservationObject.setCustomerID(customerID);
 		newReservationObject.setPax(pax);
@@ -212,10 +239,70 @@ public class ReservationManager {
 		newReservationObject.setTableID(tableID);
 		LocalDateTime endDateTime = startDateTime.plusHours(1);
 		newReservationObject.setReservationEndTime(endDateTime);
-		
 		System.out.println("New reservation created! Your reservation ID is " + newReservationObject.getReservationID());
-		
-		saveDB("ReservationDB.txt");
+		saveDB("ReservationDB.txt");	
+	}
+	
+	private static void createWalkIn(int pax,String customerID) {//gives table with buffer of 1 hour for reservations ahead
+		ArrayList<Reservation> allReservationsToday=getListOfReservationsToday();
+		ArrayList<Reservation> unfinishedReservationsToday=new ArrayList<Reservation>();
+		ArrayList<Reservation> protectedReservationsToday=new ArrayList<Reservation>();
+		ArrayList<Integer> possibleTables=TableLayoutManager.getMinTableList(pax);
+		int tableId;
+		LocalDateTime nowDate=LocalDateTime.now();
+		for (int i=0;i<allReservationsToday.size();i++) {
+			if(allReservationsToday.get(i).getIsFinished()==false) {
+				unfinishedReservationsToday.add(allReservationsToday.get(i));
+			}
+		}
+		for (int i=0;i<unfinishedReservationsToday.size();i++) {
+			if (unfinishedReservationsToday.get(i).getReservationStartTime().minusMinutes(60).isBefore(nowDate)) {
+				protectedReservationsToday.add(unfinishedReservationsToday.get(i));
+			}
+		}
+		for (int i=0;i<protectedReservationsToday.size();i++) {
+			if (possibleTables.contains(protectedReservationsToday.get(i).getTableID())) {
+				possibleTables.remove(protectedReservationsToday.get(i).getTableID());
+			}
+		}
+		if (possibleTables.size()>0) {
+			tableId=possibleTables.get(0);
+		}
+		else {
+			System.out.println("No available table at the moment");
+			return;
+		}
+		listOfReservations.add(new Reservation(tableId,pax,customerID,LocalDateTime.now(),LocalDateTime.now().plusHours(1),false));
+		TableLayoutManager.updateTable(tableId, Integer.parseInt(LocalDateTime.now().toString().substring(11,13)), status.OCCUPIED);
+		if (Integer.parseInt(LocalDateTime.now().toString().substring(11,13))!=21) {
+			TableLayoutManager.updateTable(tableId, Integer.parseInt(LocalDateTime.now().plusHours(1).toString().substring(11,13)), status.OCCUPIED);
+		}
+		System.out.println("Walk-in fulfilled.\n"
+				+ "TableID:"+tableId+"\n"
+				+ "StartTime: "+LocalDateTime.now().toString().substring(11,16)+ "\n"
+				+ "EndTime: " +LocalDateTime.now().plusHours(1).toString().substring(11,16));
+	}
+	
+	private static void completeReservation(int reservationID) {
+		ArrayList<Reservation> allReservationsToday=getListOfReservationsToday();
+		ArrayList<Reservation> unfinishedReservationsToday=new ArrayList<Reservation>();
+		ArrayList<Reservation> protectedReservationsToday=new ArrayList<Reservation>();
+		Reservation toComplete = null;
+		for (int i=0;i<allReservationsToday.size();i++) {
+			if(allReservationsToday.get(i).getIsFinished()==false) {
+				unfinishedReservationsToday.add(allReservationsToday.get(i));
+			}
+		}
+		for (int i=0;i<unfinishedReservationsToday.size();i++) {
+			if (unfinishedReservationsToday.get(i).getReservationID()==reservationID){
+				toComplete=unfinishedReservationsToday.get(i);
+			}
+		}
+		TableLayoutManager.updateTable(toComplete.getTableID(), Integer.parseInt(toComplete.getReservationStartTime().toString().substring(11,13)), status.OCCUPIED);
+		System.out.println("Reservation fulfilled.\n"
+				+ "TableID:"+toComplete.getTableID()+"\n"
+				+ "StartTime: "+toComplete.getReservationStartTime().toString().substring(11,16)+ "\n"
+				+ "EndTime: " +toComplete.getReservationStartTime().plusHours(1).toString().substring(11,16));
 		
 	}
 	
@@ -258,8 +345,8 @@ public class ReservationManager {
 		System.out.println("Whats your Reservation ID?");		
 		int reservationID=-1;
 		ArrayList<Integer> unfinishedReservationIds=new ArrayList<Integer>();
-		for (Reservation o:getListOfUnfinishedReservations()) {
-			unfinishedReservationIds.add(o.getReservationID());
+		for (int i=0;i<getListOfUnfinishedReservations().size();i++) {
+			unfinishedReservationIds.add(getListOfUnfinishedReservations().get(i).getReservationID());
 		}
 		try {
 			reservationID=sc.nextInt();
@@ -396,6 +483,36 @@ public class ReservationManager {
 			}
 		}
 	
+	public static void autoUpdate(){//updates periodically 15 minutes grace period to appear
+		LocalDateTime nowDateTime=LocalDateTime.now();
+		ArrayList<Reservation> allReservations=getListOfReservations();
+		ArrayList<Reservation> allUnfinished=new ArrayList<Reservation>();
+		for (int i=0;i<allReservations.size();i++) {
+			if (allReservations.get(i).getIsFinished()==false) {
+				allUnfinished.add(allReservations.get(i));
+			}
+		}
+		for (int i=0;i<allUnfinished.size();i++) {
+			if (LocalDateTime.now().minusMinutes(15).isAfter(allUnfinished.get(i).getReservationStartTime())) {
+				if (TableLayoutManager.getTableStatusNow(allUnfinished.get(i).getTableID())==status.RESERVED && allUnfinished.get(i).getReservationStartTime().getDayOfYear()==LocalDateTime.now().getDayOfYear()
+						&& allUnfinished.get(i).getReservationStartTime().getYear()==LocalDateTime.now().getYear()) {
+					TableLayoutManager.updateTable(allUnfinished.get(i).getTableID(), status.EMPTY);
+					allUnfinished.get(i).setIsFinished(true);
+				}
+				else if(TableLayoutManager.getTableStatusNow(allUnfinished.get(i).getTableID())==status.OCCUPIED && allUnfinished.get(i).getReservationStartTime().getDayOfYear()==LocalDateTime.now().getDayOfYear()
+						&& allUnfinished.get(i).getReservationStartTime().getYear()==LocalDateTime.now().getYear()) {
+					continue;
+				}
+				else {
+					allUnfinished.get(i).setIsFinished(true);
+				}
+			}
+		}
+	}
+	
+	
+	
+	//check methods
 	public static void checkReservationQuery(){ //Queries for correct reservation ID then passes to checkReservation
 		System.out.println("\n Enter your reservationID:");
 		int reservationIndex;
@@ -435,6 +552,7 @@ public class ReservationManager {
 		System.out.println("Standing Reservation(s):");
 		System.out.println("=============================================================");
 		ArrayList<Reservation> standingReservationList=getListOfUnfinishedReservations();
+		if (standingReservationList.size()>0) {
 		for (Reservation o:standingReservationList) {
 			System.out.println("Reservation ID:"+o.getReservationID());//reservation ID
 			System.out.println("Customer ID:"+o.getCustomerID());
@@ -442,6 +560,7 @@ public class ReservationManager {
 			System.out.println("Pax:"+o.getPax());
 			System.out.println("Reservation timeSlot:" + o.getReservationStartTime().toString().substring(0,10)+"|"+o.getReservationStartTime().toString().substring(11,13)+":00");
 			System.out.println("=============================================================");
+		}
 		}
 	}
 	
@@ -493,7 +612,7 @@ public class ReservationManager {
 			return t;
 			}
 		else {
-			return null;
+			return t;
 		}
 	}
 	
@@ -502,9 +621,11 @@ public class ReservationManager {
 		LocalDateTime timeNow=LocalDateTime.now();
 		String hourBlock=timeNow.toString().substring(11,13);
 		String dateBlock=timeNow.toString().substring(0,10);
-		for (Reservation o:unfinished) {
-			if (tableID==o.getTableID()&&o.getReservationStartTime().toString().substring(11,13).equals(hourBlock)&&o.getReservationStartTime().toString().substring(11,13).equals(dateBlock)) {
-				return o;
+		if (unfinished.size()>0) {
+			for (Reservation o:unfinished) {
+				if (tableID==o.getTableID()&&o.getReservationStartTime().toString().substring(11,13).equals(hourBlock)&&o.getReservationStartTime().toString().substring(11,13).equals(dateBlock)) {
+					return o;
+				}
 			}
 		}
 		return null; //no reservation found for tableID now.
@@ -534,21 +655,21 @@ public class ReservationManager {
 	public static void loadDB(String fileName) { //passes file name to read to ReservationDataBase. Check table Id validility. Reserves table for the day. Replaces listOfReservations.
 		ArrayList<Reservation> databaseReservations=ReservationDatabase.fread(fileName); //loaded reservations
 		ArrayList<Integer> allTableIds=new ArrayList<Integer>(); //loaded reservations
-		for (Table o:TableLayoutManager.getAllTables()) {
-			allTableIds.add(o.getTableID());
+		for (int i=0;i<TableLayoutManager.getAllTables().size();i++) {
+			allTableIds.add(TableLayoutManager.getAllTables().get(i).getTableID());
 		}
-		for (Reservation o:databaseReservations) { //check for corresponding tableIds in reservatios loaded. Indicates Table was not loaded otherwise.
-			if (!allTableIds.contains(o.getTableID())) {
+		for (int i=0;i<databaseReservations.size();i++) { //check for corresponding tableIds in reservatios loaded. Indicates Table was not loaded otherwise.
+			if (!allTableIds.contains(databaseReservations.get(i).getTableID())) {
 				System.out.println("Error. Not all orders have a corresponding TableID.\n Please load Table DataBase before loading Reservations. Loading aborted.");
 				return;
 			}
 		}
 		String nowDate=LocalDateTime.now().toString().substring(0, 10);
 		String dataHour;
-		for (Reservation o:databaseReservations) { //reserve tables for the day
-			if (o.getReservationStartTime().toString().substring(0,10).equals(nowDate)) {
-				dataHour=o.getReservationStartTime().toString().substring(11, 13);
-				TableLayoutManager.updateTable(o.getTableID(), Integer.parseInt(dataHour), status.RESERVED);
+		for (int i=0;i<databaseReservations.size();i++) { //reserve tables for the day
+			if (databaseReservations.get(i).getReservationStartTime().toString().substring(0,10).equals(nowDate)) {
+				dataHour=databaseReservations.get(i).getReservationStartTime().toString().substring(11, 13);
+				TableLayoutManager.updateTable(databaseReservations.get(i).getTableID(), Integer.parseInt(dataHour), status.RESERVED);
 			}
 		}
 		listOfReservations=ReservationDatabase.fread(fileName);

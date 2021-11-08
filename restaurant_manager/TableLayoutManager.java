@@ -124,21 +124,21 @@ public class TableLayoutManager {
 	
 	public static void updateTable(int tableID, int hourlyTime,status newStatus) { //future status
 		int updateIndex=findTableIndex(tableID);
-		int Hour=hourlyTimeToIndex(hourlyTime);
-		mainLayout.getTableLayout().get(updateIndex).getHourBlock()[Hour]=newStatus;
+		int hourIndex=hourlyTimeToIndex(hourlyTime);
+		mainLayout.getTableLayout().get(updateIndex).getHourBlock()[hourIndex]=newStatus;
 	}
 	public static void updateTable(int tableID, status newStatus) { //current status
 		LocalDateTime timeHolder=LocalDateTime.now();
 		String time = timeHolder.toString().substring(11,13);
-		int hour=Integer.parseInt(time);
-		hour=TableLayoutManager.hourlyTimeToIndex(hour);
+		int hourIndex=Integer.parseInt(time);
+		hourIndex=TableLayoutManager.hourlyTimeToIndex(hourIndex);
 		int updateIndex=findTableIndex(tableID);
 		mainLayout.getTableLayout().get(updateIndex).setTableStatus(newStatus);
-		if (hour==-1) {
+		if (hourIndex==-1) {
 			return;
 		}
 		else {
-			mainLayout.getTableLayout().get(updateIndex).getHourBlock()[hour]=newStatus;
+			mainLayout.getTableLayout().get(updateIndex).getHourBlock()[hourIndex]=newStatus;
 		}
 	}
 	
