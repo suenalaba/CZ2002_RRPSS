@@ -1,3 +1,4 @@
+
 package restaurant_entity;
 
 import java.util.ArrayList;
@@ -40,9 +41,9 @@ public class TableLayout {
 	}
 	
 	public void printTableLayout() { //prints table layout and blocks of time
-		System.out.println("Table/Time|09|10|11|12|13|14|15|16|17|18|19|20|21|");
+		System.out.println("Table no. (Px)/Time|09|10|11|12|13|14|15|16|17|18|19|20|21|");
 		for (int i=0;i<arrayOfTables.size();i++) {
-			System.out.format("Table %02d  |",arrayOfTables.get(i).getTableID());
+			System.out.format("Table %03d (%02d)     |",arrayOfTables.get(i).getTableID(),arrayOfTables.get(i).getTableCapacity());
 			for (int k=0;k<arrayOfTables.get(i).getHourBlock().length;k++) {
 				if (arrayOfTables.get(i).getHourBlock()[k]==status.RESERVED) {
 					System.out.print("RS|");
