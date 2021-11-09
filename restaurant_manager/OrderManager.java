@@ -570,7 +570,17 @@ public class OrderManager {
 		     
 		   }
 
-
+		//set paid status of order to paid given orderId from payment
+		public static void updatePaidStatus(int orderId) {
+			
+			for(int i=0; i<orderList.size(); i++)
+			{
+				if(orderList.get(i).getOrderID() == orderId)
+				{
+					orderList.get(i).setPaidStatus(true);
+				}
+			}
+		}
 
 	    
 	 	//save orders to order database
