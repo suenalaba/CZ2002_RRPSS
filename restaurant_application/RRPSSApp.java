@@ -88,7 +88,7 @@ public class RRPSSApp {
 			System.out.println("==================================================");//manage order -> create remove update print
 			System.out.println("(1) Manage Restaurant\t\t(2) Manage Order"); //manage restaurant -> can edit customer, table, menu
 			System.out.println("(3) Manage Reservations or Walk in Customer\t\t(4) Manage Payment");
-			System.out.println("(5) Generate sales report\t(6) Save and exit");
+			System.out.println("(5) Generate sales report\t(6) Save and exit application");
 			System.out.println("\nEnter your choice:");
 			rrpss_select = sc.nextInt();
 			sc.nextLine();
@@ -102,7 +102,7 @@ public class RRPSSApp {
 					System.out.println("==================================================");
 					System.out.println("(1) Edit Menu Items\t(2) Edit Customer Details");
 					System.out.println("(3) Edit Table Details\t(4) Edit Staff Details"); 
-					System.out.println("(5) Sales Report\t(6) Saves Data and exits system.");
+					System.out.println("(5) Saves Data and return to main menu");
 					System.out.println("Enter your choice:");
 					restaurant_select = sc.nextInt();
 					switch (restaurant_select) {
