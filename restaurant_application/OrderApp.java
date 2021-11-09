@@ -21,7 +21,9 @@ public class OrderApp {
 		 }
 		 if (TableLayoutManager.getOccupiedTables().size()==0) {
 			 System.out.println("No Tables are occupied at the moment. Returning to main menu.");
+			 return;
 		 }
+		 
 		 TableLayoutManager.getInstance().printTableLayout();
 		 System.out.println("Enter table ID: ");
 		 int tableId = -1;
@@ -40,7 +42,7 @@ public class OrderApp {
 	              tableId=sc.nextInt();
 	              sc.nextLine();
 	              
-	              if(occupiedTableId.contains(tableId))
+	              if(occupiedTableId.contains(tableId) && OrderManager.getOrderByTableId(tableId)==null)
 	              {
 	            	  break;
 	              }

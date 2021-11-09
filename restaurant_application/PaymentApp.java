@@ -55,6 +55,10 @@ public class PaymentApp {
 			}
 		}
 		Order order = OrderManager.getOrderByTableId(tableId);
+		if (TableLayoutManager.getTableStatusNow(tableId)!=status.EMPTY) {
+			System.out.println("Table has no order attached to it. Returning to main menu.");
+			return;
+		}
 		String customerName = ReservationManager.getUnfinishedReservationOfTableIDNow(tableId).getCustomerID();
 		Customer customer = CustomerManager.retrieveCustomerbyIDinput(customerName);
 		double subtotal = PaymentManager.calculateSubtotal(order.getOrderItems());

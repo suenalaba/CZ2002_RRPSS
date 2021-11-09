@@ -29,7 +29,7 @@ public class MenuApp {
 				}
 				catch(InputMismatchException e) {
 					sc.nextLine();
-					System.out.println("Not an Integer. Try Again:");
+					System.out.println("Not a valid option. Try Again:");
 				}
 			}
 		}
@@ -53,7 +53,7 @@ public class MenuApp {
 				}
 				catch(InputMismatchException e) {
 					sc.nextLine();
-					System.out.println("Not an Integer. Try Again:");
+					System.out.println("Not a valid option. Try Again:");
 				}
 			}
 			switch (typeChoice){
@@ -86,7 +86,7 @@ public class MenuApp {
 			}
 			catch(InputMismatchException e) {
 				sc.nextLine();
-				System.out.println("Not a Double. Try Again:");
+				System.out.println("Not a number. Try Again:");
 			}
 		}
 		if (pcheck==1) {
@@ -104,7 +104,7 @@ public class MenuApp {
 				}
 				catch(InputMismatchException e) {
 					sc.nextLine();
-					System.out.println("Not an Integer. Try Again:");
+					System.out.println("Not a whole number. Try Again:");
 				}
 			}
 			promoPackItems=new ArrayList<MenuItem>();  //ArrayList of Menu item to hold promo package items before creation of PromotioPackage object in mainMenu arraylist
@@ -126,7 +126,7 @@ public class MenuApp {
 					}
 					catch(InputMismatchException e) {
 						sc.nextLine();
-						System.out.println("Not an Integer. Try Again:");
+						System.out.println("Not a whole number. Try Again:");
 					}
 				}
 				promoPackItems.add(alaCarteMenu.getListOfMenuItems().get(pChoice));
@@ -161,7 +161,7 @@ public class MenuApp {
 			}
 			catch(InputMismatchException e) {
 				sc.nextLine();
-				System.out.println("Not an Integer. Try Again:");
+				System.out.println("Not a whole number. Try Again:");
 			}
 		}
 		for (int i=0;i<MenuManager.getMainMenu().getListOfMenuItems().size();i++) {
@@ -200,6 +200,7 @@ public class MenuApp {
 			}
 		}
 		MenuManager.removeItem(removalIndex);
+		System.out.println("Item removed and any promotion package containing it.");
 		for (int i=0;i<cRTrack;i++) {
 			MenuManager.removeItem(cascadeRemove[i]);
 		}
@@ -226,7 +227,7 @@ public class MenuApp {
 			}
 			catch(InputMismatchException e) {
 				sc.nextLine();
-				System.out.println("Not an Integer. Try Again:");
+				System.out.println("Not a whole number. Try Again:");
 			}
 		}
 		if (MenuManager.getMainMenu().getListOfMenuItems().get(updateIndex).getMenuItemType()!=type.PROMOTION) {
@@ -251,7 +252,7 @@ public class MenuApp {
 					}
 					catch(InputMismatchException e) {
 						sc.nextLine();
-						System.out.println("Not an Integer. Try Again:");
+						System.out.println("Not a valid choice. Try Again:");
 					}
 				}
 				switch (choice) {
@@ -272,7 +273,7 @@ public class MenuApp {
 						}
 						catch(InputMismatchException e) {
 							sc.nextLine();
-							System.out.println("Not an Integer. Try Again:");
+							System.out.println("Not a valid choice. Try Again:");
 						}
 					}
 					switch (typeChoice){
@@ -300,7 +301,7 @@ public class MenuApp {
 						}
 						catch(InputMismatchException e) {
 							sc.nextLine();
-							System.out.println("Not a Double. Try Again:");
+							System.out.println("Not a number. Try Again:");
 						}
 					}
 					break;
@@ -338,7 +339,7 @@ public class MenuApp {
 					}
 					catch(InputMismatchException e) {
 						sc.nextLine();
-						System.out.println("Not an Integer. Try Again:");
+						System.out.println("Not a valid choice. Try Again:");
 					}
 				}
 				switch (choice) {
@@ -360,7 +361,7 @@ public class MenuApp {
 						}
 						catch(InputMismatchException e) {
 							sc.nextLine();
-							System.out.println("Not a Double. Try Again:");
+							System.out.println("Not a number. Try Again:");
 						}
 					}
 					break;
@@ -400,7 +401,7 @@ public class MenuApp {
 							}
 							catch(InputMismatchException e) {
 								sc.nextLine();
-								System.out.println("Not an Integer. Try Again:");
+								System.out.println("Not a whole number. Try Again:");
 							}
 						}
 						promoPackItemsReplace.add(alaCarteMenu.getListOfMenuItems().get(pChoice));
