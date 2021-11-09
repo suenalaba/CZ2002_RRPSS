@@ -23,6 +23,7 @@ public class CustomerManager {
 	
 	private static String textfilename = "Customer.txt";
 	public static final String delimiter = ",";
+	private static ArrayList<Customer> customerList=new ArrayList<Customer>();
 	
 	
 	/**
@@ -32,7 +33,7 @@ public class CustomerManager {
 	 * @return null if customer not found, else return customer itself.
 	 */
 	public static Customer retrieveCustomerdetails(Customer customer) {
-		ArrayList customerlist = retrieveallcustomerdetailsfromdatabase();
+		ArrayList customerlist = customerList;
 
 		for (int i = 0; i < customerlist.size(); i++) {
 			Customer validcustomer = (Customer) customerlist.get(i);
@@ -58,7 +59,7 @@ public class CustomerManager {
 		
 		int i;
 		
-		ArrayList customerlist = retrieveallcustomerdetailsfromdatabase();
+		ArrayList customerlist = customerList;
 		
 		for (i = 0; i < customerlist.size(); i++) {
 			Customer validcustomer = (Customer) customerlist.get(i);
@@ -106,27 +107,6 @@ public class CustomerManager {
 		return validcustomer;
 	}
 			
-
-	/**
-	 * Retrieval of customer details.
-	 * 
-	 * @return ArrayList of all customers from the database
-	 */
-	public static ArrayList<Customer> retrieveallcustomerdetailsfromdatabase() { //Jacques - specified data type of ArrayList to <Customer>
-		ArrayList<Customer> customerlist = null;
-		try {
-			// read file containing Guest records
-			CustomerDatabase customerdatabase = new CustomerDatabase();
-			customerlist = customerdatabase.fread(textfilename); //create read function from database
-
-		} catch (IOException e) {
-			System.out.println("IOException > " + e.getMessage());
-		}
-		return customerlist;
-	}
-	
-	
-	
 	
 	
 	/**
@@ -160,5 +140,36 @@ public class CustomerManager {
 					restaurantmember, partnermember);
 
 		}
+	}
+	
+	public static void setCustomerList(ArrayList<Customer> newListOfCustomers) {
+		customerList=newListOfCustomers;
+	}
+	
+	public static ArrayList<Customer> getCustomerList(){
+		return customerList;
+	}
+	
+	public static void saveDB(String textFileName) {
+		CustomerDatabase cusDB=new CustomerDatabase();
+		try {
+			cusDB.fwrite(textFileName);
+		} catch (IOException e) {
+			System.out.println("Failed to save to "+textFileName);
+			return;
+		}
+	}
+	public static void loadDB(String textFileName) { 
+		ArrayList<Customer> newListOfCustomers = null;
+		try {
+			// read file containing Guest records
+			CustomerDatabase customerdatabase = new CustomerDatabase();
+			newListOfCustomers = customerdatabase.fread(textfilename); //create read function from database
+
+		} catch (IOException e) {
+			System.out.println("Failed to load "+textFileName);
+			return;
+		}
+		customerList=newListOfCustomers;
 	}
 }

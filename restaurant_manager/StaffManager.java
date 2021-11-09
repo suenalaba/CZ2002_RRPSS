@@ -313,7 +313,7 @@ public class StaffManager {
 		}
 		catch(IOException e)
 		{
-			System.out.format("File %s write failed", saveFileName);
+			System.out.println("Failed to save to "+saveFileName);
 			return;
 		}
 		
@@ -326,7 +326,7 @@ public class StaffManager {
 		}
 		
 		catch(IOException e) {
-			System.out.format("File %s read failed", loadFileName);
+			System.out.println("Failed to load "+loadFileName);
 			return;
 		}
 	}

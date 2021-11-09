@@ -91,205 +91,31 @@ public class PaymentManager{
     	return memberDiscount; 
     }
     
+  //save orders to order database
+    public static void saveDB(String saveFileName)  {
+    	PaymentDatabase PayDB=new PaymentDatabase();
+      try{
+        PayDB.fwrite(saveFileName);
+      }
+      catch(IOException e)
+      {
+    	  System.out.println("Failed to load "+saveFileName);
+			return;
+      }
+      
+      
+    }
+    //retrieve all orders from order database
+    public static void loadDB(String loadFileName) {
+    	PaymentDatabase PayDB=new PaymentDatabase();
+      try {
+        paymentInvoices = PayDB.fread(loadFileName);
+      }
+      
+      catch(IOException e) {
+    	  System.out.println("Failed to load "+loadFileName);
+			return;
+      }
+    }
+    
 }    
-    /*
-	public void setPaymentInvoices(ArrayList<Payment> paymentInvoices) {
-		this.paymentInvoices = paymentInvoices;
-	}
-   
-    
-    /**
-	 * Creating new instance of payment Manager
-	 * 
-	 * @return PaymentManager instance
-	 
-    public static PaymentManager getInstance() {
-    	if (paymentmanager != null) {
-    		return paymentmanager;
-    	}
-    	else if (paymentmanager == null) {
-    		paymentmanager = new PaymentManager();
-    	}
-    	return paymentmanager;
-    }
-
-    
-    
-    public PaymentManager() {
-    	paymentinvoices = new ArrayList<Payment>();
-    }
-
-    /**
-	 * Creating new payment
-	 * 
-	 * @param payment
-	 * 				Specifies the payment to be made
-	 
-    public void createPayment(Payment payment) {
-        paymentinvoices.add(payment);
-    }
-    //TODO
-    
-	 * Retrieving payment id by reservation number
-	 * 
-	 * @param reservationNum
-	 * 				Specifies the reservation number to retrieve payment details
-	 * @return Payment id if found. Else will return 0
-	 
-    public int retrievePaymentId(String reservationNum){
-    	for (Payment payment : paymentinvoices){
-    		if(String.valueOf(payment.getreservationNumber()).equals(reservationNum)) {
-    			return payment.getpaymentID();
-    		}
-    	}
-    	return 0;
-    }
-
-    /**
-	 * Retrieving total payment before taxes
-	 * 
-	 * @param payment
-	 * 				Specifies the payment
-	 * @param orderid
-	 * 				Specifies the orderid
-	 * @return total payment before tax
-	 
-    public double retrievetotalPayment(Payment payment, int orderID) {
-    	double paymentbeforeTax = 0;
-    	ArrayList<Order> orderlist = payment.getOrderList();
-    	if(orderlist != null) {
-            for(Order order : orderlist) {
-            	for (MenuItem menuitem : order.getOrderItems()) { //i need a function to  get the list of order item
-            		paymentbeforeTax += menuitem.getMenuItemPrice();
-            	}
-            }
-    	}
-        payment.setpaymentsbeforeTax(paymentbeforeTax);
-        return paymentbeforeTax;
-    }
-    
-    /**
-	 * Retrieving payment total price
-	 * 
-	 * @param payment
-	 * 				Specifies the payment excluding tax
-	 * @param roomId
-	 * 				Specifies the order id
-	 * @return total amount of payment after tax
-	 
-    public double retrievepaymentafterTax(Payment payment, int orderID) {
-    	double totalPayment = retrievetotalPayment(payment, orderID);
-        double paymentafterTax = (1+ GST + serviceCharge) *totalPayment;
-    	payment.setpaymentafterTax(paymentafterTax);
-        return paymentafterTax;
-    }
-    
-    /**
-	 * Retrieving payment details for printing
-	 * 
-	 * @param payment
-	 * 				Specifies the payment
-	 * @param roomId
-	 * 				Specifies the room id
-	 * @param paymentmode
-	 * 				Specifies the method of payment
-	 * @param cash
-	 * 				Specifies the cash amount
-	 
-    
-    /**
-	 * Checking of payment id
-	 * 
-	 
-    public void checkinvoice() {
-    	int paymentid = 1;
-		if(paymentinvoices!=null) {
-			for(Payment payment : paymentinvoices){
-				if(payment.getpaymentID() > paymentid) paymentid = payment.getpaymentID();
-			}
-		}
-		Payment.setrunningCount(paymentid+1);
-    }
-
-    /**
-	 * Retrieval of all payments
-	 * 
-	
-    public void retrieveallpaymentdetailsfromdatabase() {
-    	PaymentDatabase paymentdatabase = new PaymentDatabase();
-        try {
-			this.paymentinvoices = paymentdatabase.fread(textfilename);
-			paymentdatabase.fwrite(textfilename, paymentinvoices);
-			checkinvoice();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-    }
-    
-    /**
-	 * Write all payment details to database
-	 * 
-	 
-    public void writeallpaymentdetailstodatabase() {
-    	PaymentDatabase paymentdatabase= new PaymentDatabase();
-        try {
-			paymentdatabase.fwrite(textfilename, paymentinvoices);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-    }
-
-
-    
-    public void printReceipt(Payment payment, int tableID, int orderID,double amount_tendered) {
-
-    	double total_paymentaftertax = retrievepaymentafterTax(payment, orderID);
-    	double total_paymentbeforetax = retrievetotalPayment(payment,orderID);
-    	double service_charge = total_paymentbeforetax * serviceCharge;
-    	double goods_service_tax = total_paymentbeforetax * GST;
-    	double discount = 0.00; //default no discount
-		try {
-			Reservation reservation = ReservationManager.checkReservationByTableID(tableID,payment.getpaymentDate());
-			/*if (TableLayoutManager.getTableStatusNow(tableID) != status.OCCUPIED) {
-				System.out.println("Payment for this table has already been made!");
-				return;
-			}
-			String customerid = reservation.getCustomerID();
-			Customer customer = CustomerManager.retrieveCustomerbyIDinput(customerid);
-			System.out.printf("                                     Date:                     #%s              \n", payment.getpaymentDate());
-			System.out.println("---------------------------------------------------------------------------------");
-			System.out.printf("                                     Table Number:             #%d              \n", reservation.getReservationID());
-			System.out.println("---------------------------------------------------------------------------------");
-			System.out.printf("Customer Name: %s                                                               \n", customer.getcustomerName());
-	    	System.out.println("---------------------------------------------------------------------------------");
-	    	ArrayList<Order> orderlist = payment.getOrderList();
-	    	if(orderlist != null) {
-		    	for(int i = 0; i < orderlist.size(); i++){
-		    		System.out.printf("Menu Item #%d                                                                 \n", i+1);
-		        	System.out.println("---------------------------------------------------------------------------------");
-		        	orderlist.get(i).viewOrder();
-		    	}
-	    	}
-	        System.out.printf("TOTAL BEFORE TAX:                                                        %.2f\n", total_paymentbeforetax);
-	        System.out.printf("10%% SVC CHG                                                             %.2f\n", service_charge);
-	        System.out.printf("7%% GST                                                                  %.2f\n", goods_service_tax);
-	        System.out.println("---------------------------------------------------------------------------------");
-	        if (payment.getmembershipApplied() == true) {
-	        	discount = 0.10 * total_paymentaftertax; //if membership discount present, 10% discount
-	        	System.out.printf("10% MEMBERSHIP DISCOUNT                                              %.2f\n",discount);
-	        }
-	        System.out.printf("TOTAL                                                                   %.2f\n", total_paymentaftertax-discount);
-	        System.out.printf("AMOUNT TENDERED                                                                    %.2f\n", amount_tendered);
-	        System.out.printf("CHANGE                                                                  %.2f\n", amount_tendered - total_paymentaftertax);
-	        System.out.println("---------------------------------------------------------------------------------");
-		}
-		finally {
-			System.out.println("Payment Transaction Completed.");
-			TableLayoutManager.freeTableStatus(tableID);
-		}	
-			catch (IOException e) {
-		}
-		}*/ 
-    	
- 

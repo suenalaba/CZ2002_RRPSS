@@ -223,27 +223,29 @@ public class OrderManager {
 
 	   
 	 	//save orders to order database
-		public static void saveOrderDB(String saveFileName)  {
+		public static void saveDB(String textFileName)  {
 			
 			try{
-				OrderDatabase.fwrite(saveFileName,orderList);
+				OrderDatabase saver=new OrderDatabase();
+				saver.fwrite(textFileName);
 			}
 			catch(IOException e)
 			{
-				System.out.format("File %s write failed", saveFileName);
+				System.out.println("Failed to save to "+textFileName);
 				return;
 			}
 			
 			
 		}
 		//retrieve all orders from order database
-		public static void loadOrderDB(String loadFileName) {
+		public static void loadDB(String textFileName) {
 			try {
-				orderList = OrderDatabase.fread(loadFileName);
+				OrderDatabase loader=new OrderDatabase();
+				orderList = loader.fread(textFileName);
 			}
 			
 			catch(IOException e) {
-				System.out.format("File %s read failed", loadFileName);
+				System.out.println("Failed to load "+textFileName);
 				return;
 			}
 		}

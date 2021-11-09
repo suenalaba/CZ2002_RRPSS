@@ -513,12 +513,24 @@ public class MenuManager {
 		return;
 	}
 	
-	public static void saveToDB(String textFileName) {
-		MenuDatabase.fwrite(textFileName);
+	public static void saveDB(String textFileName) {
+		MenuDatabase saver=new MenuDatabase();
+		try {
+			saver.fwrite(textFileName);
+		} catch (IOException e) {
+			System.out.println("Failed to load "+textFileName);
+			return;
+		}
 	}
 	public static void loadDB(String textFileName) {
+		MenuDatabase loader=new MenuDatabase();
 		ArrayList<MenuItem> loadedMenuItemsList;
-		loadedMenuItemsList=MenuDatabase.fread(textFileName);
+		try {
+			loadedMenuItemsList=loader.fread(textFileName);
+		} catch (IOException e) {
+			System.out.println("Failed to load "+textFileName);
+			return;
+		}
 		mainMenu.setListOfMenuItems(loadedMenuItemsList);
 	}
 }

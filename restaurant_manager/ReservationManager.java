@@ -305,7 +305,7 @@ public class ReservationManager {
 			saver.fwrite(fileName);
 		}
 		catch(IOException e) {
-			System.out.println("Loading of "+fileName+" failed.");
+			System.out.println("Failed to load "+fileName);
 			return;
 		}
 
@@ -318,7 +318,7 @@ public class ReservationManager {
 		try {
 			databaseReservations = loader.fread(fileName);
 		} catch (IOException e1) {
-			System.out.println("Filed to load "+fileName+".Returning to main Menu");
+			System.out.println("Failed to load "+fileName);
 			return;
 		} 
 		ArrayList<Integer> allTableIds=new ArrayList<Integer>(); //loaded reservations
@@ -373,7 +373,7 @@ public class ReservationManager {
 		try {
 			listOfReservations=loader.fread(fileName);
 		} catch (IOException e) {
-			System.out.println("Filed to load "+fileName+".Returning to main Menu");
+			System.out.println("Failed to load "+fileName);
 			return;
 		}
 	}

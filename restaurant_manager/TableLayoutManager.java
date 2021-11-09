@@ -236,18 +236,28 @@ public class TableLayoutManager {
 			System.out.println("TableID : " + emptyTables.get(i).getTableID() + " Table Capacity : " + emptyTables.get(i).getTableCapacity());
 		}
 	}
-	public static void saveDB(String saveFile) throws IOException{
+	public static void saveDB(String saveFile){
 		TableLayoutDatabase saver=new TableLayoutDatabase();
 		if (mainLayout.getTableLayout().size()==0) {
 			System.out.println("Nothing to save!");
 			return;
 		}
-		saver.fwrite(saveFile);
+		try {
+			saver.fwrite(saveFile);
+		} catch (IOException e) {
+			System.out.println("Failed to save to "+saveFile);
+			return;
+		}
 		System.out.println("Saved successfully to "+saveFile);
 	}
-	public static void loadDB(String loadFile) throws IOException{
+	public static void loadDB(String loadFile){
 		TableLayoutDatabase loader=new TableLayoutDatabase();
-		mainLayout.setTableLayout(loader.fread(loadFile));
+		try {
+			mainLayout.setTableLayout(loader.fread(loadFile));
+		} catch (IOException e) {
+			System.out.println("Failed to load "+loadFile);
+			return;
+		}
 		System.out.println("Loaded successfully from "+loadFile);
 	}
 	
