@@ -81,7 +81,7 @@ public class PaymentApp {
 	}
 	
 	
-    public void printSaleReport() {
+    public static void printSaleReport() {
     	ArrayList<Payment> paymentinvoices = PaymentManager.getPaymentInvoices();
     	System.out.println("(1) Print sale revenue report by day\n(2) Print sale revenue report by month");
     	Scanner sc = new Scanner(System.in); 

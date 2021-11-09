@@ -350,7 +350,7 @@ public class RRPSSApp {
 					payment_select = sc.nextInt();
 					switch(payment_select) {
 					case 1:
-						//make payment and print receipt
+						PaymentApp.makePayment(); 
 						break;
 					case 2:
 						System.out.println("Exiting now, Payment Details have been updated!");
@@ -373,7 +373,7 @@ public class RRPSSApp {
 					salesreport_select = sc.nextInt();
 					switch(salesreport_select) {
 					case 1: 
-						//generate sales report query
+						PaymentApp.printSaleReport();
 						break;
 					case 2:
 						System.out.println("Exiting Sales Report interface");
