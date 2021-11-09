@@ -175,7 +175,7 @@ public class ReservationManager {
 			}
 			break;
 			}catch(Exception e) {
-				System.out.println("Invalid input. Try Again:");
+				System.out.println("Invalid input. Try Again, restaurant only opens from 0900-2200. Last booking timeslot is 2100. ");
 			}
 		}
 		String stringHourlyTime = date.substring(11,13);
