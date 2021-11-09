@@ -29,7 +29,7 @@ public class TableApp {
 			System.out.println("Select desired table capacity: ");
 			System.out.println("2/4/6/8/10");
 			try {
-			tableCapacity = sc.nextInt();
+				tableCapacity = sc.nextInt();
 			}
 			catch(InputMismatchException e) {
 				System.out.println("Invalid input");
@@ -59,7 +59,7 @@ public class TableApp {
 			sc.nextLine();
 		}
 		catch(InputMismatchException e) {
-			System.out.println("Invalid input");
+			System.out.println("Invalid input.Returning to main menu.");
 			return;
 		}
 		TableLayoutManager.removeTable(tableID);
