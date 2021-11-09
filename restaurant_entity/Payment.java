@@ -175,34 +175,25 @@ public class Payment {
         runningCount++;
     }*/
     
-    public Payment(Order order, boolean membershipApplied, int tableId, int reservationNumber) {
-    	double subTotal = 0; 
-    	ArrayList<MenuItem> listOfMenuItems = new ArrayList<>(); 
+    public Payment(String paymentDate, double subTotal, double gst,
+    		double serviceCharge, double memberDiscount, double grandTotal, Order order,
+    		int reservationNumber, int tableId, boolean membershipApplied) {
+    	
     	this.paymentID = runningCount;
-    	LocalDateTime paymentDate = LocalDateTime.now(); 
-    	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-    	this.paymentDate = paymentDate.format(formatter); 
+    	runningCount++; 
+    	this.paymentDate = paymentDate; 
+    	this.subTotal = subTotal; 
+    	this.gst = gst; 
+    	this.serviceCharge = serviceCharge; 
+    	this.memberDiscount = memberDiscount; 
+    	this.grandTotal = grandTotal; 
     	this.order = order;
-    	listOfMenuItems = order.getOrderItems();
-    	for(int i= 0; i<listOfMenuItems.size(); i++) {
-    		subTotal += listOfMenuItems.get(i).getMenuItemPrice();
-    	}
     	this.reservationNumber = reservationNumber; 
     	this.tableId = tableId; 
     	this.membershipApplied = membershipApplied; 
-    	this.subTotal = subTotal; 
-    	this.serviceCharge = subTotal* SERVICE_CHARGE; 
-    	this.gst = subTotal* GST; 
-    	if(membershipApplied == true) {
-    		this.memberDiscount = subTotal * DISCOUNT;
-    	}
-    	else {
-    		this.memberDiscount = 0.00; 
-    	}
-    	this.grandTotal = this.subTotal + this.serviceCharge + this.gst - this.memberDiscount; 
     	
     }
-    
+
     public int getpaymentID() {
     	return paymentID;
     }
