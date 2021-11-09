@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import restaurant_entity.MenuItem;
 import restaurant_entity.Order;
+import restaurant_manager.MenuManager;
 
 
 
@@ -22,6 +24,7 @@ public class OrderDatabase {
 		
 		//array to store table
 		ArrayList<Order> listOfOrders = new ArrayList<>();
+		int biggestOrderID=0;
 		for (int i = 0; i < fileasstring.size(); i++) {
 			String data = (String) fileasstring.get(i);
 			// get individual 'fields' of the string separated by the delimiter ';'
@@ -33,7 +36,13 @@ public class OrderDatabase {
 			
 			//orderitems arraylist?????????????????????
 			
+			StringTokenizer order_items_tokenizer = new StringTokenizer(str_tokenizer.nextToken().trim());
+			ArrayList<MenuItem> orderItems=new ArrayList<MenuItem>();
 			
+			while (order_items_tokenizer.hasMoreTokens()){
+				
+				orderItems.add(MenuManager.getItemFromAll(Integer.parseInt(order_items_tokenizer.nextToken().trim())));
+			}
 			
 			
 			//ordertime
@@ -43,9 +52,16 @@ public class OrderDatabase {
 			
 			int staffId = Integer.parseInt(str_tokenizer.nextToken().trim());
 			boolean isPaid = Boolean.parseBoolean(str_tokenizer.nextToken().trim());
-			Order order = new Order(orderId, tableId, , orderTime,staffId, isPaid);
+			Order.setRunningCount(orderId);
+			if (orderId>biggestOrderID) {
+				biggestOrderID=orderId;
+			}
+			Order order = new Order(tableId,orderItems,staffId);
+			order.setPaidStatus(isPaid);
+			order.setOrderTime(orderTime);
 			listOfOrders.add(order); 
 		}
+		Order.setRunningCount(biggestOrderID+1);
 		return listOfOrders; 
 	}
 	
@@ -65,7 +81,15 @@ public class OrderDatabase {
 			orderstring.append(DELIMITER);
 			
 			//orderitems????????????????????????????????
-			orderstring.append();
+			ArrayList<Integer> orderItemId = new ArrayList<Integer>();
+			
+			for(int j=0; j<order.getOrderItems().size();j++)
+			{
+				orderstring.append(Integer.toString(order.getOrderItems().get(j).getMenuItemID()));
+				orderstring.append(",");
+				
+			}
+			
 			orderstring.append(DELIMITER); 
 			
 			//ordertime
