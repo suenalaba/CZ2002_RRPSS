@@ -269,13 +269,13 @@ public class PaymentManager{
     				// prints out payment date and payment ID
     				System.out.println("Date: " + payment.getpaymentDate() + "       " + "Payment ID: " + payment.getpaymentID());
     				Order order = payment.getOrder(); 
-    				ArrayList<MenuItem> orderItems = order.getOrderItems();
+    				ArrayList<MenuItem> orderItems = payment.getOrder().getOrderItems();
     				for(i =0; i<orderItems.size(); i++) { // prints out all orders, menu type and price without gst
     					System.out.println("Menu Item: " + orderItems.get(i).getMenuItemName() + "\t" + orderItems.get(i).getMenuItemType().name() +
     							"\t" + orderItems.get(i).getMenuItemPrice());
     				}
-    				totalRevenueBeforeTax += payment.getpaymentsbeforeTax();
-    				totalRevenueAfterTax += payment.getpaymentafterTax();  
+    				totalRevenueBeforeTax += payment.getSubTotal();
+    				totalRevenueAfterTax += payment.getGrandTotal(); 
     			}
     		}
     		// if == 0, no payment found
@@ -283,8 +283,8 @@ public class PaymentManager{
     			System.out.println("No payment records found");
     		}
     		else {
-    			System.out.println("Total revenue before tax: $" + totalRevenueBeforeTax);
-    			System.out.println("Total revenue after tax: $" + totalRevenueAfterTax);
+    			System.out.println("Total revenue before tax and discounts: $" + totalRevenueBeforeTax);
+    			System.out.println("Total revenue after tax and discounts: $" + totalRevenueAfterTax);
     		}
     		break; 
     		
@@ -309,13 +309,13 @@ public class PaymentManager{
     				// prints out payment date and payment ID
     				System.out.println("Date: " + payment.getpaymentDate() + "       " + "Payment ID: " + payment.getpaymentID());
     				Order order = payment.getOrder(); 
-    				ArrayList<MenuItem> orderItems = order.getOrderItems();
+    				ArrayList<MenuItem> orderItems = payment.getOrder().getOrderItems();
     				for(i =0; i<orderItems.size(); i++) { // prints out all orders, menu type and price without gst
     					System.out.println("Menu Item: " + orderItems.get(i).getMenuItemName() + "\t" + orderItems.get(i).getMenuItemType().name() +
     							"\t" + orderItems.get(i).getMenuItemPrice());
     				}
-    				totalRevenueBeforeTax += payment.getpaymentsbeforeTax();
-    				totalRevenueAfterTax += payment.getpaymentafterTax();  
+    				totalRevenueBeforeTax += payment.getSubTotal();
+    				totalRevenueAfterTax += payment.getGrandTotal();
     			}
     		}
     		// if == 0, no payment found
@@ -323,8 +323,8 @@ public class PaymentManager{
     			System.out.println("No payment records found");
     		}
     		else {
-    			System.out.println("Total revenue before tax: $" + totalRevenueBeforeTax);
-    			System.out.println("Total revenue after tax: $" + totalRevenueAfterTax);
+    			System.out.println("Total revenue before tax and discounts: $" + totalRevenueBeforeTax);
+    			System.out.println("Total revenue after tax and discounts: $" + totalRevenueAfterTax);
     		}
     		break;     		
     		
@@ -365,6 +365,8 @@ public class PaymentManager{
 		printReceipt(payment);
 		//TableLayoutManager.freeTableStatus(tableId);
 		//ReservationManager.setIsFinished(payment.getreservationNumber());
+		//OrderManager.updatePaidStatus(payment.getOrder().getOrderID()); 
+		//fwrite
     	
     }
     
@@ -385,7 +387,7 @@ public class PaymentManager{
 	        System.out.printf("GST (7%)                                                          %.2f\n", payment.getGst());
 	        System.out.printf("Member Discount (15%)                                            -%.2f\n", payment.getMemberDiscount());	        
 	        System.out.println("---------------------------------------------------------------------------------");
-	        System.out.printf("Grand Total                                                      $%.2f\n", payment.grandTotal());
+	        System.out.printf("Grand Total                                                      $%.2f\n", payment.getGrandTotal());
 	        System.out.println("---------------------------------------------------------------------------------");
 		}
     
