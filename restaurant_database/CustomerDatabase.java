@@ -47,7 +47,7 @@ public class CustomerDatabase implements DatabaseFunction {
 	@Override
 	public void fwrite(String textfilename) throws IOException { //Jacques-fixed empty file creation
 		ArrayList<String> fwritecustomer = new ArrayList<String>(); // array list to store customer data
-		ArrayList<Customer> customerlist = CustomerManager.retrieveallcustomerdetailsfromdatabase(); //existing customer list from database
+		ArrayList<Customer> customerlist = CustomerManager.getCustomerList(); //existing customer list from database
 
 		for (int i = 0; i < customerlist.size(); i++) {
 			Customer customer = (Customer) customerlist.get(i);

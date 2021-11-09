@@ -19,12 +19,9 @@ import restaurant_manager.MenuManager;
 public class MenuDatabase implements DatabaseFunction{
 	public static final String DELIMITER = ";";
 
-	public void fwrite(String saveFileName) {
+	public void fwrite(String saveFileName) throws IOException {
 		File menuDB=new File(saveFileName);
 		try {
-			if (MenuManager.getMenuInstance().getListOfMenuItems().size()==0) {
-				throw new Exception("Nothing to save.");
-			}
 			FileWriter myWriter = new FileWriter(saveFileName);
 			String pusher="";
 			for (int i=0;i<MenuManager.getMenuInstance().getListOfMenuItems().size();i++) {
@@ -52,7 +49,6 @@ public class MenuDatabase implements DatabaseFunction{
 			}
 			myWriter.write(pusher);
 		    myWriter.close();
-		    System.out.println("Successfully wrote to the file.");
 		}catch (IOException e) {
 			System.out.println("An error occured when writing to file "+menuDB.getName());
 			e.printStackTrace();
@@ -60,13 +56,12 @@ public class MenuDatabase implements DatabaseFunction{
 			System.out.println("No data to save!");
 		}
 	}
-	public ArrayList<MenuItem> fread(String saveFileName) {
-		try {
-		      File menuDB = new File(saveFileName);
+	public ArrayList<MenuItem> fread(String loadFileName) throws IOException {
+		      File menuDB = new File(loadFileName);
 		      Scanner alacarteReader = new Scanner(menuDB);
 		      if (!alacarteReader.hasNextLine()) {
 		    	  alacarteReader.close();
-		    	  throw new Exception("Empty File");
+		    	  throw new IOException("Empty File");
 		      }
 		      ArrayList<MenuItem> loadedMenu=new ArrayList<MenuItem>();
 		      while (alacarteReader.hasNextLine()) {
@@ -119,7 +114,7 @@ public class MenuDatabase implements DatabaseFunction{
 		    	  menuHolder.setListOfMenuItems(loadedMenu);
 		      }
 		      else {
-		    	  throw new Exception("Empty File");
+		    	  throw new IOException("Empty File");
 		      }
 		      ArrayList <MenuItem> sortedMenu=new ArrayList<MenuItem>();
 		      ArrayList <Integer> sortedItemId=new ArrayList<Integer>();
@@ -134,17 +129,7 @@ public class MenuDatabase implements DatabaseFunction{
 		    	  sortedMenu.add(menuHolder.getListOfMenuItems().get(menuHolder.ItemIDToIndex(sortedItemId.get(i),true)));
 		      }
 		      MenuItem.setRunningCount(sortedItemId.get(sortedItemId.size()-1)+1);
-		      System.out.println("MenuDB.txt file contents loaded successfully.");
 		      return sortedMenu;
-		    } catch (FileNotFoundException e) {
-		      System.out.println("File is missing.");
-		      e.printStackTrace();
-		    } catch (Exception e) {
-				System.out.println("File is empty. Save data to DataBase before loading.");
-				e.printStackTrace();
-			}
-		System.out.println("Error, File was not loaded.");
-		return MenuManager.getMenuInstance().getListOfMenuItems();
 	}
 
 

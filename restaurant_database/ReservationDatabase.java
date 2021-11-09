@@ -19,9 +19,6 @@ public class ReservationDatabase implements DatabaseFunction{
 	@Override
 	public void fwrite(String saveFileName) throws IOException {
 		try {
-			if (ReservationManager.getListOfReservations().size()==0) {
-				throw new Exception("Nothing to save.");
-			}
 			FileWriter myWriter = new FileWriter(saveFileName);
 			String pusher="";
 			for (int i=0;i<ReservationManager.getListOfReservations().size();i++) {
@@ -48,13 +45,12 @@ public class ReservationDatabase implements DatabaseFunction{
 	}
 	
 	@Override
-	public ArrayList<Reservation> fread(String loadFileName) {
-		try {
+	public ArrayList<Reservation> fread(String loadFileName) throws IOException {
 		      File menuDB = new File(loadFileName);
 		      Scanner myReader = new Scanner(menuDB);
 		      if (!myReader.hasNextLine()) {
 		    	  myReader.close();
-		    	  throw new Exception("Empty File");
+		    	  throw new IOException("Empty File");
 		      }
 		      ArrayList<Reservation> loadedReservations=new ArrayList<Reservation>();
 		      while (myReader.hasNextLine()) {
@@ -72,7 +68,7 @@ public class ReservationDatabase implements DatabaseFunction{
 		      }
 		      myReader.close();
 		      if (loadedReservations.size()==0) {
-		    	  throw new Exception("Empty File");
+		    	  throw new IOException("Empty File");
 		      }
 		      ArrayList <Reservation> sortedReservations=new ArrayList<Reservation>();
 		      ArrayList <Integer> sortedItemId=new ArrayList<Integer>();
@@ -94,14 +90,5 @@ public class ReservationDatabase implements DatabaseFunction{
 		      Reservation.setCounter(sortedItemId.get(sortedItemId.size()-1)+1);
 		      System.out.println(loadFileName+ " file contents loaded successfully.");
 		      return sortedReservations;
-		    } catch (FileNotFoundException e) {
-		      System.out.println("File is missing.");
-		      e.printStackTrace();
-		    } catch (Exception e) {
-				System.out.println("File is empty. Save data to DataBase before loading.");
-				e.printStackTrace();
-			}
-		System.out.println("Error, File was not loaded.");
-		return ReservationManager.getListOfReservations();
 	}
 }

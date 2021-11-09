@@ -71,7 +71,6 @@ public class PaymentDatabase implements DatabaseFunction {
 		//(Order order, boolean membershipApplied, int tableId, int reservationNumber)
 		  paymentlist.add(payment);
 		}
-		System.out.println(fileasstring.size() + " File for Payment Database read");
 		return paymentlist;
 	}
 	
