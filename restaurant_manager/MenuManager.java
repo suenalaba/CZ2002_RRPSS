@@ -493,6 +493,12 @@ public class MenuManager {
 		choice=mainMenu.ItemIDToIndex(sc.nextInt(),false);
 		return mainMenu.getListOfMenuItems().get(choice);
 	}
+	
+	public static MenuItem getItemFromAll(int menuItemID) { 
+		int choice=mainMenu.ItemIDToIndex(menuItemID,true); //get MenuItem from deleted too
+		return mainMenu.getListOfMenuItems().get(choice);
+	}
+	
 	public static void printMainMenu() {
 		for (int i=0;i<mainMenu.getListOfMenuItems().size();i++) {
 			if (!mainMenu.getListOfMenuItems().get(i).getMenuItemType().toString().substring(0,3).contains("DEL")){
