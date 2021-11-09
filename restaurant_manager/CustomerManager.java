@@ -20,8 +20,6 @@ import restaurant_database.FileRead;
 import restaurant_database.CustomerDatabase;
 
 public class CustomerManager {
-	
-	private static String textfilename = "Customer.txt";
 	public static final String delimiter = ",";
 	private static ArrayList<Customer> customerList=new ArrayList<Customer>();
 	
@@ -33,7 +31,7 @@ public class CustomerManager {
 	 * @return null if customer not found, else return customer itself.
 	 */
 	public static Customer retrieveCustomerdetails(Customer customer) {
-		ArrayList customerlist = customerList;
+		ArrayList<Customer> customerlist = customerList;
 
 		for (int i = 0; i < customerlist.size(); i++) {
 			Customer validcustomer = (Customer) customerlist.get(i);
@@ -59,7 +57,7 @@ public class CustomerManager {
 		
 		int i;
 		
-		ArrayList customerlist = customerList;
+		ArrayList<Customer> customerlist = customerList;
 		
 		for (i = 0; i < customerlist.size(); i++) {
 			Customer validcustomer = (Customer) customerlist.get(i);
@@ -111,25 +109,21 @@ public class CustomerManager {
 	 * 
 	 */
 	public static void printallCustomerDetails() throws IOException {
-		ArrayList readfileasstring = (ArrayList) FileRead.fread(textfilename);
-		//ArrayList<CreditCard> creditArray = CreditController.retrieveAllCredit();
 		System.out.println("\n==================================================");
 		System.out.println(" Customer Details: ");
 		System.out.println("==================================================");
 		System.out.printf("%-8s %-15s %-8s %-10s %-5s %-5s\n", "CustomerID", "Name",
 				"Gender", "Phone Number", "Restaurant Membership", "Partner Membership");
-		for (int i = 0; i < readfileasstring.size(); i++) {
-			String data = (String) readfileasstring.get(i);
-			// get individual 'fields' of the string separated by delimiter
-			StringTokenizer str_tokenizer = new StringTokenizer(data, delimiter); // pass in the string to the string tokenizer
-																		// using delimiter ","
+		for (int i = 0; i < customerList.size(); i++) {
+			Customer data = customerList.get(i);
 
-			String customerid = str_tokenizer.nextToken().trim();
-			String name = str_tokenizer.nextToken().trim();
-			String gender = str_tokenizer.nextToken().trim();
-			String phonenumber = str_tokenizer.nextToken().trim();
-			String restaurantmember = str_tokenizer.nextToken().trim();
-			String partnermember = str_tokenizer.nextToken().trim();
+
+			String customerid = String.valueOf(data.getcustomerID());
+			String name = String.valueOf(data.getcustomerName());
+			String gender = String.valueOf(data.getcustomerGender());
+			String phonenumber = String.valueOf(data.getphoneNumber());
+			String restaurantmember = String.valueOf(data.getrestaurantMembership());
+			String partnermember = String.valueOf(data.getpartnerMembership());
 
 
 
@@ -161,7 +155,7 @@ public class CustomerManager {
 		try {
 			// read file containing Guest records
 			CustomerDatabase customerdatabase = new CustomerDatabase();
-			newListOfCustomers = customerdatabase.fread(textfilename); //create read function from database
+			newListOfCustomers = customerdatabase.fread(textFileName); //create read function from database
 
 		} catch (IOException e) {
 			System.out.println("Failed to load "+textFileName);
