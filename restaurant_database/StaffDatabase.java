@@ -198,17 +198,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import restaurant_entity.Payment;
 import restaurant_entity.Staff;
 
 import restaurant_entity.Staff.Gender;
+import restaurant_manager.PaymentManager;
+import restaurant_manager.StaffManager;
 
 
-public class StaffDatabase {
+public class StaffDatabase implements DatabaseFunction{
 	public static final String DELIMITER = ";";
 	
-	public static ArrayList<Staff> fread(String textfilename) throws IOException {
+	public ArrayList<Staff> fread(String textfilename) throws IOException {
 
-		ArrayList fileasstring = (ArrayList) FileRead.fread(textfilename);
+		//ArrayList<String> fileasstring = (ArrayList) FileRead.fread(textfilename);
+		ArrayList<String> fileasstring = (ArrayList<String>) FileRead.fread(textfilename);
 		
 		//array to store table
 		ArrayList<Staff> listOfStaffMembers = new ArrayList<>();
@@ -217,6 +221,8 @@ public class StaffDatabase {
 			// get individual 'fields' of the string separated by the delimiter ';'
 			
 			StringTokenizer str_tokenizer = new StringTokenizer(data, DELIMITER); // pass in the string to the string tokenizer
+			
+			//staffid, staffname, stafftitle, staffgender
 			int staffID = Integer.parseInt(str_tokenizer.nextToken().trim());
 			String staffName = str_tokenizer.nextToken().trim();
 			String staffTitle = str_tokenizer.nextToken().trim(); 
@@ -227,12 +233,14 @@ public class StaffDatabase {
 		return listOfStaffMembers; 
 	}
 	
-	public static void fwrite(String textfilename, ArrayList<Staff> listOfStaffMembers) throws IOException {
-
-		List stafflist = new ArrayList();// array list to store staffdata
-		for (int i = 0; i < listOfStaffMembers.size(); i++) {
-			Staff staff = (Staff) listOfStaffMembers.get(i);
+	public void fwrite(String textfilename) throws IOException { 
+		ArrayList<String> fwritestaff = new ArrayList<String>();
+		ArrayList<Staff> stafflist = StaffManager.getListOfStaffMembers();
+		
+		for (int i = 0; i < stafflist.size(); i++) {
+			Staff staff = (Staff) stafflist.get(i);
 			StringBuilder staffstring = new StringBuilder();
+			//staffid, staffname, stafftitle, staffgender
 			staffstring.append(Integer.toString(staff.getStaffID()));
 			staffstring.append(DELIMITER);
 			staffstring.append(staff.getStaffName());
@@ -240,11 +248,13 @@ public class StaffDatabase {
 			staffstring.append(staff.getStaffTitle());
 			staffstring.append(DELIMITER); 
 			staffstring.append(staff.getStaffGender().name());
-			staffstring.append(DELIMITER); 
-			stafflist.add(staffstring.toString());
+			staffstring.append(DELIMITER);
+			
+			fwritestaff.add(staffstring.toString());
 		}
-		FileRead.fwrite(stafflist,textfilename);
+		FileRead.fwrite(fwritestaff, textfilename);
 	}
+
 }
 
 
