@@ -61,6 +61,8 @@ public class CustomerApp {
 				System.out.print("\nEnter Customer Name: "); 
 				Name = sc.nextLine();
 				
+				
+				
 				if(Name.matches(alpha) && !Name.equals("")) {
 					customer.setcustomerName(Name);
 					break;
@@ -210,38 +212,7 @@ public class CustomerApp {
 	
 	
 	
-	/**
-	 * Retrieval of all Customer details.
-	 * 
-	 */
-	public static void printallCustomerDetails() throws IOException {
-		ArrayList readfileasstring = (ArrayList) FileRead.fread(textfilename);
-		//ArrayList<CreditCard> creditArray = CreditController.retrieveAllCredit();
-		System.out.println("\n==================================================");
-		System.out.println(" Customer Details: ");
-		System.out.println("==================================================");
-		System.out.printf("%-8s %-15s %-8s %-10s %-5s %-5s\n", "CustomerID", "Name",
-				"Gender", "Phone Number", "Restaurant Membership", "Partner Membership");
-		for (int i = 0; i < readfileasstring.size(); i++) {
-			String data = (String) readfileasstring.get(i);
-			// get individual 'fields' of the string separated by delimiter
-			StringTokenizer str_tokenizer = new StringTokenizer(data, delimiter); // pass in the string to the string tokenizer
-																		// using delimiter ","
-
-			String customerid = str_tokenizer.nextToken().trim();
-			String name = str_tokenizer.nextToken().trim();
-			String gender = str_tokenizer.nextToken().trim();
-			String phonenumber = str_tokenizer.nextToken().trim();
-			String restaurantmember = str_tokenizer.nextToken().trim();
-			String partnermember = str_tokenizer.nextToken().trim();
-
-
-
-			System.out.printf("%-8s %-15s %-8s %-10s %-5s %-5s\n", customerid, name, gender,phonenumber,
-					restaurantmember, partnermember);
-
-		}
-	}
+	
 
 	/**
 	 * Retrieve customer details by customerID
@@ -257,7 +228,7 @@ public class CustomerApp {
 		Scanner sc = new Scanner(System.in);
 		String id_entered;
 		id_entered = sc.nextLine();
-		sc.close();
+		
 
 		System.out.printf("%-8s %-15s %-8s %-10s %-5s %-5s\n", "CustomerID", "Name",
 				"Gender", "Phone Number", "Restaurant Membership", "Partner Membership");
@@ -318,9 +289,22 @@ public class CustomerApp {
 			System.out.println("(5) Partner Membership Status");
 			System.out.println("(6) Done updating");
 			Scanner sc = new Scanner(System.in);
-			updatetype = sc.nextInt();
-			sc.nextLine();
-			sc.close();
+			
+			
+			
+			try {
+				
+				updatetype = sc.nextInt();
+				sc.nextLine();
+			}
+			
+			catch(InputMismatchException e) {
+				System.out.println("Invalid number. You will be returned to main menu");
+				return;
+				
+			}
+			
+			
 			switch (updatetype) {
 
 			case 1:
@@ -417,7 +401,7 @@ public class CustomerApp {
 				System.out.println("No more updates.");
 				break;
 			default:
-				break;
+				return;
 			}
 
 		} while (updatetype >= 1 && updatetype  <=5 );
