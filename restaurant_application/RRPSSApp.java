@@ -65,6 +65,8 @@ public class RRPSSApp {
 		ReservationManager.loadDB(reservationFile); //load reservation database
 		final String orderFile = "orderDB.txt";
 		OrderManager.loadOrderDB(orderFile);
+		final String paymentFile = "paymentDB.txt";
+		PaymentManager.loadDB(paymentFile);//load Payment database
 		
 		//Customer Database is probed in classManager
 		
@@ -389,6 +391,7 @@ public class RRPSSApp {
 				StaffManager.saveStaffDB(staffFile);
 				MenuManager.saveToDB(menuFile);
 				ReservationManager.saveDB(reservationFile);
+				PaymentManager.saveDB(paymentFile);
 				break;
 			default:
 				rrpss_select = 0;
