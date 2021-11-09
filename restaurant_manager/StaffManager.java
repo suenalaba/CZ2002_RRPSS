@@ -31,7 +31,18 @@ public class StaffManager {
 	//create a staff member and add to system
 	public static void createStaffMemberQuery() {
 		Scanner sc = new Scanner(System.in);
+		
 		System.out.println("Enter staff ID: ");
+		
+		//check if staffId already exists as staff Id is unique. 
+		 ArrayList <Integer> existingStaffId = new ArrayList<Integer>();
+		 
+		 //pull out all existing staff Id from listofstaffmemebers and add to existingstaffId
+		 for(int i=0; i<listOfStaffMembers.size();i++)
+		 {
+			 existingStaffId.add(listOfStaffMembers.get(i).getStaffID());
+		 }
+		 
 		int staffId = -1;
 				
 				while (staffId==-1)
@@ -39,6 +50,17 @@ public class StaffManager {
 					try {
 						staffId = sc.nextInt();
 						sc.nextLine();
+						
+						//check if staff
+						if(existingStaffId.contains(staffId))
+						{
+							System.out.println("Staff Id entered already exists. Please enter another one.");
+						}
+						
+						else
+						{
+							break;
+						}
 						
 					}
 					
