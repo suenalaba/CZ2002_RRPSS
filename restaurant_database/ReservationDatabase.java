@@ -39,6 +39,7 @@ public class ReservationDatabase{
 				pusher+=txMedium.getReservationStartTime().toString()+DELIMITER;
 				pusher+=txMedium.getReservationEndTime().toString()+DELIMITER;
 				pusher+=String.valueOf(txMedium.getIsFinished())+DELIMITER;
+				pusher+=String.valueOf(txMedium.getIsAppeared())+DELIMITER;
 				pusher+="\n";
 			}
 			myWriter.write(pusher);
@@ -69,8 +70,9 @@ public class ReservationDatabase{
 		        LocalDateTime reservationStartTime=LocalDateTime.parse(data[4]);
 		        LocalDateTime reservationEndTime=LocalDateTime.parse(data[5]);
 		        Boolean isFinished=Boolean.valueOf(data[6]);
+		        Boolean isAppeared=Boolean.valueOf(data[7]);
 		        Reservation.setCounter(ReservationID);
-		        loadedReservations.add(new Reservation(tableID,pax,customerID,reservationStartTime,reservationEndTime,isFinished));
+		        loadedReservations.add(new Reservation(tableID,pax,customerID,reservationStartTime,reservationEndTime,isFinished,isAppeared));
 		      }
 		      myReader.close();
 		      if (loadedReservations.size()==0) {
