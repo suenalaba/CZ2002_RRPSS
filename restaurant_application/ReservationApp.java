@@ -14,7 +14,7 @@ import restaurant_manager.CustomerManager;
 import restaurant_manager.ReservationManager;
 import restaurant_manager.TableLayoutManager;
 
-public class ReservatonApp {
+public class ReservationApp {
 	public static void createReservationQuery() { 
 		//1. if registered> provide customerID
 		//2. if not> create customer and retrieve customerID
