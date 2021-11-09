@@ -190,8 +190,8 @@ public class MenuManager {
 			return;
 		}
 		Scanner sc=new Scanner(System.in);
-		System.out.println("Which item should be removed?");
 		mainMenu.printMenu();
+		System.out.println("Which item should be removed?");
 		while (removalIndex==-1) {
 			try {
 				removalIndex=mainMenu.ItemIDToIndex(sc.nextInt(),false);
@@ -255,8 +255,8 @@ public class MenuManager {
 			return;
 		}
 		Scanner sc=new Scanner(System.in);
-		System.out.println("Which item should be updated?");
 		mainMenu.printMenu();
+		System.out.println("Which item should be updated?");
 		while (updateIndex==-1) {
 			try {
 				updateIndex=mainMenu.ItemIDToIndex(sc.nextInt(),false);
