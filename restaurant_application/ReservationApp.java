@@ -15,7 +15,7 @@ import restaurant_manager.ReservationManager;
 import restaurant_manager.TableLayoutManager;
 
 public class ReservationApp {
-	public static void createReservationQuery() { 
+	public static void registerCustomerQuery() { 
 		//1. if registered> provide customerID
 		//2. if not> create customer and retrieve customerID
 		//3. if not> anonymous> assume not a case. Otherwise, input anonymous name in customer creation and ask Joshua for ability to decline providing phone number.
@@ -367,5 +367,25 @@ public class ReservationApp {
 				}
 		}while (choice>=1||choice<3);
 		ReservationManager.updateReservation(reservationIndex,newStartDateTime, newTableID);
+	}
+	
+	public static void checkReservationQuery(){ //Queries for correct reservation ID then passes to checkReservation
+		System.out.println("\n Enter your reservationID:");
+		int reservationIndex;
+		Scanner sc= new Scanner(System.in);
+		try {
+			int reservationID = sc.nextInt();
+			reservationIndex=ReservationManager.reservationIDToIndex(reservationID);
+			if (reservationIndex==-1) {
+				System.out.println("Reservation ID not in system. Returning to main menu.");
+				return;
+			}
+			else {
+				ReservationManager.checkReservation(reservationID,reservationIndex);
+			}
+			}catch(InputMismatchException e) {
+				System.out.println("Invalid input. Returning to main menu.");
+				return;
+			}
 	}
 }

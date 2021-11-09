@@ -8,10 +8,23 @@ import restaurant_manager.TableLayoutManager;
 public class TableApp {
 	public static void createTableQuery() { //creates table with tableID and pax of 2 increment
 		Scanner sc=new Scanner(System.in);
-		int tableID, tableCapacity; 
+		int tableID=-1, tableCapacity; 
 		System.out.println("Enter table ID of new table: ");
-		tableID = sc.nextInt(); 
-		sc.nextLine();
+		while (tableID==-1) {
+			try {
+				tableID=sc.nextInt();
+				sc.nextLine();
+				if (tableID>=0&&tableID<=100) {
+					break;
+				}
+				else {
+					tableID=-1;
+					System.out.println("Table ID must be within the the range of 0 to 100(incl.).");
+				}
+			}catch(InputMismatchException e) {
+				System.out.println("Invalid input. Try again: ");
+			}
+		}
 		if(TableLayoutManager.findTableIndex(tableID) == -1) { //if no existing tableID
 			System.out.println("Select desired table capacity: ");
 			System.out.println("2/4/6/8/10");
