@@ -36,7 +36,7 @@ public class OrderDatabase {
 			
 			//orderitems arraylist?????????????????????
 			
-			StringTokenizer order_items_tokenizer = new StringTokenizer(str_tokenizer.nextToken().trim());
+			StringTokenizer order_items_tokenizer = new StringTokenizer(str_tokenizer.nextToken().trim(),",");
 			ArrayList<MenuItem> orderItems=new ArrayList<MenuItem>();
 			
 			while (order_items_tokenizer.hasMoreTokens()){
