@@ -511,6 +511,14 @@ public class ReservationManager {
 		}
 	}
 	
+	public static void setIsFinished(int tableID) {
+		ArrayList<Reservation> unfinishedToday=getListOfUnfinishedReservationsToday();
+		for (Reservation o:unfinishedToday) {
+			if (o.getTableID()==tableID && o.getIsAppeared()==true) {
+				o.setIsFinished(true);
+			}
+		}
+	}
 	
 	
 	//check methods
@@ -584,6 +592,16 @@ public class ReservationManager {
 		ArrayList<Reservation> t = new ArrayList<Reservation>(); //new array of reservation objs to store
 		for (Reservation s : listOfReservations) {
 			if (s.getIsFinished()==false) {
+				t.add(s);
+			}
+		}
+		return t;
+	}
+	
+	public static ArrayList<Reservation> getListOfUnfinishedReservationsToday() { //gets arraylist of unfinished reservations today
+		ArrayList<Reservation> t = new ArrayList<Reservation>(); 
+		for (Reservation s : listOfReservations) {
+			if (s.getIsFinished()==false && s.getReservationStartTime().getDayOfYear()==LocalDateTime.now().getDayOfYear() && s.getReservationStartTime().getYear()==LocalDateTime.now().getYear()) {
 				t.add(s);
 			}
 		}
