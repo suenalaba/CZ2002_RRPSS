@@ -334,5 +334,60 @@ public class PaymentManager{
     	
     }
     
+    public void makePayment() {
+    	Scanner sc = new Scanner(System.in); 
+    	ArrayList<Order> unpaidOrders = new ArrayList<>();
+    	unpaidOrders = OrderManager.getUnpaidOrders(); // need to print unpaid orders
+    	for(int i= 0; i<unpaidOrders.size(); i++) {
+    		System.out.format("Table ID:  %d		Paid Status: %b", unpaidOrders.get(i).getTableID() , unpaidOrders.get(i).getPaidStatus());
+    	}
+    	System.out.println("Enter tableID to make payment"); 	
+    	int tableId = -1;
+		while (tableId==-1)
+		{
+			try {
+				tableId = sc.nextInt();
+				sc.nextLine();
+			}
+			catch(InputMismatchException e) {
+				sc.nextLine();
+				System.out.println("Not an Integer. Try Again:");
+			}
+		}
+		Order order = OrderManager.getOrderByTableId(tableId);
+		String customerName = ReservationManager.getUnfinishedReservationOfTableIDNow(tableId).getCustomerID();
+		Customer customer = CustomerManager.retrieveCustomerbyIDinput(customerName);
+		boolean membershipApplied = false; 
+		if(customer.getpartnerMembership() || customer.getrestaurantMembership()) {
+			membershipApplied = true; 
+		}
+		Payment payment = new Payment(order, membershipApplied, tableId, ReservationManager.getUnfinishedReservationOfTableIDNow(tableId).getReservationID());
+		printReceipt(payment);
+		//TableLayoutManager.freeTableStatus(tableId);
+		//ReservationManager.setIsFinished(payment.getreservationNumber());
+    	
+    }
+    
+    public void printReceipt(Payment payment) {
+
+
+			System.out.printf("                                     Date:                     #%s              \n", payment.getpaymentDate());
+			System.out.println("---------------------------------------------------------------------------------");
+			System.out.printf("                                     Table Number:             #%d              \n", payment.getTableId());
+			System.out.println("---------------------------------------------------------------------------------");
+		    System.out.printf("Menu Item                                                                \n");
+		    System.out.println("---------------------------------------------------------------------------------");
+		    payment.getOrder().viewOrder();
+
+
+	        System.out.printf("Sub-Total:                                                        %.2f\n", payment.getSubTotal());
+	        System.out.printf("Service Charge (10%)                                              %.2f\n", payment.getServiceCharge());
+	        System.out.printf("GST (7%)                                                          %.2f\n", payment.getGst());
+	        System.out.printf("Member Discount (15%)                                            -%.2f\n", payment.getMemberDiscount());	        
+	        System.out.println("---------------------------------------------------------------------------------");
+	        System.out.printf("Grand Total                                                      $%.2f\n", payment.grandTotal());
+	        System.out.println("---------------------------------------------------------------------------------");
+		}
+    
     
 } 
