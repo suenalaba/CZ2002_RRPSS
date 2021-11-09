@@ -78,8 +78,19 @@ public class CustomerApp {
 				System.out.println("\nPlease choose Gender");
 				System.out.println("(1) Female");
 				System.out.println("(2) Male ");
-				Gender = sc.nextInt();
-				sc.nextLine();
+				
+				
+
+
+					try {
+						Gender = sc.nextInt();
+						sc.nextLine();
+					}catch(InputMismatchException e) {
+						System.out.println("Invalid Input. Try Again: ");
+					}
+				
+				
+				
 				if (Gender == 1) { 
 					customer.setcustomerGender("Female");
 					break;
@@ -133,7 +144,15 @@ public class CustomerApp {
 				System.out.println("\nDoes customer have restaurant membership?");
 				System.out.println("(1) Yes");
 				System.out.println("(2) No ");
-				rest_membership = sc.nextInt();
+				
+				
+				try {
+					rest_membership = sc.nextInt();
+					sc.nextLine();
+				}catch(InputMismatchException e) {
+					System.out.println("Invalid Input. Try Again: ");
+				}
+			
 				if (rest_membership == 1) {
 					customer.setrestaurantMembership(true);
 					break;
@@ -145,14 +164,22 @@ public class CustomerApp {
 				else {
 					System.out.println("Invalid entry, depending on membership status enter 1 or 2");
 				}
-			} while (rest_membership != 1 || rest_membership != 2);
+			} while (rest_membership != 1 && rest_membership != 2);
 
 			// input whether customer has partner membership
 			do {
 				System.out.println("\nDoes customer have partner membership?");
 				System.out.println("(1) Yes");
 				System.out.println("(2) No ");
-				partner_membership = sc.nextInt();
+				
+				
+				try {
+					partner_membership = sc.nextInt();
+					sc.nextLine();
+				}catch(InputMismatchException e) {
+					System.out.println("Invalid Input. Try Again: ");
+				}
+				
 				if (partner_membership == 1) {
 					customer.setpartnerMembership(true);
 					break;
@@ -330,18 +357,18 @@ public class CustomerApp {
 					System.out.println("(1) Female");
 					System.out.println("(2) Male ");
 					Gender = sc.nextLine();
-					if (Gender == "1") {
+					if (Gender.equals("1")) {
 						updateCustomer.setcustomerGender("Female");
 						break;
 					}
-					else if(Gender == "2") {
+					else if(Gender.equals( "2")) {
 						updateCustomer.setcustomerGender("Male");
 						break;
 					}
 					else {
 						System.out.println("Invalid Gender!");
 					}
-				} while (Gender != "1" || Gender != "2");
+				} while (!Gender.equals("1") || !Gender.equals("2"));
 				break;
 			case 3:
 				// Update customer phone number
@@ -364,18 +391,18 @@ public class CustomerApp {
 					System.out.println("(1) Yes");
 					System.out.println("(2) No ");
 					rest_membership = sc.nextLine();
-					if (rest_membership == "1") {
+					if (rest_membership.equals( "1")) {
 						updateCustomer.setrestaurantMembership(true);
 						break;
 					}
-					else if(rest_membership == "2") {
+					else if(rest_membership.equals("2")) {
 						updateCustomer.setrestaurantMembership(false);
 						break;
 					}
 					else {
 						System.out.println("Invalid entry, depending on membership status enter 1 or 2");
 					}
-				} while (rest_membership != "1" || rest_membership != "2");
+				} while (!rest_membership.equals("1") || !rest_membership.equals("2"));
 				break;
 			case 5:
 				// Update Customer's partner membership status
@@ -384,18 +411,18 @@ public class CustomerApp {
 					System.out.println("(1) Yes");
 					System.out.println("(2) No ");
 					partner_membership = sc.nextLine();
-					if (partner_membership == "1") {
+					if (partner_membership.equals("1")) {
 						updateCustomer.setpartnerMembership(true);
 						break;
 					}
-					else if(partner_membership == "2") {
+					else if(partner_membership.equals("2")) {
 						updateCustomer.setpartnerMembership(false);
 						break;
 					}
 					else {
 						System.out.println("Invalid entry, depending on membership status enter 1 or 2");
 					}
-				} while (partner_membership != "1" || partner_membership != "2");
+				} while (!partner_membership.equals("1") || !partner_membership.equals("2"));
 				break;
 			case 6:
 				System.out.println("No more updates.");
@@ -478,7 +505,6 @@ public class CustomerApp {
 		
 		System.out.println("Customer Details have been successfully removed!");
 		tempstorage.renameTo(database);
-		
 
 	}
 
