@@ -87,9 +87,9 @@ public class OrderDatabase implements DatabaseFunction {
 			{
 				orderstring.append(Integer.toString(order.getOrderItems().get(j).getMenuItemID()));
 				orderstring.append(",");
-				
 			}
-			
+			orderstring.deleteCharAt(orderstring.lastIndexOf(","));
+			orderstring.append(DELIMITER); 
 			//ordertime
 			//Format formatter = new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss");
 			orderstring.append(order.getOrderTime());
