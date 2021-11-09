@@ -174,26 +174,6 @@ public class ReservationManager {
 	
 	
 	//check methods
-	public static void checkReservationQuery(){ //Queries for correct reservation ID then passes to checkReservation
-		System.out.println("\n Enter your reservationID:");
-		int reservationIndex;
-		Scanner sc= new Scanner(System.in);
-		try {
-			int reservationID = sc.nextInt();
-			reservationIndex=reservationIDToIndex(reservationID);
-			if (reservationIndex==-1) {
-				System.out.println("Reservation ID not in system. Returning to main menu.");
-				return;
-			}
-			else {
-			checkReservation(reservationID,reservationIndex);
-			}
-			}catch(InputMismatchException e) {
-				System.out.println("Invalid input. Returning to main menu.");
-				return;
-			}
-	}
-	
 	public static void checkReservation(int reservationID,int reservationIndex) {  //Prints reservation details
 		System.out.println("\n" + "Checking Reservation " + reservationID + "...");
 		System.out.println("\n ---Current reservation details---");

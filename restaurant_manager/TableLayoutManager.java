@@ -60,58 +60,13 @@ public class TableLayoutManager {
 		return -1;
 	}
 	
-	public static void createTableQuery() { //creates table with tableID and pax of 2 increment
-		Scanner sc=new Scanner(System.in);
-		int tableID, tableCapacity; 
-		System.out.println("Enter table ID of new table: ");
-		tableID = sc.nextInt(); 
-		sc.nextLine();
-		if(findTableIndex(tableID) == -1) { //if no existing tableID
-			System.out.println("Select desired table capacity: ");
-			System.out.println("2/4/6/8/10");
-			try {
-			tableCapacity = sc.nextInt();
-			}
-			catch(InputMismatchException e) {
-				System.out.println("Invalid input");
-				return;
-			}
-			if(tableCapacity == 2 || tableCapacity == 4 || tableCapacity == 6 || tableCapacity == 8 || tableCapacity ==10) {
-				createTable(tableID, tableCapacity); 
-				System.out.println("Table " + tableID + " with table capacity of " + tableCapacity + " created");
-				return;
-			}
-			else {
-				System.out.println("Invalid table capacity");
-				return;
-			}
-		}
-		else{
-			System.out.println("Table already exists!");
-		}
-	} 
 	
-	private static void createTable(int tableID, int tableCapacity) {
+	
+	public static void createTable(int tableID, int tableCapacity) {
 		mainLayout.getTableLayout().add(new Table(tableID,tableCapacity));
 	}
-	
-	public static void removeTableQuery() {
-		Scanner sc = new Scanner(System.in); 
-		int tableID; 
-		System.out.println("Enter table ID of table to be removed");
-		try {
-			tableID = sc.nextInt();
-			sc.nextLine();
-		}
-		catch(InputMismatchException e) {
-			System.out.println("Invalid input");
-			return;
-		}
-		removeTable(tableID);
-		
-	}
 
-	private static void removeTable(int tableID) {
+	public static void removeTable(int tableID) {
 		int index = findTableIndex(tableID); 
 		if(index == -1) {
 			System.out.println("Table does not exist");
@@ -282,15 +237,17 @@ public class TableLayoutManager {
 		}
 	}
 	public static void saveDB(String saveFile) throws IOException{
+		TableLayoutDatabase saver=new TableLayoutDatabase();
 		if (mainLayout.getTableLayout().size()==0) {
 			System.out.println("Nothing to save!");
 			return;
 		}
-		TableLayoutDatabase.fwrite(saveFile,mainLayout.getTableLayout());
+		saver.fwrite(saveFile);
 		System.out.println("Saved successfully to "+saveFile);
 	}
 	public static void loadDB(String loadFile) throws IOException{
-		mainLayout.setTableLayout(TableLayoutDatabase.fread(loadFile));
+		TableLayoutDatabase loader=new TableLayoutDatabase();
+		mainLayout.setTableLayout(loader.fread(loadFile));
 		System.out.println("Loaded successfully from "+loadFile);
 	}
 	
