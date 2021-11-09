@@ -263,7 +263,8 @@ public class ReservationManager {
 		for (int i=0;i<protectedReservationsToday.size();i++) {
 			if (possibleTables.contains(protectedReservationsToday.get(i).getTableID())) {
 				try {
-					possibleTables.remove(protectedReservationsToday.get(i).getTableID());
+					int removeIndex=possibleTables.indexOf(protectedReservationsToday.get(i).getTableID())
+					possibleTables.remove(removeIndex);
 				}
 				catch(Exception e) {
 					System.out.println("No available table at the moment");
