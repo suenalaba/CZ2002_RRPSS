@@ -16,18 +16,21 @@ import java.io.FileNotFoundException;
 
 public class MenuManager {
 	private static Menu mainMenu=new Menu();
-	private static void createItem(String name,String description,type itemType,double price) { //Append AlaCarte item to mainMenu
+	public static Menu getMainMenu() {
+		return mainMenu;
+	}
+	public static void createItem(String name,String description,type itemType,double price) { //Append AlaCarte item to mainMenu
 		System.out.println("------------------------------------");
 		mainMenu.getListOfMenuItems().add(new MenuItem(name,description,itemType,price));
 		mainMenu.getListOfMenuItems().get(mainMenu.getListOfMenuItems().size()-1).printAll();
 	}
-	private static void createItem(String name,String description,type itemType,double price,ArrayList<MenuItem> promoPackItems) { //Append promoPack to mainMenu
+	public static void createItem(String name,String description,type itemType,double price,ArrayList<MenuItem> promoPackItems) { //Append promoPack to mainMenu
 		System.out.println("------------------------------------");
 		System.out.println("New Promotion Package added to Menu:");
 		mainMenu.getListOfMenuItems().add(new PromotionPackage(name,description,itemType,price,promoPackItems));
 		mainMenu.getListOfMenuItems().get(mainMenu.getListOfMenuItems().size()-1).printAll();
 	}
-	private static void removeItem(int removalIndex) { //removes item by marking in enum type DELETED prefix
+	public static void removeItem(int removalIndex) { //removes item by marking in enum type DELETED prefix
 		type typeCheck=mainMenu.getListOfMenuItems().get(removalIndex).getMenuItemType();
 		switch(typeCheck){
 			case APPETIZER:
@@ -59,7 +62,7 @@ public class MenuManager {
 	public static Menu getMenuInstance() { //returns a Menu object of the current mainMenu
 		return mainMenu;
 	}
-	public static void createItemQuery() { //Queries user for item to create. either alacarte item or promo pack
+	/*public static void createItemQuery() { //Queries user for item to create. either alacarte item or promo pack
 		Scanner sc=new Scanner(System.in);
 		Menu alaCarteMenu=new Menu(mainMenu.getAlaCarteMenuItems());
 		ArrayList<MenuItem> promoPackItems;
@@ -460,8 +463,8 @@ public class MenuManager {
 			}
 			updateItem(updateIndex,name,description,itemType,price,promoPackItems); //atomic
 		}
-	}
-	private static void updateItem(int updateIndex,String Name,String Description,type itemType,double price) {
+	}*/
+	public static void updateItem(int updateIndex,String Name,String Description,type itemType,double price) {
 		System.out.println("Item Update");
 		System.out.println("From:");
 		mainMenu.getListOfMenuItems().get(updateIndex).printAll();
@@ -472,7 +475,7 @@ public class MenuManager {
 		System.out.println("To:");
 		mainMenu.getListOfMenuItems().get(updateIndex).printAll();
 	}
-	private static void updateItem(int updateIndex,String Name,String Description,type itemType,double price,ArrayList<MenuItem> promoPackItems) {
+	public static void updateItem(int updateIndex,String Name,String Description,type itemType,double price,ArrayList<MenuItem> promoPackItems) {
 		System.out.println("###Item Update###");
 		System.out.println("From:");
 		mainMenu.getListOfMenuItems().get(updateIndex).printAll();
