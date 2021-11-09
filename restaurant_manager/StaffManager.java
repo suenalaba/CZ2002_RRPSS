@@ -37,7 +37,7 @@ public class StaffManager {
 		//check if staffId already exists as staff Id is unique. 
 		 ArrayList <Integer> existingStaffId = new ArrayList<Integer>();
 		 
-		 //pull out all existing staff Id from listofstaffmemebers and add to existingstaffId
+		 //pull out all existing staff Id from listofstaffmembers and add to existingstaffId
 		 for(int i=0; i<listOfStaffMembers.size();i++)
 		 {
 			 existingStaffId.add(listOfStaffMembers.get(i).getStaffID());
@@ -49,11 +49,12 @@ public class StaffManager {
 				{
 					try {
 						staffId = sc.nextInt();
-						sc.nextLine();
+						//sc.nextLine();
 						
-						//check if staff
+						//check if existing list of staffId contains the staffId entered. 
 						if(existingStaffId.contains(staffId))
 						{
+							staffId=-1;
 							System.out.println("Staff Id entered already exists. Please enter another one.");
 						}
 						
@@ -73,20 +74,12 @@ public class StaffManager {
 		
 		
 		System.out.println("Enter staff Name: ");
-		
-		
 		String staffName = sc.nextLine();
-		
-		
-		
 		
 		System.out.println("Enter staff title: ");
 		String staffTitle = sc.nextLine();
 		
 		System.out.println("Enter staff gender: Enter 1 for MALE, 2 for FEMALE: ");
-		
-		
-		
 		int genderChoice = -1;
 		
 		while (genderChoice==-1)
@@ -94,6 +87,17 @@ public class StaffManager {
 			try {
 				genderChoice = sc.nextInt();
 				sc.nextLine();
+				
+				if(genderChoice!=1 || genderChoice!=2)
+				{
+					genderChoice=-1;
+					System.out.println("Gender choice invalid. Choose either 1 for MALE or 2 for FEMALE: ");
+				}
+				
+				else
+				{
+					break;
+				}
 				
 			}
 			
@@ -147,6 +151,14 @@ public class StaffManager {
 		System.out.println("Enter staff ID of staff you want to remove: ");
 		displayStaffList();
 		
+		//check if staffId entered exists in stafflist. else ask user enter again. 
+		 ArrayList <Integer> existingStaffId = new ArrayList<Integer>();
+		 
+		 //pull out all existing staff Id from listofstaffmemebers and add to existingstaffId
+		 for(int i=0; i<listOfStaffMembers.size();i++)
+		 {
+			 existingStaffId.add(listOfStaffMembers.get(i).getStaffID());
+		 }
 		
 		//error handling if input for staffId not an integer
 		int staffId = -1;
@@ -156,6 +168,18 @@ public class StaffManager {
 			try {
 				staffId = sc.nextInt();
 				sc.nextLine();
+				
+				if(existingStaffId.contains(staffId))
+				{
+					break;
+				}
+				
+				else
+				{
+					
+					staffId=-1;
+					System.out.println("Staff Id entered does not exists in system. Please enter another one.");
+				}
 				
 			}
 			
@@ -198,7 +222,16 @@ public class StaffManager {
 		System.out.println("Enter the staff ID of the staff that you want to update details to:");
 		displayStaffList();
 		
+		//check if staffId entered exists in stafflist. else ask user enter again. 
+		 ArrayList <Integer> existingStaffId = new ArrayList<Integer>();
+		 
+		 //pull out all existing staff Id from listofstaffmemebers and add to existingstaffId
+		 for(int i=0; i<listOfStaffMembers.size();i++)
+		 {
+			 existingStaffId.add(listOfStaffMembers.get(i).getStaffID());
+		 }
 		
+		 
 		int staffIdUpdate = -1;
 		
 		while (staffIdUpdate==-1)
@@ -206,6 +239,19 @@ public class StaffManager {
 			try {
 				staffIdUpdate = sc.nextInt();
 				sc.nextLine();
+				
+				if(existingStaffId.contains(staffIdUpdate))
+				{
+					break;
+				}
+				
+				else
+				{
+					
+					staffIdUpdate=-1;
+					System.out.println("Staff Id entered does not exists in system. Please enter another one.");
+				}
+				
 				
 			}
 			
