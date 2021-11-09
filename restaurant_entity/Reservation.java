@@ -14,6 +14,7 @@ public class Reservation {
 	private LocalDateTime reservationStartTime;
 	private LocalDateTime reservationEndTime;
 	private boolean isFinished;
+	private boolean isAppeared;
 	
 	
 	//Constructors
@@ -32,9 +33,10 @@ public class Reservation {
 		this.reservationStartTime=startTime;
 		this.reservationEndTime=startTime.plusHours(1);
 		this.isFinished=false;
+		this.isAppeared=false;
 	}
 	
-	public Reservation(int tableID,int pax,String customerID, LocalDateTime startTime,LocalDateTime endTime,Boolean isFinished) {
+	public Reservation(int tableID,int pax,String customerID, LocalDateTime startTime,LocalDateTime endTime,Boolean isFinished,Boolean isAppeared) {
 		this.reservationID = counter;
 		counter++;
 		this.tableID=tableID;
@@ -43,6 +45,7 @@ public class Reservation {
 		this.reservationStartTime=startTime;
 		this.reservationEndTime=endTime;
 		this.isFinished=isFinished;
+		this.isAppeared=isAppeared;
 	}
 	
 	//methods
@@ -102,6 +105,15 @@ public class Reservation {
 
 	public void setIsFinished(boolean status) {
 		this.isFinished = status;
+	}
+	
+	public boolean getIsAppeared() {
+		return isAppeared;
+	}
+
+
+	public void setIsAppeared(boolean status) {
+		this.isAppeared = status;
 	}
 	
 	public static int getCounter() {
