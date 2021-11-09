@@ -30,14 +30,13 @@ public class PaymentDatabase implements DatabaseFunction {
 			StringTokenizer str_tokenizer = new StringTokenizer(stringtoken, delimiter);
 			Order orderTarget = null; //initialized, assigned values later.
 			//paymentdate;subtotal;gst;servicecharge;memberdiscount;grandtotal;orderid;reservationnumber;tableid;membershipApplied
-			/*
+			
 			String paymentdate = str_tokenizer.nextToken().trim();
 			double subtotal = Double.valueOf(str_tokenizer.nextToken().trim());
 			double gst = Double.valueOf(str_tokenizer.nextToken().trim());
 			double servicecharge = Double.valueOf(str_tokenizer.nextToken().trim());
 			double memberdiscount = Double.valueOf(str_tokenizer.nextToken().trim());
 			double grandtotal = Double.valueOf(str_tokenizer.nextToken().trim());
-			*/
 			int orderid = Integer.valueOf(str_tokenizer.nextToken().trim());
 			int reservationnumber = Integer.valueOf(str_tokenizer.nextToken().trim());
 			int tableid = Integer.valueOf(str_tokenizer.nextToken().trim());
@@ -66,8 +65,9 @@ public class PaymentDatabase implements DatabaseFunction {
 	    			orderTarget = o;
 	    		}
 	    	}
-	    	
-	    	Payment payment = new Payment(orderTarget, membershipapplied, tableid, reservationnumber);
+	   
+	    	Payment payment = new Payment(paymentdate, subtotal, gst, servicecharge, memberdiscount, grandtotal, orderTarget,
+	        		reservationnumber, tableid, membershipapplied);
 		//(Order order, boolean membershipApplied, int tableId, int reservationNumber)
 		  paymentlist.add(payment);
 		}
@@ -78,7 +78,7 @@ public class PaymentDatabase implements DatabaseFunction {
 	@Override
 	public void fwrite(String textfilename) throws IOException {
 		ArrayList<String> fwritepayment = new ArrayList<String>();
-		ArrayList<Payment> paymentlist = PaymentManager.getAllPayments();
+		ArrayList<Payment> paymentlist = PaymentManager.getPaymentInvoices();
 		
 		
 		
