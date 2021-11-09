@@ -84,7 +84,6 @@ public class CustomerManager {
 	public static Customer retrieveCustomerDetailsbyID() {
 		String custID;
 
-		Customer customer = new Customer();
 		Customer validcustomer = new Customer();
 
 		// Checking validity of Customer ID
@@ -93,9 +92,7 @@ public class CustomerManager {
 			System.out.println("Please enter Customer ID to update: ");
 			Scanner sc = new Scanner(System.in);
 			custID = sc.nextLine();
-			customer.setcustomerID(custID);
-			validcustomer = retrieveCustomerdetails(customer);
-			sc.close();
+			validcustomer = retrieveCustomerbyIDinput(custID);
 			if (validcustomer != null) {
 				System.out.printf("Proceeding to update details for CustomerID: %s\n",custID);
 				break;

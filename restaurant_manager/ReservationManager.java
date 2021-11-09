@@ -355,14 +355,15 @@ public class ReservationManager {
 			}
 			else if (databaseReservations.get(i).getReservationStartTime().isAfter(LocalDateTime.now())) {
 				
-				if (databaseReservations.get(i).getIsAppeared()==true) {
+				if (databaseReservations.get(i).getIsAppeared()==true && databaseReservations.get(i).getIsFinished()==false && Integer.parseInt(LocalDateTime.now().toString().substring(11,13))>=9 && 
+						Integer.parseInt(LocalDateTime.now().toString().substring(11,13))<=22) {
 					dataHour=LocalDateTime.now().toString().substring(11, 13);
 					TableLayoutManager.updateTable(databaseReservations.get(i).getTableID(), Integer.parseInt(dataHour), status.OCCUPIED);
 					dataHour=databaseReservations.get(i).getReservationStartTime().toString().substring(11, 13);
 					TableLayoutManager.updateTable(databaseReservations.get(i).getTableID(), Integer.parseInt(dataHour), status.OCCUPIED);
 				}
 				
-				else{
+				else if(databaseReservations.get(i).getIsFinished()==false){
 					dataHour=databaseReservations.get(i).getReservationStartTime().toString().substring(11, 13);
 					TableLayoutManager.updateTable(databaseReservations.get(i).getTableID(), Integer.parseInt(dataHour), status.RESERVED);
 				}
