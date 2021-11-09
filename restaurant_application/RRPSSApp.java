@@ -55,18 +55,20 @@ public class RRPSSApp {
 		
 		
 		//read in all databases.
-		final String staffFile = "staffDB.txt";
-		StaffManager.loadStaffDB(staffFile);//load staff database
-		final String menuFile="menuDB.txt";
-		MenuManager.loadDB(menuFile); //load menu database
-		final String tableFile="tableLayoutDB.txt";
-		TableLayoutManager.loadDB(tableFile); //Load table database
-		final String reservationFile="reservationDB.txt";
-		ReservationManager.loadDB(reservationFile); //load reservation database
-		final String orderFile = "orderDB.txt";
-		OrderManager.loadOrderDB(orderFile);
-		final String paymentFile = "paymentDB.txt";
-		PaymentManager.loadDB(paymentFile);//load Payment database
+		final String STAFFFILE = "staffDB.txt";
+		StaffManager.loadStaffDB(STAFFFILE);//load staff database
+		final String MENUFILE="menuDB.txt";
+		MenuManager.loadDB(MENUFILE); //load menu database
+		final String TABLEFILE="tableLayoutDB.txt";
+		TableLayoutManager.loadDB(TABLEFILE); //Load table database
+		final String CUSTOMERFILE="customerDB.txt";
+		CustomerManager.loadDB(CUSTOMERFILE);
+		final String RESERVATAIONFILE="reservationDB.txt";
+		ReservationManager.loadDB(RESERVATAIONFILE); //load reservation database
+		final String ORDERFILE = "orderDB.txt";
+		OrderManager.loadDB(ORDERFILE);
+		final String PAYMENTFILE = "paymentDB.txt";
+		PaymentManager.loadDB(PAYMENTFILE);//load Payment database
 		
 		//Customer Database is probed in classManager
 		
@@ -199,7 +201,7 @@ public class RRPSSApp {
 								TableLayoutApp.removeTableQuery(); // function to remove Table
 								break;
 							case 3:
-								TableLayoutApp.getInstance().printTableLayout();
+								TableLayoutManager.getInstance().printTableLayout();
 							case 4:
 								System.out.println("Exiting now, Table Details have been updated!");
 								break;
@@ -238,7 +240,7 @@ public class RRPSSApp {
 								break;
 							case 4: 
 								//display all staff
-								StaffApp.displayStaffList();
+								StaffManager.displayStaffList();
 								break;
 							case 5:
 								System.out.println("Exiting now, Staff Details have been updated!");
@@ -315,7 +317,7 @@ public class RRPSSApp {
 					reservationwalkin_select = sc.nextInt();
 					switch (reservationwalkin_select) {
 					case 1:
-						ReservationApp.createReservationQuery();
+						ReservationApp.registerCustomerQuery();
 						break;
 					case 2:
 						ReservationApp.removeReservationQuery();
@@ -387,11 +389,13 @@ public class RRPSSApp {
 			case 6:
 				System.out.println("Have a good day fellow staff!");
 				System.out.println("Program terminating, please hold while data is being saved ..."); // Save records into database and textfile
-				TableLayoutManager.saveDB(tableFile);
-				StaffManager.saveStaffDB(staffFile);
-				MenuManager.saveToDB(menuFile);
-				ReservationManager.saveDB(reservationFile);
-				PaymentManager.saveDB(paymentFile);
+				TableLayoutManager.saveDB(TABLEFILE);
+				OrderManager.saveDB(ORDERFILE);
+				CustomerManager.saveDB(CUSTOMERFILE);
+				StaffManager.saveStaffDB(STAFFFILE);
+				MenuManager.saveDB(MENUFILE);
+				ReservationManager.saveDB(RESERVATAIONFILE);
+				PaymentManager.saveDB(PAYMENTFILE);
 				break;
 			default:
 				rrpss_select = 0;
@@ -404,17 +408,7 @@ public class RRPSSApp {
 				sc.nextLine();
 			}
 		} while (rrpss_select>=0 && rrpss_select<=5);
-		
-		//writing to all databases when program terminates
-		//MenuManager.retrieveInstance().savetoDB(); //get menu manager instance
-		//OrderManager.getInstance().savetoDB(); //get order manager instance
-		//PaymentManager.getpaymentInstance().writeallpaymentdetailstodatabase();
-		//customer manager instance
-		//reservation manager instance
-		//table layout manager instance
 		sc.close();
 		System.out.println("Data saved, thank you for coming to Li Fang and Zhang Jie restaurant");
 	}
-	//function to check if reservation exceeded then u wanna remove reservation and 
-	//set table to "vacant"
 }

@@ -220,7 +220,9 @@ public class CustomerApp {
 
 			try { //Jacques-CustomerID needs to be created before this
 				// Write Customer records to file
-				customerDatabase.fwrite(textfilename, customerinfo);
+				CustomerManager.setCustomerList(customerinfo);
+				CustomerDatabase saver=new CustomerDatabase();
+				saver.fwrite(textfilename);
 
 				System.out.println("Customer information succesfully entered! ");
 
@@ -434,7 +436,7 @@ public class CustomerApp {
 		} while (updatetype >= 1 && updatetype  <=5 );
 		try
 		{
-			ArrayList customerlist = CustomerManager.retrieveallcustomerdetailsfromdatabase();
+			ArrayList customerlist = CustomerManager.getCustomerList();
 			for (int i = 0; i < customerlist.size(); i++) {
 				Customer findcustomer = (Customer) customerlist.get(i);
 
@@ -444,8 +446,9 @@ public class CustomerApp {
 			}
 
 			// Write Customer records to file
+			CustomerManager.setCustomerList(customerlist);
 			CustomerDatabase customerdatabase = new CustomerDatabase();
-			customerdatabase.fwrite(textfilename, customerlist); //implement write function in database
+			customerdatabase.fwrite(textfilename); //implement write function in database
 
 			System.out.println("Customer Details successfully updated!");
 		} catch (

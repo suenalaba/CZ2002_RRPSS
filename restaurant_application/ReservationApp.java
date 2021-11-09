@@ -19,6 +19,12 @@ public class ReservationApp {
 		//1. if registered> provide customerID
 		//2. if not> create customer and retrieve customerID
 		//3. if not> anonymous> assume not a case. Otherwise, input anonymous name in customer creation and ask Joshua for ability to decline providing phone number.
+		if (TableLayoutManager.getInstance().getTableLayout().size()==0) {
+			 System.out.println("No Tables in restaurant for customers to dine. Returning to main menu.");
+			 return;
+		 }
+		
+		
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Walk-in or making reservation??");
 		System.out.println("(1) Walk-in/Complete Reservation");
@@ -52,8 +58,8 @@ public class ReservationApp {
 					break;
 				}
 				else if(customerCheck==2) {
-					CustomerManager.createCustomer(false,walkIn);
-					customerID=CustomerManager.retrieveallcustomerdetailsfromdatabase().get(CustomerManager.retrieveallcustomerdetailsfromdatabase().size()-1).getcustomerID();
+					CustomerApp.createCustomer(false,walkIn);
+					customerID=CustomerManager.getCustomerList().get(CustomerManager.getCustomerList().size()-1).getcustomerID();
 					break;
 				}
 				else {
@@ -69,7 +75,7 @@ public class ReservationApp {
 		}
 		if (customerID==null) {
 			System.out.println("\n Enter customerID:");
-			ArrayList<Customer> allCustomers=CustomerManager.retrieveallcustomerdetailsfromdatabase(); 
+			ArrayList<Customer> allCustomers=CustomerManager.getCustomerList(); 
 			ArrayList<String> allCustomerIds=new ArrayList<String>();
 			for (int i=0;i<allCustomers.size();i++) {
 				allCustomerIds.add(allCustomers.get(i).getcustomerID());

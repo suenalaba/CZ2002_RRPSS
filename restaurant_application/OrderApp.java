@@ -15,8 +15,12 @@ public class OrderApp {
 
 	 public static void createOrderQuery() {
 		 Scanner sc = new Scanner(System.in);
+		 if (TableLayoutManager.getInstance().getTableLayout().size()==0) {
+			 System.out.println("No Tables in restaurant for customers to dine. Returning to main menu.");
+			 return;
+		 }
+		 TableLayoutManager.getInstance().printTableLayout();
 		 System.out.println("Enter table ID: ");
-		 
 		 int tableId = -1;
 		 ArrayList <Integer> occupiedTableId = new ArrayList<Integer>();
 		 
@@ -116,11 +120,15 @@ public class OrderApp {
 	 
 	//method to delete the whole entire order based on the order ID asked from staff input
 	 	public static void deleteWholeOrderQuery() {
-	 		System.out.println("Enter orderId you want to delete: ");
-	 		OrderManager.displayOrderList();
 	 		 Scanner sc = new Scanner(System.in);
 	 		int orderIdToDelete = -1;
 	 		//error handle if orderId entered not an integer. 
+	 		if (OrderManager.getOrderList().size()==0) {
+	 			System.out.println("No orders so far. Returning to main menu.");
+	 			return;
+	 		}
+	 		OrderManager.displayOrderList();
+	 		System.out.println("Enter orderId you want to delete: ");
 	 		
 	 		
 			
@@ -155,7 +163,10 @@ public class OrderApp {
 	 	
 	 	//updateOrder
 		 public static void updateOrderQuery() {
-			 
+			 if (OrderManager.getOrderList().size()==0) {
+		 			System.out.println("No orders so far. Returning to main menu.");
+		 			return;
+		 		}
 			 OrderManager.displayOrderList();
 			 int newTableId=-1;
 			 System.out.println("Enter orderID that you want to update: ");
@@ -393,7 +404,12 @@ public class OrderApp {
 		 
 		 
 		 public static void displayOrderBasedOnTableIdQuery() {
+			 if (OrderManager.getOrderList().size()==0) {
+		 			System.out.println("No orders so far. Returning to main menu.");
+		 			return;
+		 		}
 			 Scanner sc = new Scanner(System.in);
+			 TableLayoutManager.getInstance().printTableLayout();
 			 System.out.println("Enter tableID of order you want to display:");
 			 
 			 //check if tableID input valid. check if tableID is an occupied table

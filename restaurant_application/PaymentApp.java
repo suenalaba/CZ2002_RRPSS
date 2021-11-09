@@ -91,7 +91,8 @@ public class PaymentApp {
 		double totalRevenueAfterTax = 0;
     	try {
     		choice = sc.nextInt();
-    		if(choice != 1 || choice != 2) {
+    		sc.nextLine();
+    		if(choice != 1 && choice != 2) {
     			System.out.println("Invalid input");
     			return; 
     		}
@@ -118,7 +119,7 @@ public class PaymentApp {
     			break; 
     		} 
     		for (Payment payment : paymentinvoices) {
-    			if(payment.getpaymentDate().regionMatches(3, period, 0, 7)){
+    			if(payment.getpaymentDate().regionMatches(0, period, 0, 10)){
     				// prints out payment date and payment ID
     				System.out.println("Date: " + payment.getpaymentDate() + "       " + "Payment ID: " + payment.getpaymentID());
     				Order order = payment.getOrder(); 
@@ -158,7 +159,7 @@ public class PaymentApp {
     			break; 
     		}
     		for (Payment payment : paymentinvoices) {
-    			if(payment.getpaymentDate().startsWith(period, 3)){
+    			if(payment.getpaymentDate().regionMatches(3, period, 0, 7)){
     				// prints out payment date and payment ID
     				System.out.println("Date: " + payment.getpaymentDate() + "       " + "Payment ID: " + payment.getpaymentID());
     				Order order = payment.getOrder(); 
