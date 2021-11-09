@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.text.ParseException;
 //import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.InputMismatchException;
 //import java.util.ArrayList;
 //import java.util.Calendar;
 //import java.util.Date;
@@ -40,7 +41,7 @@ public class RRPSSApp {
 	public static void main(String[] args) throws IOException, ParseException {
 		// TODO Auto-generated method stub
 		//Date d = new Date();
-		int rrpss_select;
+		int rrpss_select=0;
 		LocalDateTime datetimenow = LocalDateTime.now();
 		System.out.println(datetimenow);
 		Scanner sc = new Scanner(System.in);
@@ -75,6 +76,7 @@ public class RRPSSApp {
 		//get instance of tablelayout manager
 		
 		do {
+			try {
 			ReservationManager.autoUpdate();
 
 			System.out.println("Welcome to Zhang Jie and Li Fang's Sichuan Delights");
@@ -392,6 +394,11 @@ public class RRPSSApp {
 				rrpss_select = 0;
 				System.out.println("Invalid choice, please try again!");
 				break;
+			}
+			}catch(Exception e) {
+				System.out.println("Invalid input. Please key in one of the choices listed.\nTryAgain:");
+				System.out.println("Returning to Main Menu.");
+				sc.nextLine();
 			}
 		} while (rrpss_select>=0 && rrpss_select<=5);
 		
