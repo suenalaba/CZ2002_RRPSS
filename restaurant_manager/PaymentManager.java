@@ -1,6 +1,7 @@
 package restaurant_manager;
 import java.io.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -22,21 +23,86 @@ import restaurant_manager.ReservationManager;
 import restaurant_entity.Reservation;
 //import restaurant_entity.Reservation;
 //import restaurant_database.PaymentDatabase;
-
+import restaurant_entity.Staff;
 //import other restaurant classes...
 import restaurant_manager.TableLayoutManager;
 public class PaymentManager{
-    private static final double serviceCharge = 0.10;
-    private static final double GST = 0.07;
-	private static final String textfilename = "Payment.txt";
-	public static PaymentManager paymentmanager = null;
-    ArrayList<Payment> paymentinvoices = new ArrayList<Payment>();
 
+    private static final double MEMBER = 0.15; 
+	//private static final String textfilename = "Payment.txt";
+	//public static PaymentManager paymentmanager = null;
+    //ArrayList<Payment> paymentinvoices = new ArrayList<Payment>();
+
+    
+	private static ArrayList<Payment> paymentInvoices = new ArrayList<Payment>();
+	
+	public static ArrayList<Payment> getPaymentInvoices(){
+		return paymentInvoices;
+	}    
+    public static void addPayment(Payment payment) {
+    	paymentInvoices.add(payment);
+    } 
+    
+    public static void printReceipt(Payment payment) {
+
+
+			System.out.printf("                                     Date:                     #%s              \n", payment.getpaymentDate());
+			System.out.println("---------------------------------------------------------------------------------");
+			System.out.printf("                                     Table Number:             #%d              \n", payment.getTableId());
+			System.out.println("---------------------------------------------------------------------------------");
+		    System.out.printf("Menu Item                                                                \n");
+		    System.out.println("---------------------------------------------------------------------------------");
+		    payment.getOrder().viewOrder();
+	        System.out.print("Sub-Total:                                                          ");
+	        System.out.format("%.2f\n", payment.getSubTotal());
+	        System.out.print("Service Charge (10%)                                                ");
+	        System.out.format("%.2f\n", payment.getServiceCharge());
+	        System.out.print("GST (7%)                                                            ");
+	        System.out.format("%.2f\n", payment.getGst());
+	        System.out.print("Member Discount (15%)                                               ");
+	        System.out.format("-%.2f\n", payment.getMemberDiscount());
+	        System.out.println("---------------------------------------------------------------------------------");
+	        System.out.printf("Grand Total                                                        ");
+	        System.out.format("$%.2f\n", payment.grandTotal());
+	        System.out.println("---------------------------------------------------------------------------------");
+	        
+
+		}
+    
+    public static String getPaymentDateTime() {
+	LocalDateTime paymentDate = LocalDateTime.now(); 
+	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+	return paymentDate.format(formatter);
+    }
+    
+    public static double calculateSubtotal(ArrayList<MenuItem> listOfMenuItems) {
+    	double subTotal = 0;
+    	for(int i= 0; i<listOfMenuItems.size(); i++) {
+		subTotal += listOfMenuItems.get(i).getMenuItemPrice();
+    	}
+    	return subTotal; 
+    }
+    
+    public static double calculateMemberDiscount(boolean membershipApplied, double subtotal) {
+    	double memberDiscount = 0; 
+    	if(membershipApplied == true) {
+    		memberDiscount = subtotal * MEMBER; 
+    	}
+    	return memberDiscount; 
+    }
+    
+}    
+    /*
+	public void setPaymentInvoices(ArrayList<Payment> paymentInvoices) {
+		this.paymentInvoices = paymentInvoices;
+	}
+   
+    
     /**
 	 * Creating new instance of payment Manager
 	 * 
 	 * @return PaymentManager instance
-	 */
+	 
     public static PaymentManager getInstance() {
     	if (paymentmanager != null) {
     		return paymentmanager;
@@ -58,18 +124,18 @@ public class PaymentManager{
 	 * 
 	 * @param payment
 	 * 				Specifies the payment to be made
-	 */
+	 
     public void createPayment(Payment payment) {
         paymentinvoices.add(payment);
     }
     //TODO
-    /**
+    
 	 * Retrieving payment id by reservation number
 	 * 
 	 * @param reservationNum
 	 * 				Specifies the reservation number to retrieve payment details
 	 * @return Payment id if found. Else will return 0
-	 */
+	 
     public int retrievePaymentId(String reservationNum){
     	for (Payment payment : paymentinvoices){
     		if(String.valueOf(payment.getreservationNumber()).equals(reservationNum)) {
@@ -87,7 +153,7 @@ public class PaymentManager{
 	 * @param orderid
 	 * 				Specifies the orderid
 	 * @return total payment before tax
-	 */
+	 
     public double retrievetotalPayment(Payment payment, int orderID) {
     	double paymentbeforeTax = 0;
     	ArrayList<Order> orderlist = payment.getOrderList();
@@ -110,7 +176,7 @@ public class PaymentManager{
 	 * @param roomId
 	 * 				Specifies the order id
 	 * @return total amount of payment after tax
-	 */
+	 
     public double retrievepaymentafterTax(Payment payment, int orderID) {
     	double totalPayment = retrievetotalPayment(payment, orderID);
         double paymentafterTax = (1+ GST + serviceCharge) *totalPayment;
@@ -129,12 +195,12 @@ public class PaymentManager{
 	 * 				Specifies the method of payment
 	 * @param cash
 	 * 				Specifies the cash amount
-	 */
+	 
     
     /**
 	 * Checking of payment id
 	 * 
-	 */
+	 
     public void checkinvoice() {
     	int paymentid = 1;
 		if(paymentinvoices!=null) {
@@ -148,7 +214,7 @@ public class PaymentManager{
     /**
 	 * Retrieval of all payments
 	 * 
-	 */
+	
     public void retrieveallpaymentdetailsfromdatabase() {
     	PaymentDatabase paymentdatabase = new PaymentDatabase();
         try {
@@ -163,7 +229,7 @@ public class PaymentManager{
     /**
 	 * Write all payment details to database
 	 * 
-	 */
+	 
     public void writeallpaymentdetailstodatabase() {
     	PaymentDatabase paymentdatabase= new PaymentDatabase();
         try {
@@ -188,7 +254,7 @@ public class PaymentManager{
 			/*if (TableLayoutManager.getTableStatusNow(tableID) != status.OCCUPIED) {
 				System.out.println("Payment for this table has already been made!");
 				return;
-			}*/
+			}
 			String customerid = reservation.getCustomerID();
 			Customer customer = CustomerManager.retrieveCustomerbyIDinput(customerid);
 			System.out.printf("                                     Date:                     #%s              \n", payment.getpaymentDate());
@@ -222,174 +288,8 @@ public class PaymentManager{
 			System.out.println("Payment Transaction Completed.");
 			TableLayoutManager.freeTableStatus(tableID);
 		}	
-			/*catch (IOException e) {
+			catch (IOException e) {
 		}
-		}*/
-    }
-    
-    
-    public void printSaleReport() {
-    	retrieveallpaymentdetailsfromdatabase();
-    	System.out.println("(1) Print sale revenue report by day\n(2) Print sale revenue report by month");
-    	Scanner sc = new Scanner(System.in); 
-    	int choice, i;
-    	String period; 
-		double totalRevenueBeforeTax = 0;
-		double totalRevenueAfterTax = 0;
-    	try {
-    		choice = sc.nextInt();
-    		if(choice != 1 || choice != 2) {
-    			System.out.println("Invalid input");
-    			return; 
-    		}
-    	}
-		catch(InputMismatchException e) {
-			System.out.println("Invalid input");
-			return;
-		}
-    	switch(choice) {
-    	case 1:
-    		System.out.println("Enter day in following format dd-MM-yyyy"); 
-    		period = sc.nextLine();
-    		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-    		try {
-    			LocalDate date = LocalDate.parse(period, formatter);
-    			if(LocalDate.now().isBefore(date)) {
-    				System.out.println("Future date!");
-    				break; 
-    			}
-    			
-    		}
-    		catch(DateTimeParseException exe) {
-    			System.out.println("Invalid date"); 
-    			break; 
-    		} 
-    		for (Payment payment : paymentinvoices) {
-    			if(payment.getpaymentDate().regionMatches(3, period, 0, 7)){
-    				// prints out payment date and payment ID
-    				System.out.println("Date: " + payment.getpaymentDate() + "       " + "Payment ID: " + payment.getpaymentID());
-    				Order order = payment.getOrder(); 
-    				ArrayList<MenuItem> orderItems = payment.getOrder().getOrderItems();
-    				for(i =0; i<orderItems.size(); i++) { // prints out all orders, menu type and price without gst
-    					System.out.println("Menu Item: " + orderItems.get(i).getMenuItemName() + "\t" + orderItems.get(i).getMenuItemType().name() +
-    							"\t" + orderItems.get(i).getMenuItemPrice());
-    				}
-    				totalRevenueBeforeTax += payment.getSubTotal();
-    				totalRevenueAfterTax += payment.getGrandTotal(); 
-    			}
-    		}
-    		// if == 0, no payment found
-    		if(totalRevenueBeforeTax == 0) {
-    			System.out.println("No payment records found");
-    		}
-    		else {
-    			System.out.println("Total revenue before tax and discounts: $" + totalRevenueBeforeTax);
-    			System.out.println("Total revenue after tax and discounts: $" + totalRevenueAfterTax);
-    		}
-    		break; 
-    		
-    	case 2: 
-    		System.out.println("Enter the month and year in the following format MM/yyyy");
-    		period = sc.nextLine();
-    		DateTimeFormatter formatterMonth = DateTimeFormatter.ofPattern("MM/yyyy");
-    		try {
-    			YearMonth date = YearMonth.parse(period, formatterMonth);
-    			if(YearMonth.now().isBefore(date)) {
-    				System.out.println("Future date!");
-    				break; 
-    			}
-    			
-    		}
-    		catch(DateTimeParseException exe) {
-    			System.out.println("Invalid date"); 
-    			break; 
-    		}
-    		for (Payment payment : paymentinvoices) {
-    			if(payment.getpaymentDate().startsWith(period, 3)){
-    				// prints out payment date and payment ID
-    				System.out.println("Date: " + payment.getpaymentDate() + "       " + "Payment ID: " + payment.getpaymentID());
-    				Order order = payment.getOrder(); 
-    				ArrayList<MenuItem> orderItems = payment.getOrder().getOrderItems();
-    				for(i =0; i<orderItems.size(); i++) { // prints out all orders, menu type and price without gst
-    					System.out.println("Menu Item: " + orderItems.get(i).getMenuItemName() + "\t" + orderItems.get(i).getMenuItemType().name() +
-    							"\t" + orderItems.get(i).getMenuItemPrice());
-    				}
-    				totalRevenueBeforeTax += payment.getSubTotal();
-    				totalRevenueAfterTax += payment.getGrandTotal();
-    			}
-    		}
-    		// if == 0, no payment found
-    		if(totalRevenueBeforeTax == 0) {
-    			System.out.println("No payment records found");
-    		}
-    		else {
-    			System.out.println("Total revenue before tax and discounts: $" + totalRevenueBeforeTax);
-    			System.out.println("Total revenue after tax and discounts: $" + totalRevenueAfterTax);
-    		}
-    		break;     		
-    		
-    		
-    		
-    	}
+		}*/ 
     	
-    }
-    
-    public void makePayment() {
-    	Scanner sc = new Scanner(System.in); 
-    	ArrayList<Order> unpaidOrders = new ArrayList<>();
-    	unpaidOrders = OrderManager.getUnpaidOrders(); // need to print unpaid orders
-    	for(int i= 0; i<unpaidOrders.size(); i++) {
-    		System.out.format("Table ID:  %d		Paid Status: %b", unpaidOrders.get(i).getTableID() , unpaidOrders.get(i).getPaidStatus());
-    	}
-    	System.out.println("Enter tableID to make payment"); 	
-    	int tableId = -1;
-		while (tableId==-1)
-		{
-			try {
-				tableId = sc.nextInt();
-				sc.nextLine();
-			}
-			catch(InputMismatchException e) {
-				sc.nextLine();
-				System.out.println("Not an Integer. Try Again:");
-			}
-		}
-		Order order = OrderManager.getOrderByTableId(tableId);
-		String customerName = ReservationManager.getUnfinishedReservationOfTableIDNow(tableId).getCustomerID();
-		Customer customer = CustomerManager.retrieveCustomerbyIDinput(customerName);
-		boolean membershipApplied = false; 
-		if(customer.getpartnerMembership() || customer.getrestaurantMembership()) {
-			membershipApplied = true; 
-		}
-		Payment payment = new Payment(order, membershipApplied, tableId, ReservationManager.getUnfinishedReservationOfTableIDNow(tableId).getReservationID());
-		printReceipt(payment);
-		//TableLayoutManager.freeTableStatus(tableId);
-		//ReservationManager.setIsFinished(payment.getreservationNumber());
-		//OrderManager.updatePaidStatus(payment.getOrder().getOrderID()); 
-		//fwrite
-    	
-    }
-    
-    public void printReceipt(Payment payment) {
-
-
-			System.out.printf("                                     Date:                     #%s              \n", payment.getpaymentDate());
-			System.out.println("---------------------------------------------------------------------------------");
-			System.out.printf("                                     Table Number:             #%d              \n", payment.getTableId());
-			System.out.println("---------------------------------------------------------------------------------");
-		    System.out.printf("Menu Item                                                                \n");
-		    System.out.println("---------------------------------------------------------------------------------");
-		    payment.getOrder().viewOrder();
-
-
-	        System.out.printf("Sub-Total:                                                        %.2f\n", payment.getSubTotal());
-	        System.out.printf("Service Charge (10%)                                              %.2f\n", payment.getServiceCharge());
-	        System.out.printf("GST (7%)                                                          %.2f\n", payment.getGst());
-	        System.out.printf("Member Discount (15%)                                            -%.2f\n", payment.getMemberDiscount());	        
-	        System.out.println("---------------------------------------------------------------------------------");
-	        System.out.printf("Grand Total                                                      $%.2f\n", payment.getGrandTotal());
-	        System.out.println("---------------------------------------------------------------------------------");
-		}
-    
-    
-} 
+ 
