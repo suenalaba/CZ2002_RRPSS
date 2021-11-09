@@ -2,17 +2,17 @@ package restaurant_database;
 
 //import java libraries to be updated as we go...
 import java.util.ArrayList;
-import java.util.Date;
+//import java.util.Date;
 import java.io.IOException;
 import java.util.StringTokenizer;
-import java.util.List;
+//import java.util.List;
 //import other relevant classes..
 import restaurant_entity.Payment;
 import restaurant_manager.OrderManager;
 import restaurant_manager.PaymentManager;
 import restaurant_entity.Order;
-import restaurant_entity.MenuItem;
-import restaurant_entity.MenuItem.type;
+//import restaurant_entity.MenuItem;
+//import restaurant_entity.MenuItem.type;
 
 public class PaymentDatabase implements DatabaseFunction {
 	
@@ -30,12 +30,14 @@ public class PaymentDatabase implements DatabaseFunction {
 			StringTokenizer str_tokenizer = new StringTokenizer(stringtoken, delimiter);
 			Order orderTarget = null; //initialized, assigned values later.
 			//paymentdate;subtotal;gst;servicecharge;memberdiscount;grandtotal;orderid;reservationnumber;tableid;membershipApplied
+			/*
 			String paymentdate = str_tokenizer.nextToken().trim();
 			double subtotal = Double.valueOf(str_tokenizer.nextToken().trim());
 			double gst = Double.valueOf(str_tokenizer.nextToken().trim());
 			double servicecharge = Double.valueOf(str_tokenizer.nextToken().trim());
 			double memberdiscount = Double.valueOf(str_tokenizer.nextToken().trim());
 			double grandtotal = Double.valueOf(str_tokenizer.nextToken().trim());
+			*/
 			int orderid = Integer.valueOf(str_tokenizer.nextToken().trim());
 			int reservationnumber = Integer.valueOf(str_tokenizer.nextToken().trim());
 			int tableid = Integer.valueOf(str_tokenizer.nextToken().trim());
