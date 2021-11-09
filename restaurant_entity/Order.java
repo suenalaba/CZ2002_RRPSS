@@ -108,26 +108,26 @@ public class Order {
 		this.isPaid = isPaid;
 	}
 
-//    public void viewOrder() {
-//        System.out.println("ID  		TableNum 	 Date");
-//        System.out.println(toString());
-//        System.out.println("============================================================================================");
-//        System.out.println("ID   Name of Item                          Description                          Price(S$)");
-//        System.out.println("============================================================================================");
-//        
-//       //print all items in items arraylist
-//        ArrayList<MenuItem> items = this.orderItems;
-//        
-//        for (int i=0; i<items.size(); i++) {
-//        	items.get(i).printAll();
-//        }
-//        System.out.println("=============================================================================================");
-//    }
-//    
-//    public String toString() {
-//    	//TableLayoutManager.getOccupiedTables().
-//        return (String.format("%-5d%-5d%-30s", orderID,tableID, orderTime));
-//    }
+    public void viewOrder() {
+        System.out.println("ID  		TableNum 	 Date");
+        System.out.println(toString());
+        System.out.println("============================================================================================");
+        System.out.println("ID   Name of Item                          Description                          Price(S$)");
+        System.out.println("============================================================================================");
+        
+       //print all items in items arraylist
+        ArrayList<MenuItem> items = this.orderItems;
+        
+        for (int i=0; i<items.size(); i++) {
+        	items.get(i).printAll();
+        }
+        System.out.println("=============================================================================================");
+    }
+    
+    public String toString() {
+    	//TableLayoutManager.getOccupiedTables().
+        return (String.format("%-5d%-5d%-30s", orderID,tableID, orderTime));
+    }
 	
 	
 }
