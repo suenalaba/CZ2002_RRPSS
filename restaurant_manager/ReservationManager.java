@@ -262,7 +262,13 @@ public class ReservationManager {
 		}
 		for (int i=0;i<protectedReservationsToday.size();i++) {
 			if (possibleTables.contains(protectedReservationsToday.get(i).getTableID())) {
-				possibleTables.remove(protectedReservationsToday.get(i).getTableID());
+				try {
+					possibleTables.remove(protectedReservationsToday.get(i).getTableID());
+				}
+				catch(Exception e) {
+					System.out.println("No available table at the moment");
+					return;
+				}
 			}
 		}
 		if (possibleTables.size()>0) {
@@ -637,12 +643,9 @@ public class ReservationManager {
 	
 	public static Reservation getUnfinishedReservationOfTableIDNow(int tableID) { //give tableID, return Reservation now
 		ArrayList<Reservation> unfinished=getListOfUnfinishedReservations();
-		LocalDateTime timeNow=LocalDateTime.now();
-		String hourBlock=timeNow.toString().substring(11,13);
-		String dateBlock=timeNow.toString().substring(0,10);
 		if (unfinished.size()>0) {
 			for (Reservation o:unfinished) {
-				if (tableID==o.getTableID()&&o.getReservationStartTime().toString().substring(11,13).equals(hourBlock)&&o.getReservationStartTime().toString().substring(11,13).equals(dateBlock)) {
+				if (tableID==o.getTableID()&&o.getIsAppeared()) {
 					return o;
 				}
 			}
