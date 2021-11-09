@@ -153,8 +153,8 @@ public class MenuManager {
 			}
 			promoPackItems=new ArrayList<MenuItem>();  //ArrayList of Menu item to hold promo package items before creation of PromotioPackage object in mainMenu arraylist
 			for (int i=0;i<pSize;i++) {
-				System.out.println("Which alaCarte item should be included? (type itemID then enter):");
 				alaCarteMenu.printMenu();
+				System.out.println("Which alaCarte item should be included? (type itemID then enter):");
 				pChoice=-1;
 				while (pChoice==-1) {
 					try {
