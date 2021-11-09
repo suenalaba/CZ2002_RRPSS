@@ -142,6 +142,16 @@ public class TableLayoutManager {
 		}
 	}
 	
+	public static void freeTableStatus(int tableID) {//frees OCCUPIED tables. Called after payment made
+		int tableIndex=findTableIndex(tableID);
+		Table targetTable=mainLayout.getTableLayout().get(tableIndex);
+		for (int i=0;i<targetTable.getHourBlock().length;i++) {
+			if (targetTable.getHourBlock()[i]==status.OCCUPIED) {
+				targetTable.getHourBlock()[i]=status.EMPTY;
+			}
+		}
+	}
+	
 	//Get methods
 	public static ArrayList<Table> getAllTables(){
 		return mainLayout.getTableLayout();
