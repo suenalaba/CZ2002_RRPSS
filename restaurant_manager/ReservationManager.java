@@ -313,7 +313,14 @@ public class ReservationManager {
 	
 	public static void loadDB(String fileName) { //passes file name to read to ReservationDataBase. Check table Id validility. Reserves table for the day. Replaces listOfReservations.
 		ReservationDatabase loader=new ReservationDatabase();
-		ArrayList<Reservation> databaseReservations=loader.fread(fileName); //loaded reservations
+		
+		ArrayList<Reservation> databaseReservations;
+		try {
+			databaseReservations = loader.fread(fileName);
+		} catch (IOException e1) {
+			System.out.println("Filed to load "+fileName+".Returning to main Menu");
+			return;
+		} 
 		ArrayList<Integer> allTableIds=new ArrayList<Integer>(); //loaded reservations
 		for (int i=0;i<TableLayoutManager.getAllTables().size();i++) {
 			allTableIds.add(TableLayoutManager.getAllTables().get(i).getTableID());
@@ -363,7 +370,11 @@ public class ReservationManager {
 			}
 			
 		}
-		listOfReservations=loader.fread(fileName);
+		try {
+			listOfReservations=loader.fread(fileName);
+		} catch (IOException e) {
+			System.out.println("Filed to load "+fileName+".Returning to main Menu");
+			return;
+		}
 	}
-	
 }
