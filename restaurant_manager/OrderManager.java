@@ -149,7 +149,17 @@ public class OrderManager {
 	 		System.out.println("List of orders (by orderID):");
 	 		
 	 		for(int i=0; i<orderList.size(); i++) {
-	 			System.out.format("orderID: %d          staffID(who created the order): %d\n", orderList.get(i).getOrderID(),orderList.get(i).getStaffId());
+	 			
+	 			String staffName=null;
+				 
+				 for(int k=0; k<StaffManager.getListOfStaffMembers().size(); k++)
+				 {
+					 if(StaffManager.getListOfStaffMembers().get(k).getStaffID()==orderList.get(i).getStaffId()) {
+						 staffName = StaffManager.getListOfStaffMembers().get(k).getStaffName();
+					 }
+				 }
+	 			
+	 			System.out.format("orderID: %d          staffID: %d			staffName: %s\n", orderList.get(i).getOrderID(),orderList.get(i).getStaffId(),staffName);
 	 		}
 	 		
 	 		
@@ -312,7 +322,7 @@ public class OrderManager {
 //				 sc.nextLine();
 				 
 				
-					
+					deleteOrAdd=0;
 					while (deleteOrAdd==0)
 					{
 						try {
@@ -329,10 +339,6 @@ public class OrderManager {
 				 ArrayList<MenuItem> tempconvert= orderList.get(orderIdUpdate).getOrderItems();
 				 Menu orderItems=new Menu(tempconvert);
 				 orderItems.printMenu();
-				 
-				 
-				 
-				
 				 
 				 switch(deleteOrAdd) {
 				 case 1:
@@ -378,13 +384,13 @@ public class OrderManager {
 						 
 					 break;
 				default:
-					
+					break;
 					 
 				 }
 			 }while(deleteOrAdd==1 || deleteOrAdd==2);
 			
 			
-			 orderList.get(orderIdUpdate).viewOrder();
+			 
 			
 		 }
 		 
@@ -398,7 +404,8 @@ public class OrderManager {
 		 	{
 		 		newTableId = orderList.get(orderIdUpdate).getTableID();
 		 	}
-			 updateOrder(newTableId, newOrderItems, orderIdUpdate);
+		 	printParticularOrder(newTableId);
+		 	updateOrder(newTableId, newOrderItems, orderIdUpdate);
 	 }
 	 
 	 
@@ -406,6 +413,7 @@ public class OrderManager {
 	 {
 		 orderList.get(updateIndex).setTableID(newTableId);
 		 orderList.get(updateIndex).setOrderItems(newOrderItems);
+		 System.out.println("\n\nOrder details updated");
 	 }
 	    
 	 
@@ -452,21 +460,32 @@ public class OrderManager {
 	            }
 	          }
 		 
-		 //loop through order list to retrieve order based on table ID
+		 printParticularOrder(newTableId);
+	 }
+	 
+	 public static void printParticularOrder(int tableID) {
 		 for(int i=0; i<orderList.size();i++)
 		 {
 			 
-			 if(orderList.get(i).getTableID()==newTableId && orderList.get(i).getPaidStatus()==false)
+			 if(orderList.get(i).getTableID()==tableID && orderList.get(i).getPaidStatus()==false)
 			 {
-				 //print details of order
-				 System.out.println("OrderID  		TableNum		StaffId");
-				 System.out.println("===============================================================");
+				 String staffName=null;
 				 
-				 System.out.format("%d				%d 				%d\n", orderList.get(i).getOrderID(), orderList.get(i).getTableID(), orderList.get(i).getStaffId());
+				 for(int k=0; k<StaffManager.getListOfStaffMembers().size(); k++)
+				 {
+					 if(StaffManager.getListOfStaffMembers().get(k).getStaffID()==orderList.get(i).getStaffId()) {
+						 staffName = StaffManager.getListOfStaffMembers().get(k).getStaffName();
+					 }
+				 }
+				 //print details of order
+				 System.out.println("OrderID  		TableNum		StaffId		StaffName");
+				 System.out.println("=============================================================================");
+				 
+				 System.out.format("%d			%d 			%d	   	%s\n", orderList.get(i).getOrderID(), orderList.get(i).getTableID(), orderList.get(i).getStaffId(),staffName);
 				 
 				 System.out.println("OrderItems");
-				 System.out.println("===============================================================");
-				 //????????????????????????????????????????????can do this to print all item in a particular order?
+				 System.out.println("=============================================================================");
+				 
 				 
 				 ArrayList<MenuItem> orderDuplicates = new ArrayList<MenuItem>();
 				 System.out.println("Name           Price			Quantity");	
@@ -478,7 +497,7 @@ public class OrderManager {
 					 MenuItem orderItem = orderList.get(i).getOrderItems().get(j);
 					 
 					 
-					 System.out.format("%s			%f				       ", orderItem.getMenuItemName(),orderItem.getMenuItemPrice());
+					 System.out.format("%s		%.02f	 ", orderItem.getMenuItemName(),orderItem.getMenuItemPrice());
 					 
 					 int counter=1;
 					 for(int k=j+1; k<orderList.get(i).getOrderItems().size(); k++)
@@ -492,23 +511,14 @@ public class OrderManager {
 						 
 					 }
 					 
-					 System.out.format(" x " + counter);
+					 System.out.format(" 		x " + counter + "\n");
 					 
 					 orderDuplicates.add(orderItem);
 					 
 				 }
-				 //System.out.format("%s \n", Arrays.toString(orderList.get(i).getOrderItems().toArray()));
-				 
-				 
-				 //print all items of a particular order.
-				 
-				 
-				 
-				 
+
 			 }
 		 }
-		 
-		 
 	 }
 	
 		//return a list of all orders that haven't been paid
@@ -546,6 +556,21 @@ public class OrderManager {
 			
 		}
 	 
+		public static Order getOrderByTableId(int tableId) {
+		     
+		     
+		     for(int i=0; i<orderList.size(); i++)
+		     {
+		       if(orderList.get(i).getTableID() == tableId)
+		       {
+		         return orderList.get(i);
+		       }
+		     }
+		    return null;
+		     
+		   }
+
+
 
 	    
 	 	//save orders to order database
