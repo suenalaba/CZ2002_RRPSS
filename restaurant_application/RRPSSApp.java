@@ -119,13 +119,13 @@ public class RRPSSApp {
 							menu_select = sc.nextInt();
 							switch(menu_select) {
 							case 1: 
-								MenuManager.createItemQuery();
+								MenuApp.createItemQuery();
 								break;
 							case 2:
-								MenuManager.removeItemQuery();
+								MenuApp.removeItemQuery();
 								break;
 							case 3:
-								MenuManager.updateItemQuery();
+								MenuApp.updateItemQuery();
 								break;
 							case 4:
 								MenuManager.printMainMenu();
@@ -154,19 +154,19 @@ public class RRPSSApp {
 							switch (customer_select) {
 							case 1:
 								// Create new Customer function
-								CustomerManager.createCustomer(true,0); //Jacques - false-> solo/walkin/reservation true->multi option.
+								CustomerApp.createCustomer(true,0); //Jacques - false-> solo/walkin/reservation true->multi option.
 								break;
 							case 2:
-								CustomerManager.deleteCustomerdetailsbyID();
+								CustomerApp.deleteCustomerdetailsbyID();
 								break;
 							case 3:
-								CustomerManager.updateCustomerdetailsbyID();
+								CustomerApp.updateCustomerdetailsbyID();
 								break;
 							case 4:
 								CustomerManager.printallCustomerDetails();
 								break;
 							case 5:
-								CustomerManager.printCustomerdetailsbyID();
+								CustomerApp.printCustomerdetailsbyID();
 								break;
 							case 6:
 								System.out.println("Exiting now, Customer Details have been updated!");
@@ -193,13 +193,13 @@ public class RRPSSApp {
 							table_select = sc.nextInt();
 							switch (table_select) {
 							case 1:
-								TableLayoutManager.createTableQuery(); // function to create Table
+								TableLayoutApp.createTableQuery(); // function to create Table
 								break;
 							case 2:
-								TableLayoutManager.removeTableQuery(); // function to remove Table
+								TableLayoutApp.removeTableQuery(); // function to remove Table
 								break;
 							case 3:
-								TableLayoutManager.getInstance().printTableLayout();
+								TableLayoutApp.getInstance().printTableLayout();
 							case 4:
 								System.out.println("Exiting now, Table Details have been updated!");
 								break;
@@ -225,20 +225,20 @@ public class RRPSSApp {
 							switch(staff_select) {
 							case 1:
 								//create staff
-								StaffManager.createStaffMemberQuery();
+								StaffApp.createStaffMemberQuery();
 								break;
 							
 							case 2:
 								//remove staff
-								StaffManager.removeStaffMemberQuery();
+								StaffApp.removeStaffMemberQuery();
 								break;
 							case 3: 
 								//update staff
-								StaffManager.updateStaffMemberQuery();
+								StaffApp.updateStaffMemberQuery();
 								break;
 							case 4: 
 								//display all staff
-								StaffManager.displayStaffList();
+								StaffApp.displayStaffList();
 								break;
 							case 5:
 								System.out.println("Exiting now, Staff Details have been updated!");
@@ -273,15 +273,15 @@ public class RRPSSApp {
 					switch (order_select) {
 					case 1:
 						//create order here
-						OrderManager.createOrderQuery();
+						OrderApp.createOrderQuery();
 						break;
 					case 2:
 						//remove order here
-						OrderManager.deleteWholeOrderQuery();
+						OrderApp.deleteWholeOrderQuery();
 						break;
 					case 3:
 						//update order here
-						OrderManager.updateOrderQuery();
+						OrderApp.updateOrderQuery();
 						break;
 					case 4:
 						//display all orders
@@ -289,7 +289,7 @@ public class RRPSSApp {
 						break;
 					case 5:
 						//display specific order given a table input
-						OrderManager.displayOrderBasedOnTableIdQuery();
+						OrderApp.displayOrderBasedOnTableIdQuery();
 						break;
 					case 6: 
 						System.out.println("Exiting now, Order Details have been updated!");
@@ -315,16 +315,16 @@ public class RRPSSApp {
 					reservationwalkin_select = sc.nextInt();
 					switch (reservationwalkin_select) {
 					case 1:
-						ReservationManager.createReservationQuery();
+						ReservationApp.createReservationQuery();
 						break;
 					case 2:
-						ReservationManager.removeReservationQuery();
+						ReservationApp.removeReservationQuery();
 						break;
 					case 3:
-						ReservationManager.updateReservationQuery();
+						ReservationApp.updateReservationQuery();
 						break;
 					case 4:
-						ReservationManager.checkReservationQuery();
+						ReservationApp.checkReservationQuery();
 						break;
 					case 5:
 						ReservationManager.printAllUnfinishedReservation();
