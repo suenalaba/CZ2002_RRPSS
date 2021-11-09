@@ -3,19 +3,19 @@ package restaurant_database;
 // import relevant java libraries to be updated as we go..
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.StringTokenizer;
 
 //import Table class
 import restaurant_entity.Table;
+import restaurant_manager.TableLayoutManager;
 
 
 public class TableLayoutDatabase {
-	public static final String DELIMITER = ",";
+	public static final String DELIMITER = ";";
 	
 	public static ArrayList<Table> fread(String textfilename) throws IOException {
 
-		ArrayList fileasstring = (ArrayList) FileRead.fread(textfilename);
+		ArrayList<String> fileasstring = FileRead.fread(textfilename);
 		
 		//array to store table
 		ArrayList<Table> mainLayout = new ArrayList<>();
@@ -35,9 +35,10 @@ public class TableLayoutDatabase {
 
 	}
 	
-	public static void fwrite(String textfilename, ArrayList<Table> mainLayout) throws IOException {
+	public static void fwrite(String textfilename) throws IOException {
 
-		List tablelist = new ArrayList();// array list to store table data
+		ArrayList<String> tablelist = new ArrayList<String>();// array list to store table data
+		ArrayList<Table> mainLayout=TableLayoutManager.getInstance().getTableLayout();
 		for (int i = 0; i < mainLayout.size(); i++) {
 			Table table = (Table) mainLayout.get(i);
 			StringBuilder tablestring = new StringBuilder();

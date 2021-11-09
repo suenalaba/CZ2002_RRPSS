@@ -2,7 +2,6 @@ package restaurant_database;
 
 //importing relevant java libraries to be updated as we go...
 import java.io.IOException;
-import java.util.List;
 import java.io.PrintWriter;
 import java.io.FileWriter;
 import java.util.ArrayList;
@@ -24,8 +23,8 @@ public class FileRead {
 	 * 
 	 * 
 	 */
-	public static List fread(String textfilename) throws IOException {
-		List records = new ArrayList();
+	public static ArrayList<String> fread(String textfilename) throws IOException {
+		ArrayList<String> records = new ArrayList<String>();
 	
 		Scanner sc = new Scanner(new FileInputStream(textfilename));
 		try {  
@@ -52,7 +51,7 @@ public class FileRead {
 	 */
 	
 	
-	public static void fwrite(List records, String textfilename) throws IOException {
+	public static void fwrite(ArrayList<String> records, String textfilename) throws IOException {
 		PrintWriter writing = new PrintWriter(new FileWriter(textfilename));
 
         try {

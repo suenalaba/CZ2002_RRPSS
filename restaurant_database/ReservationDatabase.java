@@ -1,29 +1,23 @@
 package restaurant_database;
 
-
 //import relevant java libraries to be updated as we go..
 import java.util.Scanner;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.io.File;
 import java.io.FileWriter; 
 import java.io.FileNotFoundException;
 
-import restaurant_entity.Menu;
-import restaurant_entity.MenuItem;
-//import Customer class
-import restaurant_entity.MenuItem.type;
-import restaurant_entity.PromotionPackage;
+//import Reservation Classes
 import restaurant_entity.Reservation;
-import restaurant_manager.MenuManager;
 import restaurant_manager.ReservationManager;
 
-public class ReservationDatabase{
+public class ReservationDatabase implements DatabaseFunction{
 	public static final String DELIMITER = ";";
-
-	public static void fwrite(String saveFileName) {
+	
+	@Override
+	public void fwrite(String saveFileName) throws IOException {
 		try {
 			if (ReservationManager.getListOfReservations().size()==0) {
 				throw new Exception("Nothing to save.");
@@ -52,7 +46,9 @@ public class ReservationDatabase{
 			System.out.println("No data to save!");
 		}
 	}
-	public static ArrayList<Reservation> fread(String loadFileName) {
+	
+	@Override
+	public ArrayList<Reservation> fread(String loadFileName) {
 		try {
 		      File menuDB = new File(loadFileName);
 		      Scanner myReader = new Scanner(menuDB);
@@ -108,6 +104,4 @@ public class ReservationDatabase{
 		System.out.println("Error, File was not loaded.");
 		return ReservationManager.getListOfReservations();
 	}
-
-
 }

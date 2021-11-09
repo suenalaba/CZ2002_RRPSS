@@ -16,10 +16,10 @@ import restaurant_entity.MenuItem.type;
 import restaurant_entity.PromotionPackage;
 import restaurant_manager.MenuManager;
 
-public class MenuDatabase{
+public class MenuDatabase implements DatabaseFunction{
 	public static final String DELIMITER = ";";
 
-	public static void fwrite(String saveFileName) {
+	public void fwrite(String saveFileName) {
 		File menuDB=new File(saveFileName);
 		try {
 			if (MenuManager.getMenuInstance().getListOfMenuItems().size()==0) {
@@ -31,22 +31,22 @@ public class MenuDatabase{
 				MenuItem txMedium=MenuManager.getMenuInstance().getListOfMenuItems().get(i);
 				if (txMedium.getMenuItemType()==type.PROMOTION || txMedium.getMenuItemType()==type.DELETEDPROMOTION) {
 					PromotionPackage txPMedium=(PromotionPackage) txMedium;
-					pusher+=String.valueOf(txPMedium.getMenuItemID())+";";
-					pusher+=txPMedium.getMenuItemName()+";";
-					pusher+=String.valueOf(txPMedium.getMenuItemType())+";";
-					pusher+=String.valueOf(txPMedium.getMenuItemPrice())+";";
-					pusher+=txPMedium.getMenuItemDescription()+";";
+					pusher+=String.valueOf(txPMedium.getMenuItemID())+DELIMITER;
+					pusher+=txPMedium.getMenuItemName()+DELIMITER;
+					pusher+=String.valueOf(txPMedium.getMenuItemType())+DELIMITER;
+					pusher+=String.valueOf(txPMedium.getMenuItemPrice())+DELIMITER;
+					pusher+=txPMedium.getMenuItemDescription()+DELIMITER;
 					for (int k=0;k<txPMedium.getPromotionPackageItems().size();k++) {
-						pusher+=String.valueOf(txPMedium.getPromotionPackageItems().get(k).getMenuItemID())+";";
+						pusher+=String.valueOf(txPMedium.getPromotionPackageItems().get(k).getMenuItemID())+DELIMITER;
 					}
 					pusher+="\n";
 				}
 				else {
-					pusher+=String.valueOf(txMedium.getMenuItemID())+";";
-					pusher+=txMedium.getMenuItemName()+";";
-					pusher+=String.valueOf(txMedium.getMenuItemType())+";";
-					pusher+=String.valueOf(txMedium.getMenuItemPrice())+";";
-					pusher+=txMedium.getMenuItemDescription()+";";
+					pusher+=String.valueOf(txMedium.getMenuItemID())+DELIMITER;
+					pusher+=txMedium.getMenuItemName()+DELIMITER;
+					pusher+=String.valueOf(txMedium.getMenuItemType())+DELIMITER;
+					pusher+=String.valueOf(txMedium.getMenuItemPrice())+DELIMITER;
+					pusher+=txMedium.getMenuItemDescription()+DELIMITER;
 					pusher+="\n";
 				}
 			}
@@ -60,7 +60,7 @@ public class MenuDatabase{
 			System.out.println("No data to save!");
 		}
 	}
-	public static ArrayList<MenuItem> fread(String saveFileName) {
+	public ArrayList<MenuItem> fread(String saveFileName) {
 		try {
 		      File menuDB = new File(saveFileName);
 		      Scanner alacarteReader = new Scanner(menuDB);
@@ -70,7 +70,7 @@ public class MenuDatabase{
 		      }
 		      ArrayList<MenuItem> loadedMenu=new ArrayList<MenuItem>();
 		      while (alacarteReader.hasNextLine()) {
-		        String[] data = alacarteReader.nextLine().split(";");
+		        String[] data = alacarteReader.nextLine().split(DELIMITER);
 		        int itemID=Integer.parseInt(data[0]);
 		        String itemName=data[1];
 		        type itemType=type.valueOf(data[2]);
@@ -85,7 +85,7 @@ public class MenuDatabase{
 		      alacarteReader.close();
 		      Scanner promoReader = new Scanner(menuDB);
 		      while (promoReader.hasNextLine()) {
-		        String[] data = promoReader.nextLine().split(";");
+		        String[] data = promoReader.nextLine().split(DELIMITER);
 		        int puller=0;
 		        int itemID=Integer.parseInt(data[0]);
 		        String itemName=data[1];
