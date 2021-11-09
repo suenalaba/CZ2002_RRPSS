@@ -1,6 +1,14 @@
-1;Hamburger;MAIN;5.0;Yummy yummy for my tummy;
-2;Coca-cola;DRINKS;1.8;Fizzy pop;
-3;Apple pie rip-off;APPETIZER;100.0;What does this mean;
-4;Foie Gras;MAIN;5000.0;Liver fever;
-5;Slipper;UNCATEGORIZED;0.01;1 part of a pair;
-7;Squid;MAIN;5.0;Squids are cool;
+1;Braised Beef Noodles;MAIN;5.5;Signature Dish;
+2;Sliced Fish Spicy Soup Noodles;MAIN;5.2;La main or glass noodle;
+8;Sliced Fish Spicy Soup Noodles;MAIN;5.2;La main or glass noodle;
+3;Sliced Meat Spicy Soup Noodles;MAIN;5.2;La main or glass noodle;
+4;Picked Veg with Sliced Fish Noodles;MAIN;5.2;Not for the faint hearted;
+5;Sichuan Wanton Soup;SIDE;5;1 part of a pair;
+6;Spicy Wanton;SIDE;8.0;Wanton with chilli oil (for sharing);
+7;Tomato Egg Lor Mee;MAIN;7.8; 
+9;Spicy Wanton Noodle; 5.3;MAIN;A traditional bowl of freshly wrapped wanton with char siew;
+10;Red Bean Paste Cake; DESSERT; Hot Pick!;
+11; Beef Cut Noodle; 8;MAIN; POPULAR;
+12; Iced Lemon Tea; 2.1;DRINKS; Cool and homemade;
+13; Iced Barley; 1.8;DRINKS; Hot or cold; 
+

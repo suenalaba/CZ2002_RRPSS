@@ -1,1 +1,5 @@
 16756,Jacques,Male,XXXXXXXX,false,false,
+23456,Wong Xin Pei,Female,XXXXXXXX,true,false,
+12982,Joshua Kh00,Male,95843032,true,true,
+12345,Loh Yi Ze,Male,85402943,false,false,
+98765,Lek Jie Kai,XXXXXXXX,false,true,
