@@ -51,6 +51,10 @@ public class TableLayoutApp {
 	} 
 	
 	public static void removeTableQuery() {
+		if (TableLayoutManager.getInstance().getTableLayout().size()==0) {
+			System.out.println("There are no tables yet in the restaurant. Returning to main menu.");
+			return;
+		}
 		Scanner sc = new Scanner(System.in); 
 		int tableID; 
 		System.out.println("Enter table ID of table to be removed");

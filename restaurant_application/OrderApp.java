@@ -19,6 +19,9 @@ public class OrderApp {
 			 System.out.println("No Tables in restaurant for customers to dine. Returning to main menu.");
 			 return;
 		 }
+		 if (TableLayoutManager.getOccupiedTables().size()==0) {
+			 System.out.println("No Tables are occupied at the moment. Returning to main menu.");
+		 }
 		 TableLayoutManager.getInstance().printTableLayout();
 		 System.out.println("Enter table ID: ");
 		 int tableId = -1;

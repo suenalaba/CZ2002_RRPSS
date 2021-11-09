@@ -79,6 +79,10 @@ public class MenuApp {
 			try {
 				price=sc.nextDouble();
 				sc.nextLine();
+				if (price<=0) {
+					System.out.println("Price must be positive.");
+					price=-1;
+				}
 			}
 			catch(InputMismatchException e) {
 				sc.nextLine();

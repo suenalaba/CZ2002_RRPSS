@@ -202,6 +202,7 @@ public class RRPSSApp {
 								break;
 							case 3:
 								TableLayoutManager.getInstance().printTableLayout();
+								break;
 							case 4:
 								System.out.println("Exiting now, Table Details have been updated!");
 								break;
