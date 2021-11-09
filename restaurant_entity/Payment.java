@@ -8,7 +8,7 @@ import java.time.format.DateTimeFormatter;
 //import restaurant_entity.Order;
 //import java.util.Calendar;
 //import java.text.SimpleDateFormat;
-
+/*
 public class Payment {
 	private int paymentID;
 	private String paymentDate;
@@ -87,7 +87,7 @@ public class Payment {
     
     /*public int getorderID() {
     	return orderID;
-    }*/
+    }
     
     //no need set order id, this is not done here, should be in order class??
     
@@ -106,7 +106,146 @@ public class Payment {
     /*public int gettableNumber() {
     	return tableNumber;
     }
-    */
+
+    public boolean getmembershipApplied () {
+    	return membershipApplied;
+    }
+    
+    public void setmembershipApplied(boolean membershipApplied) {
+    	this.membershipApplied = membershipApplied;
+    }
+
+    public static int getrunningCount() {
+    	return runningCount;
+    }
+    
+    public static void setrunningCount(int paymentID) {
+    	runningCount = paymentID;
+    }
+
+}
+     */
+public class Payment {
+	
+	private int paymentID;
+	private String paymentDate;
+	private double subTotal; // sum of menuItem price
+	private double gst;
+	private double serviceCharge; 
+	private double memberDiscount; // only applicable to members and partners
+	private double grandTotal; // total to be paid
+	private Order order;
+	private int reservationNumber;
+	private int tableId;
+	boolean membershipApplied;
+	
+    private static int runningCount = 1;
+    final double GST = 0.07;
+    final double SERVICE_CHARGE = 0.10; 
+    final double DISCOUNT = 0.15; 
+    //private String date;
+    //SimpleDateFormat date_formatting = new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss");
+    //int paymentId, ArrayList<Order> orders, String reservationNum, String date
+    
+    /*
+    public Payment(int reservationNumber, Order order) {
+    	this.paymentID = runningCount;
+    	runningCount++;
+    	//this.reservationNumber = reservationNumber;
+    	//this.tableNumber = tableNumber;
+        this.order = order;
+        LocalDateTime datetimenow = LocalDateTime.now();
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        String paymentDate = datetimenow.format(format);
+        this.paymentDate = paymentDate;
+    }
+
+    
+    public Payment(int paymentID, Order order, boolean membershipApplied, String paymentDate) {
+    	this.paymentID = runningCount;
+    	//Calendar c = Calendar.getInstance();
+    	//this.paymentDate = paymentDate;
+    	//this.customerID = customerID;
+        this.order = order;
+        //this.reservationNumber = reservationNumber;
+        //this.tableNumber = tableNumber;
+        this.membershipApplied = membershipApplied;
+        this.paymentDate = paymentDate;
+        //String d = sdf.format(c.getTime());
+        runningCount++;
+    }*/
+    
+    public Payment(Order order, boolean membershipApplied, int tableId, int reservationNumber) {
+    	double subTotal = 0; 
+    	ArrayList<MenuItem> listOfMenuItems = new ArrayList<>(); 
+    	this.paymentID = runningCount;
+    	LocalDateTime paymentDate = LocalDateTime.now(); 
+    	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+    	this.paymentDate = paymentDate.format(formatter); 
+    	this.order = order;
+    	listOfMenuItems = order.getOrderItems();
+    	for(int i= 0; i<listOfMenuItems.size(); i++) {
+    		subTotal += listOfMenuItems.get(i).getMenuItemPrice();
+    	}
+    	this.reservationNumber = reservationNumber; 
+    	this.tableId = tableId; 
+    	this.membershipApplied = membershipApplied; 
+    	this.subTotal = subTotal; 
+    	this.serviceCharge = subTotal* SERVICE_CHARGE; 
+    	this.gst = subTotal* GST; 
+    	if(membershipApplied == true) {
+    		this.memberDiscount = subTotal * DISCOUNT;
+    	}
+    	else {
+    		this.memberDiscount = 0.00; 
+    	}
+    	this.grandTotal = this.subTotal + this.serviceCharge + this.gst - this.memberDiscount; 
+    	
+    }
+    
+    public int getpaymentID() {
+    	return paymentID;
+    }
+    // no need to set, settle by running count public void setpaymentID(
+    public String getpaymentDate() {
+    	return paymentDate;
+    }
+    
+    public double getSubTotal() {
+    	return subTotal;
+    }
+    
+    public double getGst() {
+    	return gst;
+    }
+    
+    public double getServiceCharge() {
+    	return serviceCharge;
+    }
+    
+    public double getMemberDiscount() {
+    	return memberDiscount; 
+    }
+    
+    public double grandTotal() {
+    	return grandTotal;
+    }
+    
+    public Order getOrder(){
+    	return order;
+    } //need order class
+    
+    public void setOrder(Order order) {
+    	this.order = order; 
+    }
+    
+    public int getreservationNumber() {
+    	return reservationNumber;
+    }//need reservation class
+    
+    public int getTableId() {
+    	return tableId; 
+    }
     public boolean getmembershipApplied () {
     	return membershipApplied;
     }
