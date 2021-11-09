@@ -124,4 +124,41 @@ public class CustomerManager {
 		}
 		return customerlist;
 	}
+	
+	
+	
+	
+	
+	/**
+	 * Retrieval of all Customer details.
+	 * 
+	 */
+	public static void printallCustomerDetails() throws IOException {
+		ArrayList readfileasstring = (ArrayList) FileRead.fread(textfilename);
+		//ArrayList<CreditCard> creditArray = CreditController.retrieveAllCredit();
+		System.out.println("\n==================================================");
+		System.out.println(" Customer Details: ");
+		System.out.println("==================================================");
+		System.out.printf("%-8s %-15s %-8s %-10s %-5s %-5s\n", "CustomerID", "Name",
+				"Gender", "Phone Number", "Restaurant Membership", "Partner Membership");
+		for (int i = 0; i < readfileasstring.size(); i++) {
+			String data = (String) readfileasstring.get(i);
+			// get individual 'fields' of the string separated by delimiter
+			StringTokenizer str_tokenizer = new StringTokenizer(data, delimiter); // pass in the string to the string tokenizer
+																		// using delimiter ","
+
+			String customerid = str_tokenizer.nextToken().trim();
+			String name = str_tokenizer.nextToken().trim();
+			String gender = str_tokenizer.nextToken().trim();
+			String phonenumber = str_tokenizer.nextToken().trim();
+			String restaurantmember = str_tokenizer.nextToken().trim();
+			String partnermember = str_tokenizer.nextToken().trim();
+
+
+
+			System.out.printf("%-8s %-15s %-8s %-10s %-5s %-5s\n", customerid, name, gender,phonenumber,
+					restaurantmember, partnermember);
+
+		}
+	}
 }
