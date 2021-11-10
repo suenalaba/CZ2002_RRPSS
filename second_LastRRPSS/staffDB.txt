@@ -1,0 +1,7 @@
+1;John White;Supervisor;MALE;
+2;Hu Byann;Supervisor;FEMALE;
+3;Mary Magdeline;Waiter;FEMALE;
+4;Sabrina;Waiter;FEMALE;
+5;Tom Halland;Waiter;MALE;
+7;Tan Yi Jie;Chef;MALE;
+8;Amy Oh;Senior Chef;FEMALE;

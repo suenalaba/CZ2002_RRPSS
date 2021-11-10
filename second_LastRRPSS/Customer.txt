@@ -1,0 +1,16 @@
+16756;Jacques;Male;XXXXXXXX;false;false;
+23456;Wong Xin Pei;Female;XXXXXXXX;true;false;
+12982;Joshua Kh00;Male;95843032;true;true;
+12345;Loh Yi Ze;Male;85402943;false;false;
+98765;Lek Jie Kai;Male;XXXXXXXX;false;true;
+31118;Jacies;Male;XXXXXXXX;false;false;
+11871;May Ang;Female;XXXXXXXX;false;false;
+71378;Mary Mary;Female;12345678;true;false;
+71807;Mary Loh;Female;98765432;false;false;
+87695;New Name;Male;XXXXXXXX;true;false;
+68307;lol;Male;12345678;false;false;
+39923;Loh;Male;XXXXXXXX;false;false;
+61900;Loh;Male;XXXXXXXX;false;false;
+14678;Homan;Male;XXXXXXXX;false;false;
+62387;Homan;Female;XXXXXXXX;false;false;
+49890;Yi Bi;Male;29859583;false;false;
