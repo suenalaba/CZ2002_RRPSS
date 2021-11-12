@@ -171,6 +171,47 @@ public class ReservationManager {
 				}
 			}
 		}
+		String nowDate=LocalDateTime.now().toString().substring(0, 10);
+		LocalDateTime targetTime;
+		for (int i=0;i<listOfReservations.size();i++) { //reserve tables for the day
+			if (!listOfReservations.get(i).getReservationStartTime().toString().substring(0,10).equals(nowDate)) {
+				continue;
+			}
+			else if (listOfReservations.get(i).getIsFinished()==true) {
+				continue;
+			}
+			else if(!listOfReservations.get(i).getReservationEndTime().toString().substring(14,16).equals("00")&&
+					listOfReservations.get(i).getReservationEndTime().toString().substring(11,13).equals(LocalDateTime.now().toString().substring(11,13))) {
+				targetTime=listOfReservations.get(i).getReservationEndTime();
+				tableLayoutM.updateTableStatus(listOfReservations.get(i).getTableID(), targetTime, status.OCCUPIED);
+			}
+			else if (listOfReservations.get(i).getReservationEndTime().plusSeconds(1).isBefore(LocalDateTime.now())) {
+				continue;
+			}
+			else if (listOfReservations.get(i).getReservationStartTime().toString().substring(11,13).equals(LocalDateTime.now().toString().substring(11,13)) && listOfReservations.get(i).getIsAppeared()==true && listOfReservations.get(i).getIsFinished()==false) {
+				targetTime=listOfReservations.get(i).getReservationStartTime();
+				tableLayoutM.updateTableStatus(listOfReservations.get(i).getTableID(), targetTime, status.OCCUPIED);
+				if (!listOfReservations.get(i).getReservationEndTime().toString().substring(14,16).equals("00")) {
+					targetTime=listOfReservations.get(i).getReservationEndTime();
+					tableLayoutM.updateTableStatus(listOfReservations.get(i).getTableID(), targetTime, status.OCCUPIED);
+				}
+			}
+			else if (listOfReservations.get(i).getReservationStartTime().isAfter(LocalDateTime.now().minusSeconds(899))) {
+				
+				if (listOfReservations.get(i).getIsAppeared()==true && listOfReservations.get(i).getIsFinished()==false && Integer.parseInt(LocalDateTime.now().toString().substring(11,13))>=9 && 
+						Integer.parseInt(LocalDateTime.now().toString().substring(11,13))<=22) {
+					targetTime=LocalDateTime.now();
+					tableLayoutM.updateTableStatus(listOfReservations.get(i).getTableID(), targetTime, status.OCCUPIED);
+					targetTime=listOfReservations.get(i).getReservationStartTime();
+					tableLayoutM.updateTableStatus(listOfReservations.get(i).getTableID(), targetTime, status.OCCUPIED);
+				}
+				
+				else if(listOfReservations.get(i).getIsFinished()==false){
+					targetTime=listOfReservations.get(i).getReservationStartTime();
+					tableLayoutM.updateTableStatus(listOfReservations.get(i).getTableID(), targetTime, status.RESERVED);
+				}
+			}
+		}
 	}
 	
 	public void setIsFinishedByTableID(int tableID) {
@@ -352,9 +393,7 @@ public class ReservationManager {
 					targetTime=databaseReservations.get(i).getReservationStartTime();
 					tableLayoutM.updateTableStatus(databaseReservations.get(i).getTableID(), targetTime, status.RESERVED);
 				}
-				
 			}
-			
 		}
 		try {
 			listOfReservations=loader.fread(fileName);
