@@ -21,6 +21,7 @@ public class PaymentDatabase implements DatabaseFunction {
 
 	@Override
 	public ArrayList<Payment> fread(String textfilename) throws IOException {
+		OrderManager orderM=OrderManager.getInstance();
 		ArrayList<String> fileasstring = (ArrayList<String>) FileRead.fread(textfilename);
 		ArrayList<Payment> paymentlist = new ArrayList<Payment>();
 		
@@ -60,7 +61,7 @@ public class PaymentDatabase implements DatabaseFunction {
 	    	Order order = new Order(tableid,menuitemlist,staffID); //(int tableID, ArrayList<MenuItem> orderItems,int staffId)
 			orderlist.add(order);
 			*/
-	    	for(Order o : OrderManager.getOrderList()) {
+	    	for(Order o : orderM.getOrderList()) {
 	    		if(o.getOrderID() == orderid) {
 	    			orderTarget = o;
 	    		}
@@ -76,8 +77,9 @@ public class PaymentDatabase implements DatabaseFunction {
 	
 	@Override
 	public void fwrite(String textfilename) throws IOException {
+		PaymentManager paymentM=PaymentManager.getInstance();
 		ArrayList<String> fwritepayment = new ArrayList<String>();
-		ArrayList<Payment> paymentlist = PaymentManager.getPaymentInvoices();
+		ArrayList<Payment> paymentlist = paymentM.getPaymentInvoices();
 		
 		
 		

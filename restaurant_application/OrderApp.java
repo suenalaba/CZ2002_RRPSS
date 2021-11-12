@@ -6,33 +6,41 @@ import java.util.Scanner;
 
 import restaurant_entity.Menu;
 import restaurant_entity.MenuItem;
+import restaurant_entity.Order;
 import restaurant_manager.MenuManager;
 import restaurant_manager.OrderManager;
 import restaurant_manager.StaffManager;
 import restaurant_manager.TableLayoutManager;
 
+
+
 public class OrderApp {
 
-	 public static void createOrderQuery() {
+	 public void createOrderQuery() {
+		 TableLayoutManager tableLayoutM=TableLayoutManager.getInstance();
+		 OrderManager orderM=OrderManager.getInstance();
+		 StaffManager staffM=StaffManager.getInstance();
+		 MenuManager menuM=MenuManager.getInstance();
 		 Scanner sc = new Scanner(System.in);
-		 if (TableLayoutManager.getInstance().getTableLayout().size()==0) {
+		 if (TableLayoutManager.getInstance().getLayout().getTableLayout().size()==0) {
 			 System.out.println("No Tables in restaurant for customers to dine. Returning to main menu.");
 			 return;
 		 }
-		 if (TableLayoutManager.getOccupiedTables().size()==0) {
+		 if (tableLayoutM.getOccupiedTables().size()==0) {
 			 System.out.println("No Tables are occupied at the moment. Returning to main menu.");
 			 return;
 		 }
 		 
-		 TableLayoutManager.getInstance().printTableLayout();
+		 
+		 TableLayoutManager.getInstance().getLayout().printTableLayout();
 		 System.out.println("Enter table ID: ");
 		 int tableId = -1;
 		 ArrayList <Integer> occupiedTableId = new ArrayList<Integer>();
 		 
 		 //add all tableIDs of occupied tables into arraylist occupiedTableId
-		 for (int i=0; i<TableLayoutManager.getOccupiedTables().size() ; i++)
+		 for (int i=0; i<tableLayoutM.getOccupiedTables().size() ; i++)
 		 {
-			 occupiedTableId.add(TableLayoutManager.getOccupiedTables().get(i).getTableID());
+			 occupiedTableId.add(tableLayoutM.getOccupiedTables().get(i).getTableID());
 		 }
 		 
 		 //ensure input of tableID matches an occupiedtable.. 
@@ -42,9 +50,15 @@ public class OrderApp {
 	              tableId=sc.nextInt();
 	              sc.nextLine();
 	              
-	              if(occupiedTableId.contains(tableId) && OrderManager.getOrderByTableId(tableId)==null)
+	              if(occupiedTableId.contains(tableId) && orderM.getOrderByTableId(tableId)==null)
 	              {
 	            	  break;
+	              }
+	              
+	              if(occupiedTableId.contains(tableId) && orderM.getOrderByTableId(tableId)!=null)
+	              {
+	            	  System.out.println("Table has already ordered, update order to change it");
+	            	  return;
 	              }
 	              
 	              else
@@ -70,7 +84,7 @@ public class OrderApp {
 	 		//add item to orderitems list
 		 	do{
 		 		System.out.println("Add item to order");
-		 		MenuItem newItem = MenuManager.getItem();
+		 		MenuItem newItem = menuM.getItem();
 		 		orderItems.add(newItem);
 		 		
 		 		System.out.println("Want to add another item? 1 - yes, 2 - No ");
@@ -86,9 +100,9 @@ public class OrderApp {
 		 int staffId =-1;
 		 ArrayList <Integer> staffIdList = new ArrayList<Integer>();
 		 
-		 for(int i=0; i<StaffManager.getListOfStaffMembers().size(); i++)
+		 for(int i=0; i<staffM.getListOfStaffMembers().size(); i++)
 		 {
-			 staffIdList.add(StaffManager.getListOfStaffMembers().get(i).getStaffID());
+			 staffIdList.add(staffM.getListOfStaffMembers().get(i).getStaffID());
 		 }
 		 while (staffId==-1) {
 	            try {
@@ -115,7 +129,7 @@ public class OrderApp {
 	            }
 	          }
 		 
-		 OrderManager.createOrder(tableId, orderItems, staffId);
+		 orderM.createOrder(tableId, orderItems, staffId);
 		 
 	 }
 	 
@@ -123,26 +137,36 @@ public class OrderApp {
 	 
 	 
 	 
-	//method to delete the whole entire order based on the order ID asked from staff input
-	 	public static void deleteWholeOrderQuery() {
+	    //method to delete the whole entire order based on the order ID asked from staff input
+	 	public void deleteWholeOrderQuery() {
+	 		TableLayoutManager tableLayoutM=TableLayoutManager.getInstance();
+			 OrderManager orderM=OrderManager.getInstance();
 	 		 Scanner sc = new Scanner(System.in);
 	 		int orderIdToDelete = -1;
 	 		//error handle if orderId entered not an integer. 
-	 		if (OrderManager.getOrderList().size()==0) {
+	 		if (TableLayoutManager.getInstance().getLayout().getTableLayout().size()==0) {
+				 System.out.println("No Tables in restaurant for customers to have ordered from. Returning to main menu.");
+				 return;
+			 }
+	 		if (orderM.getOrderList().size()==0) {
 	 			System.out.println("No orders so far. Returning to main menu.");
 	 			return;
 	 		}
-	 		OrderManager.displayOrderList();
+	 		orderM.displayOrderList();
 	 		System.out.println("Enter orderId you want to delete: ");
-	 		
-	 		
-			
 			while (orderIdToDelete==-1)
 			{
 				try {
 					orderIdToDelete = sc.nextInt();
 					sc.nextLine();
-					
+					if (orderM.getOrder(orderIdToDelete)==null) {
+						System.out.println("No such order exists. Returning to main menu.");
+						return;
+					}
+					if (orderM.getOrder(orderIdToDelete).getPaidStatus()==true) {
+						System.out.println("You may only select outstanding orders. returning to main menu.");
+						return;
+					}
 				}
 				
 				catch(InputMismatchException e) {
@@ -152,28 +176,21 @@ public class OrderApp {
 			}
 			
 	 		//check if orderId is in system and go to that particular order to delete from orderList (arraylist)
-	 		for(int i=0; i<OrderManager.getOrderList().size(); i++)
-	 		{
-	 			if(OrderManager.getOrderList().get(i).getOrderID()==orderIdToDelete)
-	 			{
-	 				int removalIndex = i;
-	 				OrderManager.deleteWholeOrder(removalIndex);
-	 				return;
-	 			}
-	 		}
-	 		
+	 		orderM.deleteOrder(orderIdToDelete);
+	 		System.out.println("Order "+orderIdToDelete+" has been deleted. The associated table can order again.");
 	 		
 	 	}
 	 	
 	 	
 	 	//updateOrder
-		 public static void updateOrderQuery() {
-			 if (OrderManager.getOrderList().size()==0) {
+		 public void updateOrderQuery() {
+		 OrderManager orderM=OrderManager.getInstance();
+		 MenuManager menuM=MenuManager.getInstance();
+			 if (orderM.getOrderList().size()==0) {
 		 			System.out.println("No orders so far. Returning to main menu.");
 		 			return;
 		 		}
-			 OrderManager.displayOrderList();
-			 int newTableId=-1;
+			orderM.displayOrderList();
 			 System.out.println("Enter orderID that you want to update: ");
 			 Scanner sc = new Scanner(System.in);
 			 
@@ -181,9 +198,12 @@ public class OrderApp {
 			 ArrayList <Integer> existingOrderId = new ArrayList<Integer>();
 			 
 			 //pull out all existing orderId from orderlist and add to existingOrderId
-			 for(int i=0; i<OrderManager.getOrderList().size();i++)
+			 for(int i=0; i<orderM.getOrderList().size();i++)
 			 {
-				 existingOrderId.add(OrderManager.getOrderList().get(i).getOrderID());
+				 if (orderM.getOrderList().get(i).getPaidStatus()==true) {
+					 continue;
+				 }
+				 existingOrderId.add(orderM.getOrderList().get(i).getOrderID());
 			 }
 			 
 			 int orderIdUpdate = -1;
@@ -206,7 +226,8 @@ public class OrderApp {
 						else
 						{
 							orderIdUpdate=-1;
-							System.out.println("Order Id entered is not in system. Please enter another one.");
+							System.out.println("Order Id entered is not in system. Returning to main menu.");
+							return;
 						}
 						
 					}
@@ -217,102 +238,14 @@ public class OrderApp {
 					}
 				}
 			 
-			 // assign orderId to update to that order Id entered
-			 for(int i=0; i<OrderManager.getOrderList().size(); i++ ) {
-				 if(OrderManager.getOrderList().get(i).getOrderID() == orderIdUpdate)
-				 {
-					 orderIdUpdate = i;
-					 break;
-				 }
-				 
-			 }
+			 Order targetOrder=orderM.getOrder(orderIdUpdate);
 			 
-			 ArrayList<MenuItem> newOrderItems = OrderManager.getOrderList().get(orderIdUpdate).getOrderItems();
+			 ArrayList<MenuItem> newOrderItems = targetOrder.getOrderItems();
 			 
-			 System.out.println("Which do you want to update? TableID (1) or orderitems (2)?");
-			 int choice = -1;
-			 
-			 //check for non integer input for choice of updating tableId or orderitems
-			 
-				
-				while (choice==-1)
-				{
-					try {
-						choice = sc.nextInt();
-						sc.nextLine();
-						
-						if(choice==1 || choice==2)
-						{
-							break;
-						}
-						
-						else
-						{
-							choice=-1;
-							System.out.println("choice is invalid. Please enter either 1 or 2");
-						}
-						
-						
-						
-					}
-					
-					catch(InputMismatchException e) {
-						sc.nextLine();
-						System.out.println("Not an Integer. Try Again:");
-					}
-				}
-			 
-				
-			 if(choice==1)
-			 {
-				 System.out.format("Your current tableID is %d.\n What is the new tableID you want to update to?\n", OrderManager.getOrderList().get(orderIdUpdate).getTableID());
-			
-				 //check if tableID is occupied. 
-				 ArrayList <Integer> occupiedTableId = new ArrayList<Integer>();
-				 
-				 
-				 //check that table Id entered is valid
-				 //add all tableIDs of occupied tables into arraylist occipiedTableId
-				 for (int i=0; i<TableLayoutManager.getOccupiedTables().size() ; i++)
-				 {
-					 occupiedTableId.add(TableLayoutManager.getOccupiedTables().get(i).getTableID());
-				 }
-				 
-				 newTableId = -1;
-				 
-				 while (newTableId==-1) {
-			            try {
-			            	
-			              newTableId=sc.nextInt();
-			              sc.nextLine();
-			              
-			              if(occupiedTableId.contains(newTableId))
-			              {
-			            	  break;
-			              }
-			              
-			              else
-			              {
-			            	  newTableId=-1;
-			            	  System.out.println("table Id entered is not occupied. Input again: ");
-			            	  
-			              }
-			              
-			            }
-			            catch(InputMismatchException e) {
-			              sc.nextLine();
-			              System.out.println("Not an Integer. Try Again:");
-			            }
-			          }
-			 }
-			 
-			 else if(choice==2){
 				 
 				 int deleteOrAdd = 0;
 				 do {
-					 System.out.format("Make a choice:\n 1. Delete Item\n 2. Add Item\n 3.Quit");
-//					 deleteOrAdd = sc.nextInt();
-//					 sc.nextLine();
+					 System.out.format("Make a choice:\n 1.Delete Item\n 2.Add Item\n 3.Quit");
 					 
 					
 						deleteOrAdd=0;
@@ -329,27 +262,32 @@ public class OrderApp {
 								System.out.println("Not an Integer. Try Again:");
 							}
 						}
-					 ArrayList<MenuItem> tempconvert= OrderManager.getOrderList().get(orderIdUpdate).getOrderItems();
+					 ArrayList<MenuItem> tempconvert= targetOrder.getOrderItems();
 					 Menu orderItems=new Menu(tempconvert);
+					 System.out.println("Current order:");
 					 orderItems.printMenu();
 					 
 					 switch(deleteOrAdd) {
 					 case 1:
-						 System.out.println("Enter index of order you want to remove: ");
+						 System.out.println("Enter item ID of order you want to remove: ");
 						 
 						 //run through array of menu list and check for item Id match before returning index of itemID
 						 //false==>wont check deleted items in the menu
 						 int removeID = orderItems.ItemIDToIndex(sc.nextInt(), false);
+						 if (removeID==-1) {
+							 System.out.println("Item ID does not exist in your order.");
+							 break;
+						 }
 						 newOrderItems.remove(removeID);
-						 
-						 
 						 
 						 break;
 					 case 2:
 						 System.out.println("Enter index of order you want to add items to: ");
 						 //returns menu items from Menu
-						 MenuItem newItem = MenuManager.getItem();
-						 
+						 MenuItem newItem = menuM.getItem();
+						 if (newItem==null) {
+							 break;
+						 }
 						 //
 						 int addedCheck=0;
 						 //check if new item is already inside the order. 
@@ -382,23 +320,8 @@ public class OrderApp {
 					 }
 				 }while(deleteOrAdd==1 || deleteOrAdd==2);
 				
-				
-				 
-				
-			 }
-			 
-			 
-			 else
-			 {
-				 return;
-			 }
-			 
-			 	if(newTableId==-1)
-			 	{
-			 		newTableId = OrderManager.getOrderList().get(orderIdUpdate).getTableID();
-			 	}
-			 	OrderManager.printParticularOrder(newTableId);
-			 	OrderManager.updateOrder(newTableId, newOrderItems, orderIdUpdate);
+			 	orderM.printParticularOrder(targetOrder.getTableID());
+			 	orderM.updateOrder(newOrderItems, orderIdUpdate);
 		 }
 		 
 		 
@@ -408,13 +331,21 @@ public class OrderApp {
 		 
 		 
 		 
-		 public static void displayOrderBasedOnTableIdQuery() {
-			 if (OrderManager.getOrderList().size()==0) {
+		 public void displayOrderBasedOnTableIdQuery() {
+			 TableLayoutManager tableLayoutM=TableLayoutManager.getInstance();
+			 OrderManager orderM=OrderManager.getInstance();
+			 StaffManager staffM=StaffManager.getInstance();
+			 MenuManager menuM=MenuManager.getInstance();
+			 if (TableLayoutManager.getInstance().getLayout().getTableLayout().size()==0) {
+				 System.out.println("No Tables in restaurant for customers to have ordered from. Returning to main menu.");
+				 return;
+			 }
+			 if (orderM.getOrderList().size()==0) {
 		 			System.out.println("No orders so far. Returning to main menu.");
 		 			return;
 		 		}
 			 Scanner sc = new Scanner(System.in);
-			 TableLayoutManager.getInstance().printTableLayout();
+			 TableLayoutManager.getInstance().getLayout().printTableLayout();
 			 System.out.println("Enter tableID of order you want to display:");
 			 
 			 //check if tableID input valid. check if tableID is an occupied table
@@ -424,9 +355,9 @@ public class OrderApp {
 			 
 			 //check that table Id entered is valid
 			 //add all tableIDs of occupied tables into arraylist occipiedTableId
-			 for (int i=0; i<TableLayoutManager.getOccupiedTables().size() ; i++)
+			 for (int i=0; i<tableLayoutM.getOccupiedTables().size() ; i++)
 			 {
-				 occupiedTableId.add(TableLayoutManager.getOccupiedTables().get(i).getTableID());
+				 occupiedTableId.add(tableLayoutM.getOccupiedTables().get(i).getTableID());
 			 }
 			 
 			 int newTableId = -1;
@@ -441,11 +372,14 @@ public class OrderApp {
 		              {
 		            	  break;
 		              }
-		              
+		              else if (orderM.getOrderByTableId(newTableId)==null) {
+		            	System.out.println("Table has not ordered yet. Returning to main menu.");
+		            	return;
+		              }
 		              else
 		              {
-		            	  newTableId=-1;
-		            	  System.out.println("table Id entered is not occupied. Input again: ");
+		            	  System.out.println("table Id entered is not occupied. Returning to main menu. ");
+		            	  return;
 		            	  
 		              }
 		              
@@ -456,6 +390,6 @@ public class OrderApp {
 		            }
 		          }
 			 
-			 OrderManager.printParticularOrder(newTableId);
+			 orderM.printParticularOrder(newTableId);
 		 }
 }

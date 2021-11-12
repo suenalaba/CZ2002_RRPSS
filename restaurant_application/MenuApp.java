@@ -11,16 +11,17 @@ import restaurant_entity.MenuItem.type;
 import restaurant_manager.MenuManager;
 
 public class MenuApp {
-	public static void createItemQuery() { //Queries user for item to create. either alacarte item or promo pack
+	public void createItemQuery() { 
+		MenuManager menuM=MenuManager.getInstance();
 		Scanner sc=new Scanner(System.in);
-		Menu alaCarteMenu=new Menu(MenuManager.getMainMenu().getAlaCarteMenuItems());
+		Menu alaCarteMenu=new Menu(menuM.getMainMenu().getAlaCarteMenuItems());
 		ArrayList<MenuItem> promoPackItems;
 		int pcheck=-1,typeChoice=-1,pSize=-1,pChoice=-1;
 		String name,description;
 		double price=-1;
 		type itemType;
-		Menu alacarteMenu=new Menu(MenuManager.getMainMenu().getAlaCarteMenuItems());
-		if(alacarteMenu.presentSize()!=0) { //if no ala carte items then don't branch here
+		Menu alacarteMenu=new Menu(menuM.getMainMenu().getAlaCarteMenuItems());
+		if(alacarteMenu.presentSize()!=0) { 
 			System.out.println("Do you want to make a promotional package?\n1.Yes\n2.No");
 			while (pcheck==-1) {
 				try {
@@ -44,7 +45,7 @@ public class MenuApp {
 		name=sc.nextLine();
 		System.out.println("What is the description?");
 		description=sc.nextLine();
-		if (pcheck==2) { //enum type with uncategorized as default
+		if (pcheck==2) { 
 			System.out.println("What is the type of the item?\n1.Appetizer\n2.Main\n3.Side\n4.Dessert\n5.Drinks");
 			while (typeChoice==-1) {
 				try {
@@ -107,7 +108,7 @@ public class MenuApp {
 					System.out.println("Not a whole number. Try Again:");
 				}
 			}
-			promoPackItems=new ArrayList<MenuItem>();  //ArrayList of Menu item to hold promo package items before creation of PromotioPackage object in mainMenu arraylist
+			promoPackItems=new ArrayList<MenuItem>();  
 			for (int i=0;i<pSize;i++) {
 				alaCarteMenu.printMenu();
 				System.out.println("Which alaCarte item should be included? (type itemID then enter):");
@@ -131,26 +132,27 @@ public class MenuApp {
 				}
 				promoPackItems.add(alaCarteMenu.getListOfMenuItems().get(pChoice));
 			}
-			MenuManager.createItem(name,description,itemType,price,promoPackItems);
+			menuM.createItem(name,description,itemType,price,promoPackItems);
 		}
 		else{
-			MenuManager.createItem(name,description,itemType,price);
+			menuM.createItem(name,description,itemType,price);
 		}
 	}
-	public static void removeItemQuery() {// Remove item based on itemid. print statement to show user before making selection. Removal of alacarte also removes promopack containing it
+	public void removeItemQuery() {
+		MenuManager menuM=MenuManager.getInstance();
 		int removalIndex=-1;
-		int[] cascadeRemove=new int[MenuManager.getMainMenu().getListOfMenuItems().size()-MenuManager.getMainMenu().getAlaCarteMenuItems().size()];
-		int cRTrack=0;//tracker for promo packs to remove if alacarte item is contained within
-		if (MenuManager.getMainMenu().presentSize()<1) {
+		int[] cascadeRemove=new int[menuM.getMainMenu().getListOfMenuItems().size()-menuM.getMainMenu().getAlaCarteMenuItems().size()];
+		int cRTrack=0;
+		if (menuM.getMainMenu().presentSize()<1) {
 			System.out.println("Nothing to remove");
 			return;
 		}
 		Scanner sc=new Scanner(System.in);
-		MenuManager.getMainMenu().printMenu();
+		menuM.getMainMenu().printMenu();
 		System.out.println("Which item should be removed?");
 		while (removalIndex==-1) {
 			try {
-				removalIndex=MenuManager.getMainMenu().ItemIDToIndex(sc.nextInt(),false);
+				removalIndex=menuM.getMainMenu().ItemIDToIndex(sc.nextInt(),false);
 				sc.nextLine();
 				if (removalIndex!=-1) {
 					break;
@@ -164,11 +166,11 @@ public class MenuApp {
 				System.out.println("Not a whole number. Try Again:");
 			}
 		}
-		for (int i=0;i<MenuManager.getMainMenu().getListOfMenuItems().size();i++) {
-			if (MenuManager.getMainMenu().getListOfMenuItems().get(i).getMenuItemType()==type.PROMOTION) {
-				PromotionPackage promotionPackageTemp= (PromotionPackage) MenuManager.getMainMenu().getListOfMenuItems().get(i);
+		for (int i=0;i<menuM.getMainMenu().getListOfMenuItems().size();i++) {
+			if (menuM.getMainMenu().getListOfMenuItems().get(i).getMenuItemType()==type.PROMOTION) {
+				PromotionPackage promotionPackageTemp= (PromotionPackage) menuM.getMainMenu().getListOfMenuItems().get(i);
 				for (int k=0;k<promotionPackageTemp.getPromotionPackageItems().size();k++) {
-					if (promotionPackageTemp.getPromotionPackageItems().get(k)==MenuManager.getMainMenu().getListOfMenuItems().get(removalIndex)) {
+					if (promotionPackageTemp.getPromotionPackageItems().get(k)==menuM.getMainMenu().getListOfMenuItems().get(removalIndex)) {
 						cascadeRemove[cRTrack]=i;
 						cRTrack++;
 						break;
@@ -199,24 +201,25 @@ public class MenuApp {
 				}
 			}
 		}
-		MenuManager.removeItem(removalIndex);
+		menuM.removeItem(removalIndex);
 		System.out.println("Item removed and any promotion package containing it.");
 		for (int i=0;i<cRTrack;i++) {
-			MenuManager.removeItem(cascadeRemove[i]);
+			menuM.removeItem(cascadeRemove[i]);
 		}
 	}
-	public static void updateItemQuery() { //Updates either name/price/description/type or if promo pack
+	public void updateItemQuery() { 
+		MenuManager menuM=MenuManager.getInstance();
 		int updateIndex=-1,choice=-1,typeChoice=-1,pSize=-1,pChoice=-1;
-		if (MenuManager.getMainMenu().presentSize()<1) {
+		if (menuM.getMainMenu().presentSize()<1) {
 			System.out.println("Nothing to update");
 			return;
 		}
 		Scanner sc=new Scanner(System.in);
-		MenuManager.getMainMenu().printMenu();
+		menuM.getMainMenu().printMenu();
 		System.out.println("Which item should be updated?");
 		while (updateIndex==-1) {
 			try {
-				updateIndex=MenuManager.getMainMenu().ItemIDToIndex(sc.nextInt(),false);
+				updateIndex=menuM.getMainMenu().ItemIDToIndex(sc.nextInt(),false);
 				sc.nextLine();
 				if (updateIndex!=-1) {
 					break;
@@ -230,8 +233,8 @@ public class MenuApp {
 				System.out.println("Not a whole number. Try Again:");
 			}
 		}
-		if (MenuManager.getMainMenu().getListOfMenuItems().get(updateIndex).getMenuItemType()!=type.PROMOTION) {
-			MenuItem toUpdate=MenuManager.getMainMenu().getListOfMenuItems().get(updateIndex);
+		if (menuM.getMainMenu().getListOfMenuItems().get(updateIndex).getMenuItemType()!=type.PROMOTION) {
+			MenuItem toUpdate=menuM.getMainMenu().getListOfMenuItems().get(updateIndex);
 			String name=toUpdate.getMenuItemName();
 			String description=toUpdate.getMenuItemDescription();
 			type itemType=toUpdate.getMenuItemType();
@@ -312,14 +315,14 @@ public class MenuApp {
 					return;
 				}
 			}
-			MenuManager.updateItem(updateIndex,name,description,itemType,price);
+			menuM.updateItem(updateIndex,name,description,itemType,price);
 		}
 		else {
-			PromotionPackage toUpdate=(PromotionPackage) MenuManager.getMainMenu().getListOfMenuItems().get(updateIndex);
+			PromotionPackage toUpdate=(PromotionPackage) menuM.getMainMenu().getListOfMenuItems().get(updateIndex);
 			String name=toUpdate.getMenuItemName();
 			String description=toUpdate.getMenuItemDescription();
 			type itemType=toUpdate.getMenuItemType();
-			Menu alaCarteMenu=new Menu(MenuManager.getMainMenu().getAlaCarteMenuItems());
+			Menu alaCarteMenu=new Menu(menuM.getMainMenu().getAlaCarteMenuItems());
 			ArrayList<MenuItem> promoPackItems=toUpdate.getPromotionPackageItems();
 			ArrayList<MenuItem> promoPackItemsReplace=new ArrayList<MenuItem>();//store new
 			double price=toUpdate.getMenuItemPrice();
@@ -415,7 +418,7 @@ public class MenuApp {
 					return;
 				}
 			}
-			MenuManager.updateItem(updateIndex,name,description,itemType,price,promoPackItems); //atomic
+			menuM.updateItem(updateIndex,name,description,itemType,price,promoPackItems); //atomic
 		}
 	}
 }

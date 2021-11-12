@@ -27,23 +27,34 @@ import restaurant_entity.Staff;
 //import other restaurant classes...
 import restaurant_manager.TableLayoutManager;
 public class PaymentManager{
-
-    private static final double MEMBER = 0.15; 
-	//private static final String textfilename = "Payment.txt";
-	//public static PaymentManager paymentmanager = null;
-    //ArrayList<Payment> paymentinvoices = new ArrayList<Payment>();
-
-    
-	private static ArrayList<Payment> paymentInvoices = new ArrayList<Payment>();
 	
-	public static ArrayList<Payment> getPaymentInvoices(){
+	//Attributes
+    private static final double MEMBER = 0.15; 
+	private static ArrayList<Payment> paymentInvoices = new ArrayList<Payment>();
+	private static PaymentManager instance = null;	
+	ArrayList<Payment> paymentInvoice = new ArrayList<Payment>();
+	
+	//Constructor
+	public PaymentManager() {	
+		paymentInvoice=new ArrayList<Payment>();
+	}
+	
+	//Get Instance
+	public static PaymentManager getInstance() {
+		if (instance == null) {
+	    	   instance = new PaymentManager();
+	           }
+	       return instance;
+    }
+	
+	public ArrayList<Payment> getPaymentInvoices(){
 		return paymentInvoices;
 	}    
-    public static void addPayment(Payment payment) {
+    public void addPayment(Payment payment) {
     	paymentInvoices.add(payment);
     } 
     
-    public static void printReceipt(Payment payment) {
+    public void printReceipt(Payment payment) {
 
 
 			System.out.printf("                                     Date:                     #%s              \n", payment.getpaymentDate());
@@ -69,13 +80,13 @@ public class PaymentManager{
 
 		}
     
-    public static String getPaymentDateTime() {
+    public String getPaymentDateTime() {
 	LocalDateTime paymentDate = LocalDateTime.now(); 
 	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 	return paymentDate.format(formatter);
     }
     
-    public static double calculateSubtotal(ArrayList<MenuItem> listOfMenuItems) {
+    public double calculateSubtotal(ArrayList<MenuItem> listOfMenuItems) {
     	double subTotal = 0;
     	for(int i= 0; i<listOfMenuItems.size(); i++) {
 		subTotal += listOfMenuItems.get(i).getMenuItemPrice();
@@ -83,7 +94,7 @@ public class PaymentManager{
     	return subTotal; 
     }
     
-    public static double calculateMemberDiscount(boolean membershipApplied, double subtotal) {
+    public double calculateMemberDiscount(boolean membershipApplied, double subtotal) {
     	double memberDiscount = 0; 
     	if(membershipApplied == true) {
     		memberDiscount = subtotal * MEMBER; 
@@ -92,7 +103,7 @@ public class PaymentManager{
     }
     
   //save orders to order database
-    public static void saveDB(String saveFileName)  {
+    public void saveDB(String saveFileName)  {
     	PaymentDatabase PayDB=new PaymentDatabase();
       try{
         PayDB.fwrite(saveFileName);
@@ -106,7 +117,7 @@ public class PaymentManager{
       
     }
     //retrieve all orders from order database
-    public static void loadDB(String loadFileName) {
+    public void loadDB(String loadFileName) {
     	PaymentDatabase PayDB=new PaymentDatabase();
       try {
         paymentInvoices = PayDB.fread(loadFileName);
@@ -116,6 +127,7 @@ public class PaymentManager{
     	  System.out.println("Failed to load "+loadFileName);
 			return;
       }
+      System.out.println("Loaded successfully from "+loadFileName);
     }
     
 }    

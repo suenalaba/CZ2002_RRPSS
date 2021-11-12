@@ -10,10 +10,10 @@ import restaurant_entity.Table;
 import restaurant_manager.TableLayoutManager;
 
 
-public class TableLayoutDatabase {
+public class TableLayoutDatabase implements DatabaseFunction{
 	public static final String DELIMITER = ";";
 	
-	public static ArrayList<Table> fread(String textfilename) throws IOException {
+	public ArrayList<Table> fread(String textfilename) throws IOException {
 
 		ArrayList<String> fileasstring = FileRead.fread(textfilename);
 		
@@ -22,9 +22,7 @@ public class TableLayoutDatabase {
 
 		for (int i = 0; i < fileasstring.size(); i++) {
 			String data = (String) fileasstring.get(i);
-			// get individual 'fields' of the string separated by the delimiter ','
-			StringTokenizer str_tokenizer = new StringTokenizer(data, DELIMITER); // pass in the string to the string tokenizer
-		
+			StringTokenizer str_tokenizer = new StringTokenizer(data, DELIMITER); 
 			int tableID = Integer.parseInt(str_tokenizer.nextToken().trim());
 			int tableCapacity = Integer.parseInt(str_tokenizer.nextToken().trim());
 			Table table = new Table(tableID, tableCapacity);
@@ -35,10 +33,9 @@ public class TableLayoutDatabase {
 
 	}
 	
-	public static void fwrite(String textfilename) throws IOException {
-
+	public void fwrite(String textfilename) throws IOException {
 		ArrayList<String> tablelist = new ArrayList<String>();// array list to store table data
-		ArrayList<Table> mainLayout=TableLayoutManager.getInstance().getTableLayout();
+		ArrayList<Table> mainLayout=TableLayoutManager.getInstance().getLayout().getTableLayout();
 		for (int i = 0; i < mainLayout.size(); i++) {
 			Table table = (Table) mainLayout.get(i);
 			StringBuilder tablestring = new StringBuilder();

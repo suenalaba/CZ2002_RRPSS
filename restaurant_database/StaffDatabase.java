@@ -9,12 +9,13 @@ import java.util.StringTokenizer;
 import restaurant_entity.Staff;
 
 import restaurant_entity.Staff.Gender;
+import restaurant_manager.StaffManager;
 
 
-public class StaffDatabase {
+public class StaffDatabase implements DatabaseFunction{
 	public static final String DELIMITER = ";";
 	
-	public static ArrayList<Staff> fread(String textfilename) throws IOException {
+	public ArrayList<Staff> fread(String textfilename) throws IOException {
 
 		ArrayList<String> fileasstring = FileRead.fread(textfilename);
 		
@@ -29,15 +30,17 @@ public class StaffDatabase {
 			String staffName = str_tokenizer.nextToken().trim();
 			String staffTitle = str_tokenizer.nextToken().trim(); 
 			Gender staffGender = Gender.valueOf(str_tokenizer.nextToken().trim().toUpperCase()); 
-			Staff staff = new Staff(staffID, staffName, staffTitle, staffGender);
+			Boolean isWorking = Boolean.valueOf(str_tokenizer.nextToken().trim());
+			Staff staff = new Staff(staffName, staffTitle, staffGender,isWorking);
 			listOfStaffMembers.add(staff); 
 		}
 		return listOfStaffMembers; 
 	}
 	
-	public static void fwrite(String textfilename, ArrayList<Staff> listOfStaffMembers) throws IOException {
+	public void fwrite(String textfilename) throws IOException {
 
 		ArrayList<String> stafflist = new ArrayList<String>();// array list to store staffdata
+		ArrayList<Staff> listOfStaffMembers=StaffManager.getInstance().getListOfStaffMembers();
 		for (int i = 0; i < listOfStaffMembers.size(); i++) {
 			Staff staff = (Staff) listOfStaffMembers.get(i);
 			StringBuilder staffstring = new StringBuilder();
@@ -48,6 +51,8 @@ public class StaffDatabase {
 			staffstring.append(staff.getStaffTitle());
 			staffstring.append(DELIMITER); 
 			staffstring.append(staff.getStaffGender().name());
+			staffstring.append(DELIMITER); 
+			staffstring.append(String.valueOf(staff.getIsWorking()));
 			staffstring.append(DELIMITER); 
 			stafflist.add(staffstring.toString());
 		}

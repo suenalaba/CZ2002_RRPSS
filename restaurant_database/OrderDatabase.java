@@ -20,6 +20,7 @@ public class OrderDatabase implements DatabaseFunction {
 	public static final String DELIMITER = ";";
 	
 	public ArrayList<Order> fread(String textfilename) throws IOException {
+		MenuManager menuM=MenuManager.getInstance();
 		ArrayList<String> fileasstring = (ArrayList<String>) FileRead.fread(textfilename);
 		ArrayList<Order> listofOrders = new ArrayList<Order>();
 		
@@ -41,7 +42,7 @@ public class OrderDatabase implements DatabaseFunction {
 			while (order_items_tokenizer.hasMoreTokens()){
 				//MenuManager.getItemFromAll() returns a menuitem obj
 				//add each menu item obj into orderItem ArrayList<MenuItem>
-				orderItems.add(MenuManager.getItemFromAll(Integer.parseInt(order_items_tokenizer.nextToken().trim()))); //get items all items from
+				orderItems.add(menuM.getItemFromAll(Integer.parseInt(order_items_tokenizer.nextToken().trim()))); //get items all items from
 			}
 			
 			//ordertime
@@ -65,8 +66,9 @@ public class OrderDatabase implements DatabaseFunction {
 	}
 	
 	public void fwrite(String textfilename) throws IOException {
+		OrderManager orderM=OrderManager.getInstance();
 		ArrayList<String> fwritepayment = new ArrayList<String>(); //Initialize new arraylist of String type. Used to store list of order objects in string.
-		ArrayList<Order> orderlist = OrderManager.getOrderList();// get and store existing array list of Order objects 
+		ArrayList<Order> orderlist = orderM.getOrderList();// get and store existing array list of Order objects 
 		for (int i = 0; i < orderlist.size(); i++) {
 			Order order = (Order) orderlist.get(i);
 			StringBuilder orderstring = new StringBuilder(); //create mutable string

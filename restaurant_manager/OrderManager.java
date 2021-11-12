@@ -10,47 +10,36 @@ import restaurant_database.StaffDatabase;
 import restaurant_entity.Menu;
 import restaurant_entity.MenuItem;
 import restaurant_entity.Order;
+import restaurant_entity.Reservation;
 import restaurant_entity.Staff;
 
 public class OrderManager {
+	//Attributes
+	private static OrderManager instance = null;	
+	ArrayList<Order> orderList = new ArrayList<Order>();
 	
-	//private static Order 
-	//private static final String filename = "Order.txt";
-	private static OrderManager instance = null;
+	//Constructor
+	public OrderManager() {	
+		orderList=new ArrayList<Order>();
+	}
 	
-	private static ArrayList<Order> orderList = new ArrayList<Order>();
+	//Get Instance
+	public static OrderManager getInstance() {
+		if (instance == null) {
+	    	   instance = new OrderManager();
+	           }
+	       return instance;
+    }
 	
-	
-	public static  ArrayList<Order> getOrderList(){
+	public ArrayList<Order> getOrderList(){
 		return orderList;
 	}
-	public static void setOrderList(ArrayList<Order> wholeOrderList) {
+	public void setOrderList(ArrayList<Order> wholeOrderList) {
 		orderList = wholeOrderList;
 	}
 
-	public OrderManager() {
-		//empty array list to store orders
-		orderList = new ArrayList<Order>();
-	}
-	
-	
-	
-	//create new instance of OrderManager
-//	 public static OrderManager getInstance() {
-//	        if (instance == null) {
-//	            instance = new OrderManager();
-//	        }
-//	        return instance;
-//	    }
-//	    
-	 
-//	public static Order getOrderInstance() { 
-//		return;
-//	}
-	 
-
 	 //method create new order item 
-	 public static void createOrder(int tableId, ArrayList<MenuItem> orderItems, int staffId) {
+	 public void createOrder(int tableId, ArrayList<MenuItem> orderItems, int staffId) {
 		 
 		 	
 		 	orderList.add(new Order(tableId, orderItems,staffId));
@@ -58,51 +47,52 @@ public class OrderManager {
 	      
 	    }	 
 	 
-	 public static void displayOrderList() {
+	 public void displayOrderList() {
 	 		System.out.println("List of orders (by orderID):");
-	 		
-	 		for(int i=0; i<orderList.size(); i++) {
+	 		StaffManager staffM=StaffManager.getInstance();
+	 		ArrayList<Order> unpaidOrders=getUnpaidOrders();
+	 		for(int i=0; i<unpaidOrders.size(); i++) {
 	 			
 	 			String staffName=null;
 				 
-				 for(int k=0; k<StaffManager.getListOfStaffMembers().size(); k++)
+				 for(int k=0; k<staffM.getListOfStaffMembers().size(); k++)
 				 {
-					 if(StaffManager.getListOfStaffMembers().get(k).getStaffID()==orderList.get(i).getStaffId()) {
-						 staffName = StaffManager.getListOfStaffMembers().get(k).getStaffName();
+					 if(staffM.getListOfStaffMembers().get(k).getStaffID()==unpaidOrders.get(i).getStaffId()) {
+						 staffName = staffM.getListOfStaffMembers().get(k).getStaffName();
 					 }
 				 }
 	 			
-	 			System.out.format("orderID: %d          staffID: %d			staffName: %s\n", orderList.get(i).getOrderID(),orderList.get(i).getStaffId(),staffName);
+	 			System.out.format("orderID: %d          staffID: %d			staffName: %s\n", unpaidOrders.get(i).getOrderID(),unpaidOrders.get(i).getStaffId(),staffName);
 	 		}
 	 		
 	 		
 	 	}
 	 
+	 	//get order from order ID
+	 public Order getOrder(int orderID) {
+		 for (Order o:orderList) {
+			 if (o.getOrderID()==orderID) {
+				 return o;
+			 }
+		 }
+		 return null;
+	 }
 	 	
-	 	
-	 	
-	 	
-	 	
-	 	//delete whole order
-	 	public static void deleteWholeOrder(int removalIndex) {
-	 		orderList.remove(removalIndex);
-	 	}
-	 	
-	 	
-	 
+	 public void deleteOrder(int orderID) {
+		 int toDeleteIndex=orderIdToIndex(orderID);
+		 orderList.remove(toDeleteIndex);
+	 }
 	 
 	 //update Order
-	 public static void updateOrder(int newTableId, ArrayList<MenuItem> newOrderItems, int updateIndex)
+	 public void updateOrder(ArrayList<MenuItem> newOrderItems, int orderID)
 	 {
-		 orderList.get(updateIndex).setTableID(newTableId);
-		 orderList.get(updateIndex).setOrderItems(newOrderItems);
+		 Order targetOrder=getOrder(orderID);
+		 targetOrder.setOrderItems(newOrderItems);
 		 System.out.println("\n\nOrder details updated");
 	 }
 	    
-	 
-
-	 
-	 public static void printParticularOrder(int tableID) {
+	 public void printParticularOrder(int tableID) {
+		 StaffManager staffM=StaffManager.getInstance();
 		 for(int i=0; i<orderList.size();i++)
 		 {
 			 
@@ -110,10 +100,10 @@ public class OrderManager {
 			 {
 				 String staffName=null;
 				 
-				 for(int k=0; k<StaffManager.getListOfStaffMembers().size(); k++)
+				 for(int k=0; k<staffM.getListOfStaffMembers().size(); k++)
 				 {
-					 if(StaffManager.getListOfStaffMembers().get(k).getStaffID()==orderList.get(i).getStaffId()) {
-						 staffName = StaffManager.getListOfStaffMembers().get(k).getStaffName();
+					 if(staffM.getListOfStaffMembers().get(k).getStaffID()==orderList.get(i).getStaffId()) {
+						 staffName = staffM.getListOfStaffMembers().get(k).getStaffName();
 					 }
 				 }
 				 //print details of order
@@ -161,7 +151,7 @@ public class OrderManager {
 	 }
 	
 		//return a list of all orders that haven't been paid
-		public static ArrayList<Order> getUnpaidOrders() {
+		public ArrayList<Order> getUnpaidOrders() {
 
 			
 			ArrayList<Order> unpaidOrderList  = new ArrayList<Order>();
@@ -180,7 +170,7 @@ public class OrderManager {
 		
 		
 		
-		public static int orderIdToIndex(int orderId) {
+		public int orderIdToIndex(int orderId) {
 			
 			
 			for(int i=0; i<orderList.size(); i++)
@@ -195,12 +185,12 @@ public class OrderManager {
 			
 		}
 	 
-		public static Order getOrderByTableId(int tableId) {
+		public Order getOrderByTableId(int tableId) {
 		     
 		     
 		     for(int i=0; i<orderList.size(); i++)
 		     {
-		       if(orderList.get(i).getTableID() == tableId)
+		       if(orderList.get(i).getTableID() == tableId && orderList.get(i).getPaidStatus()==false)
 		       {
 		         return orderList.get(i);
 		       }
@@ -210,7 +200,7 @@ public class OrderManager {
 		   }
 
 		//set paid status of order to paid given orderId from payment
-		public static void updatePaidStatus(int orderId) {
+		public void updatePaidStatus(int orderId) {
 			
 			for(int i=0; i<orderList.size(); i++)
 			{
@@ -223,7 +213,7 @@ public class OrderManager {
 
 	   
 	 	//save orders to order database
-		public static void saveDB(String textFileName)  {
+		public void saveDB(String textFileName)  {
 			
 			try{
 				OrderDatabase saver=new OrderDatabase();
@@ -238,7 +228,7 @@ public class OrderManager {
 			
 		}
 		//retrieve all orders from order database
-		public static void loadDB(String textFileName) {
+		public void loadDB(String textFileName) {
 			try {
 				OrderDatabase loader=new OrderDatabase();
 				orderList = loader.fread(textFileName);
@@ -248,6 +238,7 @@ public class OrderManager {
 				System.out.println("Failed to load "+textFileName);
 				return;
 			}
+			System.out.println("Loaded successfully from "+textFileName);
 		}
 	    
 	

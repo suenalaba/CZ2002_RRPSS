@@ -16,25 +16,28 @@ import java.io.BufferedWriter;
 
 //import other class.....
 import restaurant_entity.Customer;
+import restaurant_entity.TableLayout;
 import restaurant_database.FileRead;
 import restaurant_database.CustomerDatabase;
 
 public class CustomerManager {
-	public static final String delimiter = ",";
-	private static ArrayList<Customer> customerList=new ArrayList<Customer>();
+	private static CustomerManager instance=null;
+	ArrayList<Customer> customerList=new ArrayList<Customer>();
 	
+	public CustomerManager() {
+		customerList=new ArrayList<Customer>();
+	}
 	
-	/**
-	 * Retrieval of a particular customer's details
-	 * 
-	 * @param Customer Parameter to search for Customer details.
-	 * @return null if customer not found, else return customer itself.
-	 */
-	public static Customer retrieveCustomerdetails(Customer customer) {
-		ArrayList<Customer> customerlist = customerList;
-
-		for (int i = 0; i < customerlist.size(); i++) {
-			Customer validcustomer = (Customer) customerlist.get(i);
+	public static CustomerManager getInstance() {
+        if (instance == null) {
+            instance = new CustomerManager();
+        }
+        return instance;
+    }
+	
+	public Customer retrieveCustomerdetails(Customer customer) {
+		for (int i = 0; i < customerList.size(); i++) {
+			Customer validcustomer = customerList.get(i);
 
 			if (validcustomer.getcustomerID() != customer.getcustomerID()) {
 				return null;
@@ -53,14 +56,12 @@ public class CustomerManager {
 	 * @param Search for customer details with ID
 	 * @return if customer don't exist null, else customer
 	 */
-	public static Customer retrieveCustomerbyIDinput(String ID) {
+	public Customer getCustomer(String ID) {
 		
 		int i;
 		
-		ArrayList<Customer> customerlist = customerList;
-		
-		for (i = 0; i < customerlist.size(); i++) {
-			Customer validcustomer = (Customer) customerlist.get(i);
+		for (i = 0; i < customerList.size(); i++) {
+			Customer validcustomer = (Customer) customerList.get(i);
 
 			if (ID.equals(validcustomer.getcustomerID())) {
 				return validcustomer;
@@ -79,7 +80,7 @@ public class CustomerManager {
 	 * @return Customer details.
 	 */
 
-	public static Customer retrieveCustomerDetailsbyID() {
+	public Customer retrieveCustomerDetailsbyID() {
 		String custID;
 
 		Customer validcustomer = new Customer();
@@ -90,7 +91,7 @@ public class CustomerManager {
 			System.out.println("Please enter Customer ID to update: ");
 			Scanner sc = new Scanner(System.in);
 			custID = sc.nextLine();
-			validcustomer = retrieveCustomerbyIDinput(custID);
+			validcustomer = getCustomer(custID);
 			if (validcustomer != null) {
 				System.out.printf("Proceeding to update details for CustomerID: %s\n",custID);
 				break;
@@ -108,7 +109,7 @@ public class CustomerManager {
 	 * Retrieval of all Customer details.
 	 * 
 	 */
-	public static void printallCustomerDetails() throws IOException {
+	public void printallCustomerDetails() throws IOException {
 		System.out.println("\n==================================================");
 		System.out.println(" Customer Details: ");
 		System.out.println("==================================================");
@@ -133,15 +134,15 @@ public class CustomerManager {
 		}
 	}
 	
-	public static void setCustomerList(ArrayList<Customer> newListOfCustomers) {
+	public void setCustomerList(ArrayList<Customer> newListOfCustomers) {
 		customerList=newListOfCustomers;
 	}
 	
-	public static ArrayList<Customer> getCustomerList(){
+	public ArrayList<Customer> getCustomerList(){
 		return customerList;
 	}
 	
-	public static void saveDB(String textFileName) {
+	public void saveDB(String textFileName) {
 		CustomerDatabase cusDB=new CustomerDatabase();
 		try {
 			cusDB.fwrite(textFileName);
@@ -150,7 +151,7 @@ public class CustomerManager {
 			return;
 		}
 	}
-	public static void loadDB(String textFileName) { 
+	public void loadDB(String textFileName) { 
 		ArrayList<Customer> newListOfCustomers = null;
 		try {
 			// read file containing Guest records
@@ -162,5 +163,6 @@ public class CustomerManager {
 			return;
 		}
 		customerList=newListOfCustomers;
+		System.out.println("Loaded successfully from "+textFileName);
 	}
 }

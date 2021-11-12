@@ -18,8 +18,7 @@ import restaurant_entity.Customer;
 import restaurant_manager.CustomerManager;
 
 public class CustomerApp {
-
-	private static String textfilename = "Customer.txt";
+	
 	public static final String delimiter = ",";
 	
 	/**
@@ -27,25 +26,16 @@ public class CustomerApp {
 	 * 
 	 */
 
-	public static void createCustomer(boolean multiEntry,int walkIn) throws IOException { //Jacques-when checking in or reserving. Only one customer entry. set multiEntry according to use case.//walkIn 1=true walkIn !1=normal;
+	public void createCustomer(boolean multiEntry,int walkIn) throws IOException { 
+		CustomerManager customerM=CustomerManager.getInstance();
 		String Name = "";
-		int Gender = 0; //Jacques - couldnt match strings for some reason. so changed the Gender data type. Can consider integer parsing but messy
-		String phone_number = ""; //Jacques - Walk in will have option to give this detail or not
-		int rest_membership = 0; //default is no restaurant membership //Jacques - String match failing. Changed to int. 
-		int partner_membership = 0; //default is no partner membership //Jacques - String match failing. Changed to int. 
-
-		int createcustomer = 0;//Jacques - String match failing. Changed to int. //default will exit do-while after 1 pass.
-		
-
-
-		// To be used for data validation
+		int Gender = 0; 
+		String phone_number = ""; 
+		int rest_membership = 0; 
+		int partner_membership = 0; 
+		int createcustomer = 0;
 		String alpha = "[a-zA-Z.*\\s+.]+";
 		String phonenumber = "\\d{8}";
-
-		
-		// input customer details 
-		//all the details will go to customer object
-		
 		do {
 			Customer customer = new Customer();
 
@@ -53,16 +43,10 @@ public class CustomerApp {
 			System.out.println(" Enter Customer Details ");
 			System.out.println("==================================================");
 			Scanner sc = new Scanner(System.in);
-			
-			
-			// input customer name
 			do {
 				
 				System.out.print("\nEnter Customer Name: "); 
 				Name = sc.nextLine();
-				
-				
-				
 				if(Name.matches(alpha) && !Name.equals("")) {
 					customer.setcustomerName(Name);
 					break;
@@ -70,27 +54,18 @@ public class CustomerApp {
 				else {
 					System.out.print("Please enter a valid name.\n");
 				}
-				
 			} while (!Name.matches(alpha) || Name.equals(""));
-
-			// input customer gender
 			do {
 				System.out.println("\nPlease choose Gender");
 				System.out.println("(1) Female");
 				System.out.println("(2) Male ");
-				
-				
-
-
 					try {
 						Gender = sc.nextInt();
 						sc.nextLine();
 					}catch(InputMismatchException e) {
 						System.out.println("Invalid Input. Try Again: ");
+						sc.nextLine();
 					}
-				
-				
-				
 				if (Gender == 1) { 
 					customer.setcustomerGender("Female");
 					break;
@@ -99,12 +74,7 @@ public class CustomerApp {
 					customer.setcustomerGender("Male");
 					break;
 				}
-				else {
-					System.out.println("Invalid Gender!");
-				}
-			} while (Gender != 1 || Gender != 2);
-			
-			// Guest PhoneNumber
+			} while (Gender != 1 && Gender != 2);
 			do {
 				if (walkIn==1) {
 					System.out.println("Does customer want to provide Contact Number?");
@@ -121,9 +91,10 @@ public class CustomerApp {
 							}
 						}catch(InputMismatchException e) {
 							System.out.println("Invalid Input. Try Again: ");
+							sc.nextLine();
 						}
 					}
-					if (anonChoice==2) { //defaults and breaks out of providence of contact question //if anonymous customer in data base and phone number is anon, reservationManager will update with new one
+					if (anonChoice==2) { 
 						customer.setphoneNumber("XXXXXXXX");
 						break;
 					}
@@ -138,19 +109,16 @@ public class CustomerApp {
 					System.out.println("Invalid contact number!");
 				}
 			} while (phone_number.equals("") || !phone_number.matches(phonenumber));
-			
-			// input whether customer has restaurant membership
 			do {
 				System.out.println("\nDoes customer have restaurant membership?");
 				System.out.println("(1) Yes");
 				System.out.println("(2) No ");
-				
-				
 				try {
 					rest_membership = sc.nextInt();
 					sc.nextLine();
 				}catch(InputMismatchException e) {
 					System.out.println("Invalid Input. Try Again: ");
+					sc.nextLine();
 				}
 			
 				if (rest_membership == 1) {
@@ -165,21 +133,17 @@ public class CustomerApp {
 					System.out.println("Invalid entry, depending on membership status enter 1 or 2");
 				}
 			} while (rest_membership != 1 && rest_membership != 2);
-
-			// input whether customer has partner membership
 			do {
 				System.out.println("\nDoes customer have partner membership?");
 				System.out.println("(1) Yes");
 				System.out.println("(2) No ");
-				
-				
 				try {
 					partner_membership = sc.nextInt();
 					sc.nextLine();
 				}catch(InputMismatchException e) {
 					System.out.println("Invalid Input. Try Again: ");
+					sc.nextLine();
 				}
-				
 				if (partner_membership == 1) {
 					customer.setpartnerMembership(true);
 					break;
@@ -192,49 +156,24 @@ public class CustomerApp {
 					System.out.println("Invalid entry, depending on membership status enter 1 or 2");
 				}
 			} while (partner_membership != 1 || partner_membership != 2);
-			
-			ArrayList<Customer> customerinfo=new ArrayList<Customer>(); //Jacques-fread fails without text file. Moved ArrayList Declaration
-			CustomerDatabase customerDatabase = new CustomerDatabase(); //Instantiate database
-			
-			try {
-				customerinfo = customerDatabase.fread(textfilename); //read from database 
-			}catch(IOException e) {
-				System.out.println("First instance of customer recorded.");
-			}
-			
-			//Jacques-to generate randomized 5 digit Customer ID 
 			Random rnd = new Random();
 			int n;
-			ArrayList<Integer> listOfCustomerId=new ArrayList<Integer>(); //for duplicate check loop
-			for (Customer o:customerinfo) { //Jacques-Integer comparison is more reliable than string comparison imo
+			ArrayList<Integer> listOfCustomerId=new ArrayList<Integer>(); 
+			for (Customer o:customerM.getCustomerList()) { 
 				listOfCustomerId.add(Integer.parseInt(o.getcustomerID()));
 			}
 			do {
-				n= 10000 + rnd.nextInt(90000); //rnd.nextInt(90000) at most returns 89999
+				n= 10000 + rnd.nextInt(90000); 
 			}while(listOfCustomerId.contains(n));
-			customer.setcustomerID(String.valueOf(n));//CustomerId set
-			
+			customer.setcustomerID(String.valueOf(n));
 			System.out.println("CustomerID of new customer is: "+n);
-			
-			customerinfo.add(customer);
-
-			try { //Jacques-CustomerID needs to be created before this
-				// Write Customer records to file
-				CustomerManager.setCustomerList(customerinfo);
-				CustomerDatabase saver=new CustomerDatabase();
-				saver.fwrite(textfilename);
-
-				System.out.println("Customer information succesfully entered! ");
-
-			} catch (IOException e) {
-				System.out.println("IOException > " + e.getMessage());
-			}
-			if (multiEntry==true) { //defaults to 0 and exits. 
+			customerM.getCustomerList().add(customer);
+			if (multiEntry==true) { 
 				System.out.println("Do you want to add another customer?");
 				System.out.println("(1) Yes");
 				System.out.println("(2) No");
 				createcustomer = sc.nextInt();
-			} //Jacques- removed sc.close, if this method is closed. subsequent Scanner objects of System.in will not work
+			} 
 		} while (createcustomer == 1); 
 
 	}
@@ -247,37 +186,27 @@ public class CustomerApp {
 	 * Retrieve customer details by customerID
 	 * 
 	 */
-	public static void printCustomerdetailsbyID() throws IOException {
-		ArrayList readfileasstring = (ArrayList)FileRead.fread(textfilename);
+	public void printCustomerdetailsbyID() throws IOException {
 		System.out.println("\n==================================================");
 		System.out.println(" Search Customer Record");
 		System.out.println("==================================================");
-
 		System.out.print("Enter Customer ID: ");
 		Scanner sc = new Scanner(System.in);
-		String id_entered;
-		id_entered = sc.nextLine();
-		
-
-		System.out.printf("%-8s %-15s %-8s %-10s %-5s %-5s\n", "CustomerID", "Name",
-				"Gender", "Phone Number", "Restaurant Membership", "Partner Membership");
-		for (int i = 0; i < readfileasstring.size(); i++) {
-			String data = (String) readfileasstring.get(i);
-			// get individual 'fields' of the string separated by delimiter
-			StringTokenizer str_tokenizer = new StringTokenizer(data, delimiter); // pass in the string to the string tokenizer
-																		// using delimiter ","
-			String customerid = str_tokenizer.nextToken().trim();
-			String name = str_tokenizer.nextToken().trim();
-			String gender = str_tokenizer.nextToken().trim();
-			String phonenumber = str_tokenizer.nextToken().trim();
-			String restaurantmember = str_tokenizer.nextToken().trim();
-			String partnermember = str_tokenizer.nextToken().trim();
-
-			if (customerid.contains(id_entered)) {
-
-				System.out.printf("%-8s %-15s %-8s %-10s %-5s %-5s\n", customerid, name, gender,phonenumber,
-						restaurantmember, partnermember);
-			}
+		ArrayList<String> customerIDs=new ArrayList<String>();
+		CustomerManager customerM=CustomerManager.getInstance();
+		for (Customer o:customerM.getCustomerList()) {
+			customerIDs.add(o.getcustomerID());
+		}
+		String customerID="";
+		customerID=sc.nextLine();
+		if (customerIDs.contains(customerID)) {
+			Customer aCustomer=customerM.getCustomer(customerID);
+			System.out.printf("%-8s %-15s %-8s %-10s %-5s %-5s\n", aCustomer.getcustomerID(), aCustomer.getcustomerName(),
+					aCustomer.getcustomerGender(), aCustomer.getphoneNumber(), aCustomer.getrestaurantMembership(), aCustomer.getpartnerMembership());
+		}
+		else {
+			System.out.println("Customer not in records. Returning to main menu.");
+			return;
 		}
 	}
 
@@ -288,7 +217,8 @@ public class CustomerApp {
 	 * Update Customer Details by ID
 	 * 
 	 */
-	public static void updateCustomerdetailsbyID() throws IOException {
+	public void updateCustomerdetailsbyID() throws IOException {
+		CustomerManager customerM=CustomerManager.getInstance();
 		System.out.println("\n==================================================");
 		System.out.println(" Update Customer Details: ");
 		System.out.println("==================================================");
@@ -297,18 +227,11 @@ public class CustomerApp {
 		String phone_number = "";
 		String rest_membership = "";
 		String partner_membership = "";
-
-
-
-		// To be used for data validation
 		String alpha = "[a-zA-Z.*\\s+.]+";
 		String phonenumber = "\\d{8}";
 		int updatetype;
 		Customer updateCustomer = new Customer();
-		updateCustomer = CustomerManager.retrieveCustomerDetailsbyID();
-		
-		
-
+		updateCustomer = customerM.retrieveCustomerDetailsbyID();
 		do {
 			System.out.println("\nPlease choose Guest Detail to update");
 			System.out.println("(1) Name");
@@ -318,31 +241,21 @@ public class CustomerApp {
 			System.out.println("(5) Partner Membership Status");
 			System.out.println("(6) Done updating");
 			Scanner sc = new Scanner(System.in);
-			
-			
-			
 			try {
 				
 				updatetype = sc.nextInt();
 				sc.nextLine();
 			}
-			
 			catch(InputMismatchException e) {
 				System.out.println("Invalid number. You will be returned to main menu");
 				return;
-				
 			}
-			
-			
 			switch (updatetype) {
-
 			case 1:
-				// Updating customer name
 				do {
 					System.out.print("\nUpdate Customer Name: ");
 					Name = sc.nextLine();
-					
-					if(Name.equals("") || !Name.matches(alpha)) {
+					if(!Name.equals("") && Name.matches(alpha)) {
 						updateCustomer.setcustomerName(Name);
 						break;
 					}
@@ -353,7 +266,6 @@ public class CustomerApp {
 				} while (!Name.matches(alpha) || Name.equals(""));
 				break;
 			case 2:
-				// Updating gender of customer
 				do {
 					System.out.println("\nPlease choose Gender");
 					System.out.println("(1) Female");
@@ -373,7 +285,6 @@ public class CustomerApp {
 				} while (!Gender.equals("1") || !Gender.equals("2"));
 				break;
 			case 3:
-				// Update customer phone number
 				do {
 					System.out.print("Enter customer's Contact Number: ");
 					phone_number = sc.nextLine();
@@ -387,7 +298,6 @@ public class CustomerApp {
 				} while (phone_number.equals("") || !phone_number.matches(phonenumber));
 				break;
 			case 4:
-				// Update Customer's restaurant membership status
 				do {
 					System.out.println("\nDoes customer have restaurant membership?");
 					System.out.println("(1) Yes");
@@ -407,7 +317,6 @@ public class CustomerApp {
 				} while (!rest_membership.equals("1") || !rest_membership.equals("2"));
 				break;
 			case 5:
-				// Update Customer's partner membership status
 				do {
 					System.out.println("\nDoes customer have partner membership?");
 					System.out.println("(1) Yes");
@@ -434,30 +343,16 @@ public class CustomerApp {
 			}
 
 		} while (updatetype >= 1 && updatetype  <=5 );
-		try
-		{
-			ArrayList customerlist = CustomerManager.getCustomerList();
+
+			ArrayList<Customer> customerlist = customerM.getCustomerList();
 			for (int i = 0; i < customerlist.size(); i++) {
 				Customer findcustomer = (Customer) customerlist.get(i);
-
 				if (updateCustomer.getcustomerID().equals(findcustomer.getcustomerID())) {
-					customerlist.set(i, updateCustomer);
+					customerM.getCustomerList().set(i, updateCustomer);
 				}
 			}
-
-			// Write Customer records to file
-			CustomerManager.setCustomerList(customerlist);
-			CustomerDatabase customerdatabase = new CustomerDatabase();
-			customerdatabase.fwrite(textfilename); //implement write function in database
-
 			System.out.println("Customer Details successfully updated!");
-		} catch (
 
-		IOException e)
-
-		{
-			System.out.println("IOException > " + e.getMessage());
-		}
 	}
 	
 	
@@ -467,49 +362,26 @@ public class CustomerApp {
 	 * 
 	 */
 	
-	public static void deleteCustomerdetailsbyID() throws IOException {
-		
-		String custid;
-
-		
+	public void deleteCustomerdetailsbyID() {
 		System.out.println("\n==================================================");
-		System.out.println(" CAUTION! Deleting Customer Record");
+		System.out.println(" Delete Customer Record");
 		System.out.println("==================================================");
-		
-		System.out.println("Enter Customer ID of the customer to be removed: ");
+		System.out.print("Enter Customer ID: ");
 		Scanner sc = new Scanner(System.in);
-		custid = sc.nextLine();
-		
-		//file objects, one for reading one for file storage
-		File database = new File(textfilename);
-		File tempstorage = new File("deleterecord.txt"); //rename this file name
-		
-		//read and write objects
-		BufferedWriter writer = new BufferedWriter(new FileWriter(tempstorage));
-		BufferedReader reader = new BufferedReader(new FileReader(database));
-		
-		String databasedetail;
-		
-		while ((databasedetail = reader.readLine()) != null) {
-
-			String record[] = databasedetail.split(",");
-			if (record[0].contains(custid))
-				continue;
-
-			writer.write(databasedetail);
-			writer.flush();
-			writer.newLine();
-
+		ArrayList<String> customerIDs=new ArrayList<String>();
+		CustomerManager customerM=CustomerManager.getInstance();
+		for (Customer o:customerM.getCustomerList()) {
+			customerIDs.add(o.getcustomerID());
 		}
-		writer.close();
-		reader.close();
-
-		database.delete();
-		
-		System.out.println("Customer Details have been successfully removed!");
-		tempstorage.renameTo(database);
-
+		String customerID="";
+		customerID=sc.nextLine();
+		if (customerIDs.contains(customerID)) {
+			Customer toRemove=customerM.getCustomer(customerID);
+			customerM.getCustomerList().remove(toRemove);
+		}
+		else {
+			System.out.println("Customer not in records. Returning to main menu.");
+			return;
+		}
 	}
-
-	
 }

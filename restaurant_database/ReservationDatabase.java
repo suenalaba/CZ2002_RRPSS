@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.io.File;
 import java.io.FileWriter; 
-import java.io.FileNotFoundException;
 
 //import Reservation Classes
 import restaurant_entity.Reservation;
@@ -18,11 +17,11 @@ public class ReservationDatabase implements DatabaseFunction{
 	
 	@Override
 	public void fwrite(String saveFileName) throws IOException {
-		try {
+			ReservationManager reservationM=ReservationManager.getInstance();
 			FileWriter myWriter = new FileWriter(saveFileName);
 			String pusher="";
-			for (int i=0;i<ReservationManager.getListOfReservations().size();i++) {
-				Reservation txMedium=ReservationManager.getListOfReservations().get(i); //object
+			for (int i=0;i<reservationM.getListOfReservations().size();i++) {
+				Reservation txMedium=reservationM.getListOfReservations().get(i); //object
 				pusher+=String.valueOf(txMedium.getReservationID())+DELIMITER; //reservationID
 				pusher+=String.valueOf(txMedium.getTableID())+DELIMITER; //tableID
 				pusher+=String.valueOf(txMedium.getPax())+DELIMITER; //pax
@@ -35,13 +34,6 @@ public class ReservationDatabase implements DatabaseFunction{
 			}
 			myWriter.write(pusher);
 		    myWriter.close();
-		    System.out.println("Successfully wrote to the file.");
-		}catch (IOException e) {
-			System.out.println("An error occured when writing to file "+saveFileName);
-			e.printStackTrace();
-		}catch (Exception e) {
-			System.out.println("No data to save!");
-		}
 	}
 	
 	@Override
@@ -88,7 +80,6 @@ public class ReservationDatabase implements DatabaseFunction{
 		    	  }
 		      }
 		      Reservation.setCounter(sortedItemId.get(sortedItemId.size()-1)+1);
-		      System.out.println(loadFileName+ " file contents loaded successfully.");
 		      return sortedReservations;
 	}
 }

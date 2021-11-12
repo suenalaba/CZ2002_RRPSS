@@ -1,14 +1,18 @@
 package restaurant_application;
 
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import restaurant_entity.Reservation;
+import restaurant_manager.ReservationManager;
 import restaurant_manager.TableLayoutManager;
 
 public class TableLayoutApp {
-	public static void createTableQuery() { //creates table with tableID and pax of 2 increment
+	public void createTableQuery() { //creates table with tableID and pax of 2 increment
 		Scanner sc=new Scanner(System.in);
 		int tableID=-1, tableCapacity; 
+		TableLayoutManager tableM=TableLayoutManager.getInstance();
 		System.out.println("Enter table ID of new table: ");
 		while (tableID==-1) {
 			try {
@@ -25,7 +29,7 @@ public class TableLayoutApp {
 				System.out.println("Invalid input. Try again: ");
 			}
 		}
-		if(TableLayoutManager.findTableIndex(tableID) == -1) { //if no existing tableID
+		if(tableM.getTableIndex(tableID) == -1) { //if no existing tableID
 			System.out.println("Select desired table capacity: ");
 			System.out.println("2/4/6/8/10");
 			try {
@@ -36,8 +40,7 @@ public class TableLayoutApp {
 				return;
 			}
 			if(tableCapacity == 2 || tableCapacity == 4 || tableCapacity == 6 || tableCapacity == 8 || tableCapacity ==10) {
-				TableLayoutManager.createTable(tableID, tableCapacity); 
-				System.out.println("Table " + tableID + " with table capacity of " + tableCapacity + " created");
+				tableM.createTable(tableID, tableCapacity); 
 				return;
 			}
 			else {
@@ -45,28 +48,42 @@ public class TableLayoutApp {
 				return;
 			}
 		}
-		else{
-			System.out.println("Table already exists!");
+		else {
+			System.out.println("Table ID already exists. Returning to Table menu.");
+			return;
 		}
 	} 
 	
-	public static void removeTableQuery() {
-		if (TableLayoutManager.getInstance().getTableLayout().size()==0) {
+	public void removeTableQuery() {
+		TableLayoutManager tableM=TableLayoutManager.getInstance();
+		ReservationManager reservationM=ReservationManager.getInstance();
+		if (tableM.getLayout().getTableLayout().size()==0) {
 			System.out.println("There are no tables yet in the restaurant. Returning to main menu.");
 			return;
 		}
 		Scanner sc = new Scanner(System.in); 
 		int tableID; 
 		System.out.println("Enter table ID of table to be removed");
+		ArrayList<Integer> reservationTables=new ArrayList<Integer>();
+		for (Reservation o:reservationM.getListOfUnfinishedReservations()) {
+			if (!reservationTables.contains(o.getTableID())) {
+				reservationTables.add(o.getTableID());
+			}
+		}
 		try {
 			tableID = sc.nextInt();
 			sc.nextLine();
+			if (reservationTables.contains(tableID)) {
+				System.out.println("Cannot remove table with future reservation or if currently occupied");
+				return;
+			}
+			
 		}
 		catch(InputMismatchException e) {
 			System.out.println("Invalid input.Returning to main menu.");
 			return;
 		}
-		TableLayoutManager.removeTable(tableID);
+		tableM.removeTable(tableID);
 		
 	}
 	

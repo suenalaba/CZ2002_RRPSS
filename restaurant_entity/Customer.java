@@ -7,7 +7,6 @@ public class Customer {
 	private String phoneNumber;
 	private boolean restaurantMembership;
 	private boolean partnerMembership;
-	//private static int runningCount = 1;
 	
 	public Customer() {
 		
@@ -21,7 +20,6 @@ public class Customer {
 		this.phoneNumber = phoneNumber;
 		this.restaurantMembership = restaurantMembership;
 		this.partnerMembership = partnerMembership;
-		//runningCount++;
 	}
 
 	public String getcustomerID() {
@@ -71,12 +69,4 @@ public class Customer {
 	public void setpartnerMembership(boolean partnerMembership) {
 		this.partnerMembership = partnerMembership;
 	}
-	
-    /*public static int getrunningCount() {
-    	return runningCount;
-    }
-    
-    public static void setrunningCount(int customerID) {
-    	runningCount = customerID;
-    }*/
 }

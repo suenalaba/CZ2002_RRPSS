@@ -1,13 +1,10 @@
 package restaurant_entity;
-import java.time.LocalDateTime;
-import java.util.*;
 
-import restaurant_manager.TableLayoutManager;
 public class Table {
-	
+	private static int openingTime=9;
+	private static int closingTime=22;
 	private int tableID; 
 	private int tableCapacity; 
-	private status tableStatus;
 	private status[] hourBlock;
 	
 	public Table() {
@@ -16,15 +13,35 @@ public class Table {
 	public Table(int tableID, int tableCapacity) {
 		this.tableID = tableID; 
 		this.tableCapacity = tableCapacity; 
-		this.tableStatus = status.EMPTY; 
-		this.hourBlock = new status[13];
+		this.hourBlock = new status[24];
 		for (int i=0;i<hourBlock.length;i++) {
 			hourBlock[i]=status.EMPTY;
+		}
+		for (int i=openingTime-1;i>=0;i--) {
+			hourBlock[i]=status.CLOSED;
+		}
+		for (int i=closingTime;i<24;i++) {
+			hourBlock[i]=status.CLOSED;
+		}
+	}
+	
+	public Table(Table tableCopy) {
+		this.tableID = tableCopy.getTableID(); 
+		this.tableCapacity = tableCopy.getTableCapacity(); 
+		this.hourBlock = tableCopy.getHourBlock();
+		for (int i=0;i<hourBlock.length;i++) {
+			hourBlock[i]=status.EMPTY;
+		}
+		for (int i=openingTime-1;i>=0;i--) {
+			hourBlock[i]=status.CLOSED;
+		}
+		for (int i=closingTime;i<24;i++) {
+			hourBlock[i]=status.CLOSED;
 		}
 	}
 	
 	public enum status{
-		EMPTY, OCCUPIED, RESERVED
+		EMPTY, OCCUPIED, RESERVED, CLOSED
 	}
 	
 	public int getTableID() {
@@ -39,26 +56,16 @@ public class Table {
 	public void setTableCapacity(int tableCapacity) {
 		this.tableCapacity = tableCapacity; 
 	}
-	public status getTableStatus(){
-		LocalDateTime timeHolder=LocalDateTime.now();
-		String time = timeHolder.toString().substring(11,13);
-		int hour=Integer.parseInt(time);
-		hour=TableLayoutManager.hourlyTimeToIndex(hour);
-		if (hour==-1) {
-			this.tableStatus=status.EMPTY;
-		}
-		else {
-			this.tableStatus=this.hourBlock[hour];
-		}
-		return tableStatus; 
-	}
-	public void setTableStatus(status tableStatus) {
-		this.tableStatus = tableStatus; 
-	}
 	public status[] getHourBlock(){
 		return this.hourBlock;
 	}
+	public status getHourBlock(int hour){
+		return this.hourBlock[hour];
+	}
 	public void setHourBlock(status[] hourBlock) {
 		this.hourBlock= hourBlock; 
+	}
+	public void setHourBlock(int hour,status tableStatus) {
+		this.hourBlock[hour]=tableStatus;
 	}
 }

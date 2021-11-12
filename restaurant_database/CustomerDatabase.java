@@ -4,7 +4,6 @@ package restaurant_database;
 // import relevant java libraries to be updated as we go..
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.StringTokenizer;
 
 //import Customer class
@@ -16,6 +15,7 @@ public class CustomerDatabase implements DatabaseFunction {
 
 	@Override
 	public ArrayList<Customer> fread(String textfilename) throws IOException { //Jacques-specified type of ArrayList return
+
 
 		ArrayList<String> fileasstring = (ArrayList<String>) FileRead.fread(textfilename);//store file.txt as string
 		//array to store customer data
@@ -46,8 +46,10 @@ public class CustomerDatabase implements DatabaseFunction {
 
 	@Override
 	public void fwrite(String textfilename) throws IOException { //Jacques-fixed empty file creation
+
 		ArrayList<String> fwritecustomer = new ArrayList<String>(); // array list to store customer data
-		ArrayList<Customer> customerlist = CustomerManager.getCustomerList(); //existing customer list from database
+		CustomerManager customerM=CustomerManager.getInstance();
+		ArrayList<Customer> customerlist = customerM.getCustomerList(); //existing customer list from database
 
 		for (int i = 0; i < customerlist.size(); i++) {
 			Customer customer = (Customer) customerlist.get(i);

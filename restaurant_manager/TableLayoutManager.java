@@ -32,11 +32,42 @@ import java.util.Scanner;
 import restaurant_entity.Reservation;
 
 public class TableLayoutManager {
-	private static TableLayout mainLayout = new TableLayout();
+	//Attributes
+	private static TableLayoutManager instance=null;
+	TableLayout layout = new TableLayout();
 	
-	public static int findTableIndex(int tableID) { //returns array index according to TableIndex
+	//Constructor
+	public TableLayoutManager() {
+		layout=new TableLayout();
+	}
+	
+	public TableLayoutManager(TableLayout tableSetter) {
+		layout=tableSetter;
+	}
+	
+	//Get Instance
+	public static TableLayoutManager getInstance() {
+        if (instance == null) {
+            instance = new TableLayoutManager();
+        }
+        return instance;
+    }
+	
+	//get layout
+	public TableLayout getLayout(){
+			return layout;
+		}
+	
+	//set layout
+	public void setLayout(TableLayout newLayout){
+		this.layout=newLayout;
+	}
+	
+	
+	//returns table array index based on tableID
+	public int getTableIndex(int tableID) {
 		ArrayList<Table> arr = new ArrayList<Table>();
-		arr = mainLayout.getTableLayout();
+		arr = layout.getTableLayout();
 		for(int i =0; i<arr.size(); i++) {
 			if(arr.get(i).getTableID() == tableID) {
 				return i;
@@ -45,163 +76,138 @@ public class TableLayoutManager {
 		return -1;
 	}
 	
-	public static int hourlyTimeToIndex(int Hourlytime) {
-		int[] hours=new int[13];
-		int hourInc=9;
-		for (int i=0;i<hours.length;i++) { //09 00 to 2100
-			hours[i]=hourInc;
-			hourInc++;
-		}
-		for (int i=0;i<hours.length;i++) {
-			if (Hourlytime==hours[i]) {
-				return i;
+	//returns table based on tableID
+	public Table getTable(int tableID) {
+		for (Table table:layout.getTableLayout()) {
+			if (table.getTableID()==tableID) {
+				return table;
 			}
 		}
-		return -1;
+		return null;
 	}
 	
-	
-	
-	public static void createTable(int tableID, int tableCapacity) {
-		mainLayout.getTableLayout().add(new Table(tableID,tableCapacity));
+	//create table with capacity
+	public void createTable(int tableID, int tableCapacity) {
+		layout.getTableLayout().add(new Table(tableID,tableCapacity));
+		System.out.println("Table " + tableID + " with capacity of "+tableCapacity+" added");
 	}
-
-	public static void removeTable(int tableID) {
-		int index = findTableIndex(tableID); 
+	
+	//remove table
+	public void removeTable(int tableID) {
+		int index = getTableIndex(tableID); 
 		if(index == -1) {
 			System.out.println("Table does not exist");
 		}
 		else {
-			mainLayout.getTableLayout().remove(index);
+			layout.getTableLayout().remove(index);
 			System.out.println("Table " + tableID + " removed");
 		}
 	}
 	
-	public static void updateTable(int tableID, int hourlyTime,status newStatus) { //future status
-		int updateIndex=findTableIndex(tableID);
-		int hourIndex=hourlyTimeToIndex(hourlyTime);
-		mainLayout.getTableLayout().get(updateIndex).getHourBlock()[hourIndex]=newStatus;
-	}
-	public static void updateTable(int tableID, status newStatus) { //current status
-		LocalDateTime timeHolder=LocalDateTime.now();
-		String time = timeHolder.toString().substring(11,13);
-		int hourIndex=Integer.parseInt(time);
-		hourIndex=TableLayoutManager.hourlyTimeToIndex(hourIndex);
-		int updateIndex=findTableIndex(tableID);
-		mainLayout.getTableLayout().get(updateIndex).setTableStatus(newStatus);
-		if (hourIndex==-1) {
-			return;
-		}
-		else {
-			mainLayout.getTableLayout().get(updateIndex).getHourBlock()[hourIndex]=newStatus;
-		}
-	}
-	
-	public static void freeTableStatus(int tableID) {//frees OCCUPIED tables. Called after payment made
-		int tableIndex=findTableIndex(tableID);
-		Table targetTable=mainLayout.getTableLayout().get(tableIndex);
-		for (int i=0;i<targetTable.getHourBlock().length;i++) {
-			if (targetTable.getHourBlock()[i]==status.OCCUPIED) {
-				targetTable.getHourBlock()[i]=status.EMPTY;
+	//reserves table in 1 hour blocks for same day and year
+	public void reserveTable(int tableID,LocalDateTime time) {
+		Table table=getTable(tableID);
+		int year=time.getYear();
+		int day=time.getDayOfYear();
+		int hour=time.getHour();
+		if (day==LocalDateTime.now().getDayOfYear() && year==LocalDateTime.now().getYear()) {
+			if (table.getHourBlock(hour)==status.EMPTY) {
+				table.setHourBlock(hour,status.RESERVED);
 			}
 		}
 	}
 	
-	//Get methods
-	public static ArrayList<Table> getAllTables(){
-		return mainLayout.getTableLayout();
-	}
-	
-	public static TableLayout getInstance() {
-		return mainLayout;
-	}
-	
-	public static ArrayList<Table> getOccupiedTables(){
-		ArrayList<Table> tables = new ArrayList<>(); 
-		ArrayList<Table> occupiedTables = new ArrayList<>();
-		tables = mainLayout.getTableLayout(); 
-		for(int i = 0; i<tables.size(); i++) {
-			if(tables.get(i).getTableStatus() == status.OCCUPIED) {
-				occupiedTables.add(tables.get(i)); 
+	//occupies table
+	public void occupyTable(int tableID,LocalDateTime time) {
+		Table table=getTable(tableID);
+		int year=time.getYear();
+		int day=time.getDayOfYear();
+		int hour=time.getHour();
+		int minute=time.getMinute();
+		if (day==LocalDateTime.now().getDayOfYear() && year==LocalDateTime.now().getYear()) {
+			if (table.getHourBlock(hour)==status.RESERVED) {
+				table.setHourBlock(hour, status.OCCUPIED);
+			}
+			if (table.getHourBlock(hour)!=status.CLOSED) {
+				table.setHourBlock(hour,status.OCCUPIED);
+			}
+			if (minute>0 && table.getHourBlock(hour+1)!=status.CLOSED) {
+				table.setHourBlock(hour+1, status.OCCUPIED);
 			}
 		}
-		return occupiedTables; 
 	}
 	
+	//check table occupancy availability at current time
+	public boolean isOccupiable(int tableID) {
+		Table table=getTable(tableID);
+		LocalDateTime time=LocalDateTime.now();
+		int hour=time.getHour();
+		int minute=time.getMinute();
+		if(table.getHourBlock(hour)==status.EMPTY && minute==0) {
+			return true;
+		}
+		if (table.getHourBlock(hour)==status.EMPTY && table.getHourBlock(hour+1)==status.EMPTY) {
+			return true;
+		}
+		return false;
+	}
 	
+	//updateTableStatus
+	public void updateTableStatus(int tableID, LocalDateTime time,status newStatus) {
+		Table table=getTable(tableID);
+		int year=time.getYear();
+		int day=time.getDayOfYear();
+		int hour=time.getHour();
+		if (day==LocalDateTime.now().getDayOfYear() && year==LocalDateTime.now().getYear()) {
+			table.setHourBlock(hour,newStatus);
+		}
+	}
 	
-	public static ArrayList<Table> getReservedTables(){
-		ArrayList<Table> tables = new ArrayList<>(); 
-		ArrayList<Table> reservedTables = new ArrayList<>();
-		tables = mainLayout.getTableLayout(); 
-		for(int i = 0; i<tables.size(); i++) {
-			if(tables.get(i).getTableStatus() == status.RESERVED) {
-				reservedTables.add(tables.get(i)); 
+	//frees table of occupancy
+	public void freeTableStatus(int tableID) {
+		Table table=getTable(tableID);
+		for (int i=0;i<24;i++) {
+			if (table.getHourBlock(i)==status.OCCUPIED) {
+				table.setHourBlock(i,status.EMPTY);
 			}
 		}
-		return reservedTables; 
 	}
 	
-	public static ArrayList<Table> getReservedTables(int hour){//overloading for specific time slot
-		int hourBlock=hourlyTimeToIndex(hour);
-		ArrayList<Table> ReservedTables = new ArrayList<>();
-		for (int i=0;i<mainLayout.getTableLayout().size();i++) {
-			if (mainLayout.getTableLayout().get(i).getHourBlock()[hourBlock]==status.RESERVED)
-				ReservedTables.add(mainLayout.getTableLayout().get(i));
-		}
-		return ReservedTables; 
+	//get all tables
+	public ArrayList<Table> getAllTables(){
+		return layout.getTableLayout();
 	}
-	
 
-	public static ArrayList<Table> getEmptyTables(){
-		ArrayList<Table> tables = new ArrayList<>(); 
-		ArrayList<Table> emptyTables = new ArrayList<>();
-		tables = mainLayout.getTableLayout(); 
+	
+	//get available tables
+	public ArrayList<Table> getAvailableTables(int pax){
+		ArrayList<Table> tables = new ArrayList<Table>(); 
+		ArrayList<Table> outputTables = new ArrayList<Table>();
+		tables = layout.getTableLayout(); 
 		for(int i = 0; i<tables.size(); i++) {
-			if(tables.get(i).getTableStatus() == status.EMPTY) {
-				emptyTables.add(tables.get(i)); 
+			if(isOccupiable(tables.get(i).getTableID()) && tables.get(i).getTableCapacity()>=pax) {
+				outputTables.add(tables.get(i)); 
 			}
 		}
-		return emptyTables; 
+		return outputTables; 
 	}
 	
-	public static ArrayList<Table> getEmptyTables  (int hour){//overloading for specific time slot
-		int hourBlock=hourlyTimeToIndex(hour);
-		ArrayList<Table> emptyTables = new ArrayList<>();
-		for (int i=0;i<mainLayout.getTableLayout().size();i++) {
-			if (mainLayout.getTableLayout().get(i).getHourBlock()[hourBlock]==status.EMPTY)
-				emptyTables.add(mainLayout.getTableLayout().get(i));
-		}
-		return emptyTables; 
-	}
-	public static int getEmptyTableAtHour(int pax, int Hourlytime) { //return tableID of with apt start time and pax otherwise -1
-		int Hour=hourlyTimeToIndex(Hourlytime);
-		ArrayList<Table> emptyTables=getEmptyTables(Hourlytime);
-		ArrayList<Table> emptyPaxApt=new ArrayList<Table>();
-		for (int i=0;i<emptyTables.size();i++) {
-			if (emptyTables.get(i).getTableCapacity()>=pax) {
-				emptyPaxApt.add(emptyTables.get(i));
+	//get occupied tables
+	public ArrayList<Table> getOccupiedTables(){
+		ArrayList<Table> tables = new ArrayList<Table>(); 
+		ArrayList<Table> outputTables = new ArrayList<Table>();
+		tables = layout.getTableLayout(); 
+		int hour=LocalDateTime.now().getHour();
+		for(int i = 0; i<tables.size(); i++) {
+			if(tables.get(i).getHourBlock(hour)==status.OCCUPIED) {
+				outputTables.add(tables.get(i)); 
 			}
 		}
-		int smallestCap=10;
-		int tableID=-1;
-		for (int i=0;i<emptyPaxApt.size();i++) {
-			if (emptyPaxApt.get(i).getTableCapacity()<=smallestCap) {
-				smallestCap=emptyPaxApt.get(i).getTableCapacity();
-				tableID=emptyPaxApt.get(i).getTableID();
-			}
-		}
-		return tableID; //defaults to -1 if no empty table
+		return outputTables; 
 	}
 	
-	public static status getTableStatusNow(int tableID) {
-		int checkIndex=findTableIndex(tableID);
-		return mainLayout.getTableLayout().get(checkIndex).getTableStatus();
-	}
-	
-	
-	public static ArrayList<Integer> getMinTableList(int pax) { //sorted list of tables with minimum capacity for pax
-		int leastCap=11;
+	//sorted list of tableIDs with minimum capacity for pax
+	public ArrayList<Integer> getMinTableList(int pax) { 
 		ArrayList<Integer> capList=new ArrayList<Integer>();
 		for (int i=2;i<=10;i+=2) {
 			if (i>=pax) {
@@ -210,50 +216,72 @@ public class TableLayoutManager {
 		}
  		ArrayList<Integer> minTables=new ArrayList<Integer>();
  		for (int k=0;k<capList.size();k++) {
- 			for (int i=0;i<mainLayout.getTableLayout().size();i++) {
- 				if (mainLayout.getTableLayout().get(i).getTableCapacity()==capList.get(k)) {//to sort
- 					minTables.add(mainLayout.getTableLayout().get(i).getTableID());
+ 			for (int i=0;i<layout.getTableLayout().size();i++) {
+ 				if (layout.getTableLayout().get(i).getTableCapacity()==capList.get(k)) {//to sort
+ 					minTables.add(layout.getTableLayout().get(i).getTableID());
  				}
  			}
  		}
  		return minTables;
 	}
 	
-	public static void printOccupiedTables() {
-		ArrayList<Table> occupiedTables = new ArrayList<>();
-		occupiedTables = getOccupiedTables();
-		System.out.println("Occupied Tables: ");
-		for(int i = 0; i<occupiedTables.size(); i++) {
-			System.out.println("TableID : " + occupiedTables.get(i).getTableID() + " Table Capacity : " + occupiedTables.get(i).getTableCapacity());
-		}
+	//print all
+	public void printAllTables() {
+		layout.printTableLayout();
 	}
 	
-	public static void printEmptyTables() {
-		ArrayList<Table> emptyTables = new ArrayList<>();
-		emptyTables = getEmptyTables();
-		System.out.println("Empty Tables: ");
-		for(int i = 0; i<emptyTables.size(); i++) {
-			System.out.println("TableID : " + emptyTables.get(i).getTableID() + " Table Capacity : " + emptyTables.get(i).getTableCapacity());
+	public int getEmptyTableNow(int pax) {
+		ArrayList<Integer> minTable=getMinTableList(pax);
+		ArrayList<Table> allTables=layout.getTableLayout();
+		for (int i=0;i<minTable.size();i++) {
+			for(Table o:allTables) {
+				if(o.getTableID()==minTable.get(i)) {
+					return minTable.get(i);
+				}
+			}
 		}
+		return -1;
 	}
-	public static void saveDB(String saveFile){
+	
+//	//print all available
+//	public void printTablesAtDate(LocalDateTime time) {
+//		TableLayout referenceTableLayout = layout;
+//		ArrayList<Table> newTables = new ArrayList<Table>();
+//		TableLayout newTableLayout=new TableLayout();
+//		for (Table o:referenceTableLayout.getTableLayout()) {
+//			newTables.add(new Table(o));
+//		}
+//		//for each future reservation that is not finished, get start time year and date as first layer if and hour and table in reservation id to fill.
+//		comeback
+//	}
+//	
+//	public ArrayList<Table> getAvailableTablesAtDate(LocalDateTime time,int pax) {
+//		TableLayout referenceTableLayout = layout;
+//		ArrayList<Table> newTables = new ArrayList<Table>();
+//		TableLayout newTableLayout=new TableLayout();
+//		for (Table o:referenceTableLayout.getTableLayout()) {
+//			newTables.add(new Table(o));
+//		}
+//		//for each future reservation that is not finished, get start time year and date as first layer if and hour and table in reservation id to fill.
+//		comeback
+//	}
+	
+	//saves instance to db
+	public void saveDB(String saveFile){
 		TableLayoutDatabase saver=new TableLayoutDatabase();
-		if (mainLayout.getTableLayout().size()==0) {
-			System.out.println("Nothing to save!");
-			return;
-		}
 		try {
 			saver.fwrite(saveFile);
 		} catch (IOException e) {
 			System.out.println("Failed to save to "+saveFile);
 			return;
 		}
-		System.out.println("Saved successfully to "+saveFile);
 	}
-	public static void loadDB(String loadFile){
+	
+	//load db to array
+	public void loadDB(String loadFile){
 		TableLayoutDatabase loader=new TableLayoutDatabase();
 		try {
-			mainLayout.setTableLayout(loader.fread(loadFile));
+			this.layout.setTableLayout(loader.fread(loadFile));
 		} catch (IOException e) {
 			System.out.println("Failed to load "+loadFile);
 			return;

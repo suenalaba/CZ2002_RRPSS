@@ -2,11 +2,7 @@ package restaurant_entity;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 
-import restaurant_manager.TableLayoutManager;
-//import OOP_Project_Package1.Staff.Gender;
 public class Order {
 	private static int runningCount = 1;
 	
@@ -15,13 +11,7 @@ public class Order {
 	private ArrayList<MenuItem> orderItems;
 	private String orderTime;
 	SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss");
-	
-	//staff ID of staff who created order????
 	private int staffId;
-	
-	//Staff staff  = new Staff();
-	//staffId = staff.getStaffID();
-	
 	private boolean isPaid; 
 	
 	

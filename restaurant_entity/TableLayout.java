@@ -2,13 +2,23 @@
 package restaurant_entity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import restaurant_entity.Table.status;
 
 public class TableLayout {
 	//attribute
-	private ArrayList<Table> arrayOfTables = new ArrayList<>();
+	private ArrayList<Table> arrayOfTables;
 	
+	public TableLayout() {
+		this.arrayOfTables=new ArrayList<>();
+	}
+	
+	
+	public TableLayout(ArrayList<Table> arrayOfTables) {
+		this.arrayOfTables=arrayOfTables;
+	}
+
 	//method
 	public ArrayList<Table> getTableLayout(){
 		return arrayOfTables;
@@ -42,14 +52,21 @@ public class TableLayout {
 	
 	public void printTableLayout() { //prints table layout and blocks of time
 		System.out.println("Table no. (Px)/Time|09|10|11|12|13|14|15|16|17|18|19|20|21|");
-		for (int i=0;i<arrayOfTables.size();i++) {
-			System.out.format("Table %03d (%02d)     |",arrayOfTables.get(i).getTableID(),arrayOfTables.get(i).getTableCapacity());
-			for (int k=0;k<arrayOfTables.get(i).getHourBlock().length;k++) {
-				if (arrayOfTables.get(i).getHourBlock()[k]==status.RESERVED) {
+		List<Table> subsetOfTables=arrayOfTables;
+		for (int i=0;i<subsetOfTables.size();i++) {
+			System.out.format("Table %03d (%02d)     |",subsetOfTables.get(i).getTableID(),subsetOfTables.get(i).getTableCapacity());
+			for (int k=0;k<subsetOfTables.get(i).getHourBlock().length;k++) {
+				if (k<9||k>=22) {
+					continue;
+				}
+				if (subsetOfTables.get(i).getHourBlock()[k]==status.RESERVED) {
 					System.out.print("RS|");
 				}
-				else if (arrayOfTables.get(i).getHourBlock()[k]==status.OCCUPIED) {
+				else if (subsetOfTables.get(i).getHourBlock()[k]==status.OCCUPIED) {
 					System.out.print("OC|");
+				}
+				else if (subsetOfTables.get(i).getHourBlock()[k]==status.CLOSED) {
+					System.out.print("CL|");
 				}
 				else {
 					System.out.print("  |");

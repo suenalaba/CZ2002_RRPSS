@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.io.File;
 import java.io.FileWriter; 
-import java.io.FileNotFoundException;
 
 import restaurant_entity.Menu;
 import restaurant_entity.MenuItem;
@@ -20,44 +19,40 @@ public class MenuDatabase implements DatabaseFunction{
 	public static final String DELIMITER = ";";
 
 	public void fwrite(String saveFileName) throws IOException {
-		File menuDB=new File(saveFileName);
-		try {
-			FileWriter myWriter = new FileWriter(saveFileName);
-			String pusher="";
-			for (int i=0;i<MenuManager.getMenuInstance().getListOfMenuItems().size();i++) {
-				MenuItem txMedium=MenuManager.getMenuInstance().getListOfMenuItems().get(i);
-				if (txMedium.getMenuItemType()==type.PROMOTION || txMedium.getMenuItemType()==type.DELETEDPROMOTION) {
-					PromotionPackage txPMedium=(PromotionPackage) txMedium;
-					pusher+=String.valueOf(txPMedium.getMenuItemID())+DELIMITER;
-					pusher+=txPMedium.getMenuItemName()+DELIMITER;
-					pusher+=String.valueOf(txPMedium.getMenuItemType())+DELIMITER;
-					pusher+=String.valueOf(txPMedium.getMenuItemPrice())+DELIMITER;
-					pusher+=txPMedium.getMenuItemDescription()+DELIMITER;
-					for (int k=0;k<txPMedium.getPromotionPackageItems().size();k++) {
-						pusher+=String.valueOf(txPMedium.getPromotionPackageItems().get(k).getMenuItemID())+DELIMITER;
-					}
-					pusher+="\n";
+
+		FileWriter myWriter = new FileWriter(saveFileName);
+		String pusher="";
+		MenuManager menuM=MenuManager.getInstance();
+		for (int i=0;i<menuM.getMenuInstance().getListOfMenuItems().size();i++) {
+			MenuItem txMedium=menuM.getMenuInstance().getListOfMenuItems().get(i);
+			if (txMedium.getMenuItemType()==type.PROMOTION || txMedium.getMenuItemType()==type.DELETEDPROMOTION) {
+				PromotionPackage txPMedium=(PromotionPackage) txMedium;
+				pusher+=String.valueOf(txPMedium.getMenuItemID())+DELIMITER;
+				pusher+=txPMedium.getMenuItemName()+DELIMITER;
+				pusher+=String.valueOf(txPMedium.getMenuItemType())+DELIMITER;
+				pusher+=String.valueOf(txPMedium.getMenuItemPrice())+DELIMITER;
+				pusher+=txPMedium.getMenuItemDescription()+DELIMITER;
+				for (int k=0;k<txPMedium.getPromotionPackageItems().size();k++) {
+					pusher+=String.valueOf(txPMedium.getPromotionPackageItems().get(k).getMenuItemID())+DELIMITER;
 				}
-				else {
-					pusher+=String.valueOf(txMedium.getMenuItemID())+DELIMITER;
-					pusher+=txMedium.getMenuItemName()+DELIMITER;
-					pusher+=String.valueOf(txMedium.getMenuItemType())+DELIMITER;
-					pusher+=String.valueOf(txMedium.getMenuItemPrice())+DELIMITER;
-					pusher+=txMedium.getMenuItemDescription()+DELIMITER;
-					pusher+="\n";
+				pusher+="\n";
+				}
+			else {
+				pusher+=String.valueOf(txMedium.getMenuItemID())+DELIMITER;
+				pusher+=txMedium.getMenuItemName()+DELIMITER;
+				pusher+=String.valueOf(txMedium.getMenuItemType())+DELIMITER;
+				pusher+=String.valueOf(txMedium.getMenuItemPrice())+DELIMITER;
+				pusher+=txMedium.getMenuItemDescription()+DELIMITER;
+				pusher+="\n";
 				}
 			}
 			myWriter.write(pusher);
-		    myWriter.close();
-		}catch (IOException e) {
-			System.out.println("An error occured when writing to file "+menuDB.getName());
-			e.printStackTrace();
-		}catch (Exception e) {
-			System.out.println("No data to save!");
-		}
-	}
-	public ArrayList<MenuItem> fread(String loadFileName) throws IOException {
+			myWriter.close();
+			}
+	
+	public ArrayList<MenuItem> fread(String loadFileName) throws IOException {									
 		      File menuDB = new File(loadFileName);
+		      MenuManager menuM=MenuManager.getInstance();
 		      Scanner alacarteReader = new Scanner(menuDB);
 		      if (!alacarteReader.hasNextLine()) {
 		    	  alacarteReader.close();
@@ -85,7 +80,7 @@ public class MenuDatabase implements DatabaseFunction{
 		        int itemID=Integer.parseInt(data[0]);
 		        String itemName=data[1];
 		        type itemType=type.valueOf(data[2]);
-		        if (itemType!=type.PROMOTION || itemType!=type.DELETEDPROMOTION) {
+		        if (itemType!=type.PROMOTION && itemType!=type.DELETEDPROMOTION) {
 		        	continue;
 		        }
 		        double itemPrice=Double.parseDouble(data[3]);
@@ -109,7 +104,7 @@ public class MenuDatabase implements DatabaseFunction{
 		        }
 		      }
 		      promoReader.close();
-		      Menu menuHolder=new Menu(MenuManager.getMenuInstance().getListOfMenuItems());
+		      Menu menuHolder=new Menu(menuM.getMenuInstance().getListOfMenuItems());
 		      if (loadedMenu.size()>0) {
 		    	  menuHolder.setListOfMenuItems(loadedMenu);
 		      }
