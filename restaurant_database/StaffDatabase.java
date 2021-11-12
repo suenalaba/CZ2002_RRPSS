@@ -21,6 +21,7 @@ public class StaffDatabase implements DatabaseFunction{
 		
 		//array to store table
 		ArrayList<Staff> listOfStaffMembers = new ArrayList<>();
+		int biggest=0;
 		for (int i = 0; i < fileasstring.size(); i++) {
 			String data = (String) fileasstring.get(i);
 			// get individual 'fields' of the string separated by the delimiter ';'
@@ -32,8 +33,13 @@ public class StaffDatabase implements DatabaseFunction{
 			Gender staffGender = Gender.valueOf(str_tokenizer.nextToken().trim().toUpperCase()); 
 			Boolean isWorking = Boolean.valueOf(str_tokenizer.nextToken().trim());
 			Staff staff = new Staff(staffName, staffTitle, staffGender,isWorking);
+			if (staffID>biggest) {
+				biggest=staffID;
+			}
+			Staff.setRunningCount(staffID);
 			listOfStaffMembers.add(staff); 
 		}
+		Staff.setRunningCount(biggest+1);
 		return listOfStaffMembers; 
 	}
 	

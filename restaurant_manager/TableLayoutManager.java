@@ -58,12 +58,6 @@ public class TableLayoutManager {
 			return layout;
 		}
 	
-	//set layout
-	public void setLayout(TableLayout newLayout){
-		this.layout=newLayout;
-	}
-	
-	
 	//returns table array index based on tableID
 	public int getTableIndex(int tableID) {
 		ArrayList<Table> arr = new ArrayList<Table>();
@@ -101,19 +95,6 @@ public class TableLayoutManager {
 		else {
 			layout.getTableLayout().remove(index);
 			System.out.println("Table " + tableID + " removed");
-		}
-	}
-	
-	//reserves table in 1 hour blocks for same day and year
-	public void reserveTable(int tableID,LocalDateTime time) {
-		Table table=getTable(tableID);
-		int year=time.getYear();
-		int day=time.getDayOfYear();
-		int hour=time.getHour();
-		if (day==LocalDateTime.now().getDayOfYear() && year==LocalDateTime.now().getYear()) {
-			if (table.getHourBlock(hour)==status.EMPTY) {
-				table.setHourBlock(hour,status.RESERVED);
-			}
 		}
 	}
 	
@@ -177,20 +158,6 @@ public class TableLayoutManager {
 	public ArrayList<Table> getAllTables(){
 		return layout.getTableLayout();
 	}
-
-	
-	//get available tables
-	public ArrayList<Table> getAvailableTables(int pax){
-		ArrayList<Table> tables = new ArrayList<Table>(); 
-		ArrayList<Table> outputTables = new ArrayList<Table>();
-		tables = layout.getTableLayout(); 
-		for(int i = 0; i<tables.size(); i++) {
-			if(isOccupiable(tables.get(i).getTableID()) && tables.get(i).getTableCapacity()>=pax) {
-				outputTables.add(tables.get(i)); 
-			}
-		}
-		return outputTables; 
-	}
 	
 	//get occupied tables
 	public ArrayList<Table> getOccupiedTables(){
@@ -224,48 +191,7 @@ public class TableLayoutManager {
  		}
  		return minTables;
 	}
-	
-	//print all
-	public void printAllTables() {
-		layout.printTableLayout();
-	}
-	
-	public int getEmptyTableNow(int pax) {
-		ArrayList<Integer> minTable=getMinTableList(pax);
-		ArrayList<Table> allTables=layout.getTableLayout();
-		for (int i=0;i<minTable.size();i++) {
-			for(Table o:allTables) {
-				if(o.getTableID()==minTable.get(i)) {
-					return minTable.get(i);
-				}
-			}
-		}
-		return -1;
-	}
-	
-//	//print all available
-//	public void printTablesAtDate(LocalDateTime time) {
-//		TableLayout referenceTableLayout = layout;
-//		ArrayList<Table> newTables = new ArrayList<Table>();
-//		TableLayout newTableLayout=new TableLayout();
-//		for (Table o:referenceTableLayout.getTableLayout()) {
-//			newTables.add(new Table(o));
-//		}
-//		//for each future reservation that is not finished, get start time year and date as first layer if and hour and table in reservation id to fill.
-//		comeback
-//	}
-//	
-//	public ArrayList<Table> getAvailableTablesAtDate(LocalDateTime time,int pax) {
-//		TableLayout referenceTableLayout = layout;
-//		ArrayList<Table> newTables = new ArrayList<Table>();
-//		TableLayout newTableLayout=new TableLayout();
-//		for (Table o:referenceTableLayout.getTableLayout()) {
-//			newTables.add(new Table(o));
-//		}
-//		//for each future reservation that is not finished, get start time year and date as first layer if and hour and table in reservation id to fill.
-//		comeback
-//	}
-	
+
 	//saves instance to db
 	public void saveDB(String saveFile){
 		TableLayoutDatabase saver=new TableLayoutDatabase();

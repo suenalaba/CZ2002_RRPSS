@@ -34,28 +34,7 @@ public class CustomerManager {
         }
         return instance;
     }
-	
-	public Customer retrieveCustomerdetails(Customer customer) {
-		for (int i = 0; i < customerList.size(); i++) {
-			Customer validcustomer = customerList.get(i);
 
-			if (validcustomer.getcustomerID() != customer.getcustomerID()) {
-				return null;
-			}
-			else if (validcustomer.getcustomerID() != customer.getcustomerID()) {
-				customer = validcustomer;
-				return customer;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Return Customer object if found.
-	 * 
-	 * @param Search for customer details with ID
-	 * @return if customer don't exist null, else customer
-	 */
 	public Customer getCustomer(String ID) {
 		
 		int i;
@@ -69,16 +48,6 @@ public class CustomerManager {
 		}
 		return null;
 	}
-
-	
-
-	
-
-	/**
-	 * Retrieval of Customer's details by ID number
-	 * 
-	 * @return Customer details.
-	 */
 
 	public Customer retrieveCustomerDetailsbyID() {
 		String custID;
@@ -103,12 +72,6 @@ public class CustomerManager {
 		return validcustomer;
 	}
 			
-	
-	
-	/**
-	 * Retrieval of all Customer details.
-	 * 
-	 */
 	public void printallCustomerDetails() throws IOException {
 		System.out.println("\n==================================================");
 		System.out.println(" Customer Details: ");
@@ -117,25 +80,15 @@ public class CustomerManager {
 				"Gender", "Phone Number", "Restaurant Membership", "Partner Membership");
 		for (int i = 0; i < customerList.size(); i++) {
 			Customer data = customerList.get(i);
-
-
 			String customerid = String.valueOf(data.getcustomerID());
 			String name = String.valueOf(data.getcustomerName());
 			String gender = String.valueOf(data.getcustomerGender());
 			String phonenumber = String.valueOf(data.getphoneNumber());
 			String restaurantmember = String.valueOf(data.getrestaurantMembership());
 			String partnermember = String.valueOf(data.getpartnerMembership());
-
-
-
 			System.out.printf("%-8s %-15s %-8s %-10s %-5s %-5s\n", customerid, name, gender,phonenumber,
 					restaurantmember, partnermember);
-
 		}
-	}
-	
-	public void setCustomerList(ArrayList<Customer> newListOfCustomers) {
-		customerList=newListOfCustomers;
 	}
 	
 	public ArrayList<Customer> getCustomerList(){

@@ -251,16 +251,6 @@ public class ReservationManager {
 		return t;
 	}
 	
-	public ArrayList<Reservation> getListOfFinishedReservations() { //gets arraylist of finished reservations
-		ArrayList<Reservation> t = new ArrayList<Reservation>(); 
-		for (Reservation s : listOfReservations) {
-			if (s.getIsFinished()==true) {
-				t.add(s);
-			}
-		}
-		return t;
-	}
-	
 	public ArrayList<Reservation> getListOfReservationsToday(){ //Returns reservation arraylist for current day. finished and unfinished
 		ArrayList<Reservation> t = new ArrayList<Reservation>(); 
 		for (Reservation s : listOfReservations) {
@@ -288,22 +278,6 @@ public class ReservationManager {
 			}
 		}
 		return null; //no reservation found for tableID now.
-	}
-	
-	public ArrayList<Reservation> getUnfinishedReservationByDate(String dateBlock) { //takes yyyy-MM-dd. Provide dateblock and returns array of unfinished reservations. Might be a redundant method.
-		ArrayList<Reservation> t = new ArrayList<Reservation>(); 
-		for (Reservation s: listOfReservations) {
-			String reservationTime = s.getReservationStartTime().toString().substring(0,10);
-			if (dateBlock.equals( reservationTime) && s.getIsFinished()==false) {
-				t.add(s);
-			}
-		}
-		if (t.size()>0) {
-			return t;
-		}
-		else {
-			return null;
-		}
 	}
 	
 	//Database methods

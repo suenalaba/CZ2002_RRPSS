@@ -34,17 +34,10 @@ public class OrderManager {
 	public ArrayList<Order> getOrderList(){
 		return orderList;
 	}
-	public void setOrderList(ArrayList<Order> wholeOrderList) {
-		orderList = wholeOrderList;
-	}
 
 	 //method create new order item 
 	 public void createOrder(int tableId, ArrayList<MenuItem> orderItems, int staffId) {
-		 
-		 	
 		 	orderList.add(new Order(tableId, orderItems,staffId));
-		 	
-	      
 	    }	 
 	 
 	 public void displayOrderList() {
@@ -52,20 +45,15 @@ public class OrderManager {
 	 		StaffManager staffM=StaffManager.getInstance();
 	 		ArrayList<Order> unpaidOrders=getUnpaidOrders();
 	 		for(int i=0; i<unpaidOrders.size(); i++) {
-	 			
 	 			String staffName=null;
-				 
 				 for(int k=0; k<staffM.getListOfStaffMembers().size(); k++)
 				 {
 					 if(staffM.getListOfStaffMembers().get(k).getStaffID()==unpaidOrders.get(i).getStaffId()) {
 						 staffName = staffM.getListOfStaffMembers().get(k).getStaffName();
 					 }
 				 }
-	 			
 	 			System.out.format("orderID: %d          staffID: %d			staffName: %s\n", unpaidOrders.get(i).getOrderID(),unpaidOrders.get(i).getStaffId(),staffName);
 	 		}
-	 		
-	 		
 	 	}
 	 
 	 	//get order from order ID
@@ -152,10 +140,7 @@ public class OrderManager {
 	
 		//return a list of all orders that haven't been paid
 		public ArrayList<Order> getUnpaidOrders() {
-
-			
 			ArrayList<Order> unpaidOrderList  = new ArrayList<Order>();
-			
 			for(int i=0; i<orderList.size(); i++)
 			{
 				if(orderList.get(i).getPaidStatus()==false)
@@ -163,7 +148,6 @@ public class OrderManager {
 					unpaidOrderList.add(orderList.get(i));
 				}
 			}
-			
 			return unpaidOrderList;
 		}
 		
@@ -171,8 +155,6 @@ public class OrderManager {
 		
 		
 		public int orderIdToIndex(int orderId) {
-			
-			
 			for(int i=0; i<orderList.size(); i++)
 			{
 				if(orderList.get(i).getOrderID() == orderId)
@@ -196,12 +178,10 @@ public class OrderManager {
 		       }
 		     }
 		    return null;
-		     
 		   }
 
 		//set paid status of order to paid given orderId from payment
 		public void updatePaidStatus(int orderId) {
-			
 			for(int i=0; i<orderList.size(); i++)
 			{
 				if(orderList.get(i).getOrderID() == orderId)
