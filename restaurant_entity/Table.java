@@ -1,8 +1,8 @@
 package restaurant_entity;
 
 public class Table {
-	private static int openingTime=9;
-	private static int closingTime=22;
+	private static int OPENING_TIME=9;
+	private static int CLOSING_TIME=22;
 	private int tableID; 
 	private int tableCapacity; 
 	private status[] hourBlock;
@@ -17,10 +17,10 @@ public class Table {
 		for (int i=0;i<hourBlock.length;i++) {
 			hourBlock[i]=status.EMPTY;
 		}
-		for (int i=openingTime-1;i>=0;i--) {
+		for (int i=OPENING_TIME-1;i>=0;i--) {
 			hourBlock[i]=status.CLOSED;
 		}
-		for (int i=closingTime;i<24;i++) {
+		for (int i=CLOSING_TIME;i<24;i++) {
 			hourBlock[i]=status.CLOSED;
 		}
 	}
@@ -32,10 +32,10 @@ public class Table {
 		for (int i=0;i<hourBlock.length;i++) {
 			hourBlock[i]=status.EMPTY;
 		}
-		for (int i=openingTime-1;i>=0;i--) {
+		for (int i=OPENING_TIME-1;i>=0;i--) {
 			hourBlock[i]=status.CLOSED;
 		}
-		for (int i=closingTime;i<24;i++) {
+		for (int i=CLOSING_TIME;i<24;i++) {
 			hourBlock[i]=status.CLOSED;
 		}
 	}
