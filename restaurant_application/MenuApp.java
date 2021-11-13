@@ -9,8 +9,21 @@ import restaurant_entity.MenuItem;
 import restaurant_entity.PromotionPackage;
 import restaurant_entity.MenuItem.type;
 import restaurant_manager.MenuManager;
-
+/**
+ * The Menu Boundary class for user interaction
+ * @author	Jacques
+ * @version	version 4.5
+ * @since	13-11-2021
+ */
 public class MenuApp {
+	/**
+	 * The create item query that interacts with user
+	 * Uses MenuManager methods
+	 * If there is an Alacarte MenuItem object in records that is not deleted in records, then Promotion Package can be made.
+	 * A Menu Item has the creation stages of naming, describing,item typing and pricing
+	 * A Promotion Package has the creation stages of naming, describing, pricing and which menu items to include. Item Typing for Promotion Packages defaults to PROMOTION
+	 * Extensive Research and Development is done before creating new Menu Item object
+	 */
 	public void createItemQuery() { 
 		MenuManager menuM=MenuManager.getInstance();
 		Scanner sc=new Scanner(System.in);
@@ -138,6 +151,13 @@ public class MenuApp {
 			menuM.createItem(name,description,itemType,price);
 		}
 	}
+	/**
+	 * Removes Item based on query of Item ID by prefixing the itemType with "DELETE"
+	 * The list of items will be printed for ease of selection.
+	 * There will be a cascade deletion if the item deleted is part of a PromotionPackage as the PromotionPackage cannot exist without the AlaCarte Menu Item.
+	 * A confirmation must be given if a cascade deletion will occur.
+	 * Careful thought is done for deletion. It will not happen during operating hours.
+	 */
 	public void removeItemQuery() {
 		MenuManager menuM=MenuManager.getInstance();
 		int removalIndex=-1;
@@ -207,6 +227,12 @@ public class MenuApp {
 			menuM.removeItem(cascadeRemove[i]);
 		}
 	}
+	/**
+	 * Updates Item based on Item ID
+	 * List of available items will be displayed
+	 * For Menu Item or AlaCarte Items, these can be changed: Name, Description,ItemType & Price
+	 * For PromotionPackages, these can be change: Name, Description, Price & AlaCarte MenuItems under PromotionPackage
+	 */
 	public void updateItemQuery() { 
 		MenuManager menuM=MenuManager.getInstance();
 		int updateIndex=-1,choice=-1,typeChoice=-1,pSize=-1,pChoice=-1;
