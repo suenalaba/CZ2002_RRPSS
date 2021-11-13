@@ -17,13 +17,23 @@ import restaurant_database.FileRead;
 import restaurant_entity.Customer;
 import restaurant_manager.CustomerManager;
 
+/**
+ * define methods to create customer, Retrieve customer details, Update Customer Details and Delete Customer Details.
+ * @author joshua
+ *
+ */
 public class CustomerApp {
-	
+	/**
+	 * fixed delimiter used to split tokens
+	 */
 	public static final String delimiter = ",";
 	
 	/**
 	 * Creation of new Customer
-	 * 
+	 * customer details include name, contact number, memberships status and a customer ID. 
+	 * @param multiEntry
+	 * @param walkIn
+	 * @throws IOException
 	 */
 
 	public void createCustomer(boolean multiEntry,int walkIn) throws IOException { 
@@ -179,12 +189,10 @@ public class CustomerApp {
 	}
 	
 	
-	
-	
 
 	/**
 	 * Retrieve customer details by customerID
-	 * 
+	 * @throws IOException
 	 */
 	public void printCustomerdetailsbyID() throws IOException {
 		System.out.println("\n==================================================");
@@ -213,10 +221,14 @@ public class CustomerApp {
 	
 	
 	
+	
+	
 	/**
-	 * Update Customer Details by ID
-	 * 
+	 * Update Customer Details by customer ID
+	 * customer details include Name, Gender, Phone number, Restaurant Membership Status, Partner Membership Status
+	 * @throws IOException
 	 */
+	
 	public void updateCustomerdetailsbyID() throws IOException {
 		CustomerManager customerM=CustomerManager.getInstance();
 		System.out.println("\n==================================================");
@@ -356,12 +368,9 @@ public class CustomerApp {
 	}
 	
 	
-	
 	/**
-	 * Delete Customer Details by ID
-	 * 
+	 *  Delete Customer from system by customer ID
 	 */
-	
 	public void deleteCustomerdetailsbyID() {
 		System.out.println("\n==================================================");
 		System.out.println(" Delete Customer Record");
