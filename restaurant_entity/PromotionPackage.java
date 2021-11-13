@@ -1,17 +1,42 @@
 package restaurant_entity;
 import java.util.ArrayList;
+/**
+ * A class defining a PromotionPackage object. It extends MenuItem class.
+ * @author Jacques
+ * @version 4.5
+ * @since 13-11-2021
+ */
 public class PromotionPackage extends MenuItem{
 	private ArrayList<MenuItem> listOfPromotionPackageItems;
+	/**
+	 * Constructor. Create a promotion package (object).
+	 * @param name
+	 * @param description
+	 * @param itemType
+	 * @param price
+	 * @param listOfPromotionPackageItems
+	 */
 	public PromotionPackage(String name,String description, type itemType,double price,ArrayList<MenuItem> listOfPromotionPackageItems) {
 		super(name,description,itemType,price);
 		this.listOfPromotionPackageItems=listOfPromotionPackageItems;
 	}
+	/**
+	 * Get promotional package items. Public method.
+	 * @return listOfPromotionPackageItems ArrayList of MenuItem objects.
+	 */
 	public ArrayList<MenuItem> getPromotionPackageItems() {
 		return this.listOfPromotionPackageItems;
 	}
+	/**
+	 * Set menu items in promotional package object. Public method.
+	 * @param listOfPromotionPackageItems ArrayList of MenuItem objects.
+	 */
 	public void setPromotionPackageItems(ArrayList<MenuItem> listOfPromotionPackageItems) {
 		this.listOfPromotionPackageItems=listOfPromotionPackageItems;
 	}
+	/**
+	 *Call this method to print all promotion packages with their details. Public method.
+	 */
 	public void printAll() {
 		System.out.format("ItemID: %03d\n",this.getMenuItemID());
 		System.out.format("Name: %s\n", this.getMenuItemName().substring(0,1).toUpperCase()+this.getMenuItemName().substring(1).toLowerCase());
