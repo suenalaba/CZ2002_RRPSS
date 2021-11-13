@@ -12,10 +12,19 @@ import restaurant_manager.OrderManager;
 import restaurant_manager.StaffManager;
 import restaurant_manager.TableLayoutManager;
 
-
+/**
+ * define methods that interact with main RRPSS App and OrderManager to 
+ create and order, delete an order, update an order details and display an order details
+ * @author jiekai
+ *
+ */
 
 public class OrderApp {
 
+	/**
+	 * creates an order
+	 * An order should include the tableID, arraylist of order items and staff details(staff Id and name)
+	 */
 	 public void createOrderQuery() {
 		 TableLayoutManager tableLayoutM=TableLayoutManager.getInstance();
 		 OrderManager orderM=OrderManager.getInstance();
@@ -137,7 +146,9 @@ public class OrderApp {
 	 
 	 
 	 
-	    //method to delete the whole entire order based on the order ID asked from staff input
+    /**
+     *Delete a whole order based on the order ID input by staff
+     */
 	 	public void deleteWholeOrderQuery() {
 	 		TableLayoutManager tableLayoutM=TableLayoutManager.getInstance();
 			 OrderManager orderM=OrderManager.getInstance();
@@ -182,7 +193,10 @@ public class OrderApp {
 	 	}
 	 	
 	 	
-	 	//updateOrder
+	 	/**
+	 	 * update an order details based on order Id and staff's choice to delete or add an item 
+	 	 *  
+	 	 */
 		 public void updateOrderQuery() {
 		 OrderManager orderM=OrderManager.getInstance();
 		 MenuManager menuM=MenuManager.getInstance();
@@ -330,7 +344,10 @@ public class OrderApp {
 		 
 		 
 		 
-		 
+		 /**
+		  * display details of an order based on tableId input by staff
+		  * Details of order include orderID, orderitems, price, quantity and details of staff who created the order
+		  */
 		 public void displayOrderBasedOnTableIdQuery() {
 			 TableLayoutManager tableLayoutM=TableLayoutManager.getInstance();
 			 OrderManager orderM=OrderManager.getInstance();

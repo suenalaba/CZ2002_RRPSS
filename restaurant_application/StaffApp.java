@@ -7,9 +7,18 @@ import restaurant_manager.StaffManager;
 import restaurant_entity.Staff;
 import restaurant_entity.Staff.Gender;
 
+/**
+ * define methods which interacts with the main RRPSS App and StaffManager
+ to create a staff, remove a staff and update a staff details
+ * @author jiekai
+ * 
+ *
+ */
+
 public class StaffApp {
-	//create a staff member and add to system
-	//need name, title and gender
+		/**
+		 * creates a staff member (requires, name, title and gender)
+		 */
 		public void createStaffMemberQuery() {
 			String alpha = "[a-zA-Z.*\\s+.]+";
 			Scanner sc = new Scanner(System.in);
@@ -73,7 +82,9 @@ public class StaffApp {
 			StaffManager.getInstance().createStaffMember(staffName, staffTitle, staffGender);
 		}
 		
-		//remove staff
+		/**
+		 * removes a staff member
+		 */
 		public void removeStaffMemberQuery() {
 			Scanner sc = new Scanner(System.in);
 			StaffManager staffM=StaffManager.getInstance();
@@ -111,7 +122,9 @@ public class StaffApp {
 			staffM.removeStaffMember(staffId);
 		}
 		
-		//update staff details (staffName and staffTitle)
+		/**
+		 * updates a staff member's details (staff's name and job title)
+		 */
 		public void updateStaffMemberQuery() {
 			String alpha = "[a-zA-Z.*\\s+.]+";
 			Scanner sc = new Scanner(System.in);
