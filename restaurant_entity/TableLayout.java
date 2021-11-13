@@ -5,29 +5,39 @@ import java.util.ArrayList;
 import java.util.List;
 
 import restaurant_entity.Table.status;
-
+/**
+ * A class managing the table objects.
+ * @author yize
+ * @version 4.5
+ * @since 13-11-2021
+ */
 public class TableLayout {
-	//attribute
-	private ArrayList<Table> arrayOfTables;
-	
+	private ArrayList<Table> arrayOfTables; //An ArrayList storing Table objects.
+	/**
+	 * Declare new array list for variable, arrayOfTables.
+	 * ArrayList arrayOfTable has table object as its type.
+	 */
 	public TableLayout() {
 		this.arrayOfTables=new ArrayList<>();
 	}
-	
-	
-	public TableLayout(ArrayList<Table> arrayOfTables) {
-		this.arrayOfTables=arrayOfTables;
-	}
-
-	//method
+	/**
+	 * Call this method to get ArrayList containing all existing table objects.
+	 * Public method.
+	 * @return an ArrayList containing table objects.
+	 */
 	public ArrayList<Table> getTableLayout(){
 		return arrayOfTables;
 	}
-
+	/**
+	 * Set variable arrayOfTables.
+	 * @param newLayout ArrayList containing table objects.
+	 */
 	public void setTableLayout(ArrayList<Table> newLayout) {
 		this.arrayOfTables = newLayout; 
 	}
-	
+	/**
+	 * Call this method to sort existing array of tables by tableID. Public method.
+	 */
 	public void sortArrayOfTables() { //sorts by tableID
 		if (this.arrayOfTables.size()==0) {
 			return;
@@ -49,7 +59,9 @@ public class TableLayout {
 		}
 		this.arrayOfTables=sorted;
 	}
-	
+	/**
+	 * Call this method to print existing tables and reveal their status for each hour block.
+	 */
 	public void printTableLayout() { //prints table layout and blocks of time
 		System.out.println("Table no. (Px)/Time|09|10|11|12|13|14|15|16|17|18|19|20|21|");
 		List<Table> subsetOfTables=arrayOfTables;
@@ -75,13 +87,4 @@ public class TableLayout {
 			System.out.println("");
 		}
 	}
-	
-	public int tableIDToIndex(int ID) {//return index of TableID in TableLayout arrayOfTables
-		for (int i=0;i<this.arrayOfTables.size();i++) {
-			if (this.arrayOfTables.get(i).getTableID()==ID) {
-				return i;
-				}
-			}
-		return -1;
-		}
 }
