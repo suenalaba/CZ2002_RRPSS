@@ -4,37 +4,47 @@ package restaurant_manager;
 import java.util.Scanner;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.Random;
-import java.util.StringTokenizer;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 
 
 //import other class.....
 import restaurant_entity.Customer;
-import restaurant_entity.TableLayout;
-import restaurant_database.FileRead;
 import restaurant_database.CustomerDatabase;
-
+/**
+ * Stores Customer object data and has methods called by the Customer App to manipulate Customer related data.
+ * @author Joshua
+ * @version 4.5
+ * @since	13-11-2021
+ */
 public class CustomerManager {
+	/**
+	 * For singleton pattern adherence. This CustomerManager instance persists throughout runtime.
+	 */
 	private static CustomerManager instance=null;
+	/**
+	 * Holds ArrayList of Customer object that can be referenced to throughout runtime.
+	 */
 	ArrayList<Customer> customerList=new ArrayList<Customer>();
-	
+	/**
+	 * Default constructor for Customer Manager.
+	 */
 	public CustomerManager() {
 		customerList=new ArrayList<Customer>();
 	}
-	
+	/**
+	 * For singleton pattern adherence. 
+	 * @return instance The static instance that persists throughout runtime.
+	 */
 	public static CustomerManager getInstance() {
         if (instance == null) {
             instance = new CustomerManager();
         }
         return instance;
     }
-
+	/**
+	 * Get Customer instance with Customer ID
+	 * @param ID The Customer ID that is associated with him/her.
+	 * @return Customer or null The Customer associated with Customer ID. Returns null if Customer with specified Customer ID does not exist.
+	 */
 	public Customer getCustomer(String ID) {
 		
 		int i;
@@ -48,7 +58,10 @@ public class CustomerManager {
 		}
 		return null;
 	}
-
+	/**
+	 * A method that queries Customer ID then returns a Customer if within CustomerList records
+	 * @return Customer The existing customer within customerList records OR null if customer does not exist with customerList records
+	 */
 	public Customer retrieveCustomerDetailsbyID() {
 		String custID;
 
@@ -71,8 +84,10 @@ public class CustomerManager {
 		}while(validcustomer == null);
 		return validcustomer;
 	}
-			
-	public void printallCustomerDetails() throws IOException {
+	/**
+	 * prints all customer details in customerList
+	 */
+	public void printallCustomerDetails(){
 		System.out.println("\n==================================================");
 		System.out.println(" Customer Details: ");
 		System.out.println("==================================================");
@@ -90,11 +105,17 @@ public class CustomerManager {
 					restaurantmember, partnermember);
 		}
 	}
-	
+	/**
+	 * Gets customerList for use as reference list of Customer objects or manipulation
+	 * @return customerList
+	 */
 	public ArrayList<Customer> getCustomerList(){
 		return customerList;
 	}
-	
+	/**
+	 * Saves the instance's customerList as string in a text file.
+	 * @param textFileName The name of the the text file.
+	 */
 	public void saveDB(String textFileName) {
 		CustomerDatabase cusDB=new CustomerDatabase();
 		try {
@@ -104,6 +125,10 @@ public class CustomerManager {
 			return;
 		}
 	}
+	/**
+	 * Loads to instance's customerList from a text file
+	 * @param textFileName The name of the text file.
+	 */
 	public void loadDB(String textFileName) { 
 		ArrayList<Customer> newListOfCustomers = null;
 		try {

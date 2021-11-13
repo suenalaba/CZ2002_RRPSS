@@ -2,63 +2,54 @@ package restaurant_manager;
 import restaurant_entity.Table;
 import restaurant_entity.Table.status;
 import restaurant_entity.TableLayout;
-import restaurant_manager.ReservationManager;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.InputMismatchException;
-import java.util.Scanner;
-
 import restaurant_database.TableLayoutDatabase;
-import restaurant_entity.Reservation;
-
-import restaurant_entity.Table;
-import restaurant_entity.Table.status;
-import restaurant_entity.TableLayout;
-import restaurant_manager.ReservationManager;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.InputMismatchException;
-import java.util.Scanner;
-import restaurant_entity.Reservation;
-
+/**
+ * Stores a TableLayout object during runtime and methods to manipulate TableLayout and Table objects
+ * @author	Yi Ze
+ * @version 4.5
+ * @since	13-11-2021
+ */
 public class TableLayoutManager {
-	//Attributes
+	/**
+	 * For singleton pattern adherence. This TableLayoutManager instance persists throughout runtime.
+	 */
 	private static TableLayoutManager instance=null;
+	/**
+	 * TableLayout that holds ArrayList of Table objects that can referenced during runtime
+	 */
 	TableLayout layout = new TableLayout();
-	
-	//Constructor
+	/**
+	 * Default TableLayoutManager constructor
+	 */
 	public TableLayoutManager() {
 		layout=new TableLayout();
 	}
-	
-	public TableLayoutManager(TableLayout tableSetter) {
-		layout=tableSetter;
-	}
-	
-	//Get Instance
+	/**
+	 * For singleton pattern adherence. 
+	 * @return instance The static instance that persists throughout runtime.
+	 */
 	public static TableLayoutManager getInstance() {
         if (instance == null) {
             instance = new TableLayoutManager();
         }
         return instance;
     }
-	
-	//get layout
+	/**
+	 * Gets the TableLayoutObject of instance
+	 * @return layout which is TableLayout of instance
+	 */
 	public TableLayout getLayout(){
 			return layout;
 		}
-	
-	//returns table array index based on tableID
+	/**
+	 * get Table Index in tableLayout Array
+	 * @param tableID the TableID of table to index
+	 * @return
+	 */
 	public int getTableIndex(int tableID) {
 		ArrayList<Table> arr = new ArrayList<Table>();
 		arr = layout.getTableLayout();
@@ -69,8 +60,11 @@ public class TableLayoutManager {
 		}
 		return -1;
 	}
-	
-	//returns table based on tableID
+	/**
+	 * Gets Table object from TableLayout which corresponds to TableID
+	 * @param tableID of the Table to get
+	 * @return Table object or null if no Table with TableID given in TableLayout exists
+	 */
 	public Table getTable(int tableID) {
 		for (Table table:layout.getTableLayout()) {
 			if (table.getTableID()==tableID) {
@@ -79,14 +73,19 @@ public class TableLayoutManager {
 		}
 		return null;
 	}
-	
-	//create table with capacity
+	/**
+	 * Creates and adds table to TableLayout Table ArrayList
+	 * @param tableID of the new Table
+	 * @param tableCapacity of the new Table
+	 */
 	public void createTable(int tableID, int tableCapacity) {
 		layout.getTableLayout().add(new Table(tableID,tableCapacity));
 		System.out.println("Table " + tableID + " with capacity of "+tableCapacity+" added");
 	}
-	
-	//remove table
+	/**
+	 * Removes table with corresponding tableID
+	 * @param tableID of Table object to remove from TableLayout Table ArrayList
+	 */
 	public void removeTable(int tableID) {
 		int index = getTableIndex(tableID); 
 		if(index == -1) {
@@ -97,8 +96,11 @@ public class TableLayoutManager {
 			System.out.println("Table " + tableID + " removed");
 		}
 	}
-	
-	//occupies table
+	/**
+	 * Occupies the table with corresponding tableID and at time provided
+	 * @param tableID of Table to occupy
+	 * @param time reservation Start Date Time of occupancy
+	 */
 	public void occupyTable(int tableID,LocalDateTime time) {
 		Table table=getTable(tableID);
 		int year=time.getYear();
@@ -117,23 +119,12 @@ public class TableLayoutManager {
 			}
 		}
 	}
-	
-	//check table occupancy availability at current time
-	public boolean isOccupiable(int tableID) {
-		Table table=getTable(tableID);
-		LocalDateTime time=LocalDateTime.now();
-		int hour=time.getHour();
-		int minute=time.getMinute();
-		if(table.getHourBlock(hour)==status.EMPTY && minute==0) {
-			return true;
-		}
-		if (table.getHourBlock(hour)==status.EMPTY && table.getHourBlock(hour+1)==status.EMPTY) {
-			return true;
-		}
-		return false;
-	}
-	
-	//updateTableStatus
+	/**
+	 * Updates the Table hourBlock status element at specified time
+	 * @param tableID of Table to update hourBlock of
+	 * @param time Time inside houBlock that needs the update
+	 * @param newStatus element status to update to inside hourBlock array 
+	 */
 	public void updateTableStatus(int tableID, LocalDateTime time,status newStatus) {
 		Table table=getTable(tableID);
 		int year=time.getYear();
@@ -143,8 +134,10 @@ public class TableLayoutManager {
 			table.setHourBlock(hour,newStatus);
 		}
 	}
-	
-	//frees table of occupancy
+	/**
+	 * Free table of all occupied status but leaves reserved status alone
+	 * @param tableID of Table to free
+	 */
 	public void freeTableStatus(int tableID) {
 		Table table=getTable(tableID);
 		for (int i=0;i<24;i++) {
@@ -153,13 +146,17 @@ public class TableLayoutManager {
 			}
 		}
 	}
-	
-	//get all tables
+	/**
+	 * Gets Table Layout ArrayList of Tables of current instance
+	 * @return tableLayout ArrayList of Tables
+	 */
 	public ArrayList<Table> getAllTables(){
 		return layout.getTableLayout();
 	}
-	
-	//get occupied tables
+	/**
+	 * Gets ArrayList of Tables that are occupied at current time
+	 * @return ArrayList of Tables from TableLayout that are occupied
+	 */
 	public ArrayList<Table> getOccupiedTables(){
 		ArrayList<Table> tables = new ArrayList<Table>(); 
 		ArrayList<Table> outputTables = new ArrayList<Table>();
@@ -172,8 +169,11 @@ public class TableLayoutManager {
 		}
 		return outputTables; 
 	}
-	
-	//sorted list of tableIDs with minimum capacity for pax
+	/**
+	 * Gets Sorted ArrayList of Tables that can fit pax. Sorted by capacity ascending
+	 * @param pax to fit in table
+	 * @return sorted ArrayList of tables that can fit pax
+	 */
 	public ArrayList<Integer> getMinTableList(int pax) { 
 		ArrayList<Integer> capList=new ArrayList<Integer>();
 		for (int i=2;i<=10;i+=2) {
@@ -191,28 +191,32 @@ public class TableLayoutManager {
  		}
  		return minTables;
 	}
-
-	//saves instance to db
-	public void saveDB(String saveFile){
+    /**
+	 * Saves the instance's tableLayout as string in a text file.
+	 * @param textFileName The name of the the text file.
+	 */
+	public void saveDB(String textFileName){
 		TableLayoutDatabase saver=new TableLayoutDatabase();
 		try {
-			saver.fwrite(saveFile);
+			saver.fwrite(textFileName);
 		} catch (IOException e) {
-			System.out.println("Failed to save to "+saveFile);
+			System.out.println("Failed to save to "+textFileName);
 			return;
 		}
 	}
-	
-	//load db to array
-	public void loadDB(String loadFile){
+    /**
+	 * Loads to instance's tableLayout from a text file
+	 * @param textFileName The name of the text file.
+	 */
+	public void loadDB(String textFileName){
 		TableLayoutDatabase loader=new TableLayoutDatabase();
 		try {
-			this.layout.setTableLayout(loader.fread(loadFile));
+			this.layout.setTableLayout(loader.fread(textFileName));
 		} catch (IOException e) {
-			System.out.println("Failed to load "+loadFile);
+			System.out.println("Failed to load "+textFileName);
 			return;
 		}
-		System.out.println("Loaded successfully from "+loadFile);
+		System.out.println("Loaded successfully from "+textFileName);
 	}
 	
 }

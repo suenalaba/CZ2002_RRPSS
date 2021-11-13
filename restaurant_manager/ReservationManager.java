@@ -1,38 +1,51 @@
 package restaurant_manager;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.InputMismatchException;
-import java.util.Scanner;
 
 import restaurant_database.ReservationDatabase;
 import restaurant_entity.Customer;
 import restaurant_entity.Reservation;
 import restaurant_entity.Table;
 import restaurant_entity.Table.status;
-
+/**
+ * Stores an ArrayList of Reservation objects during runtime and methods to manipulate them
+ * @author	Xin Pei
+ * @version 4.5
+ * @since	13-11-2021
+ */
 public class ReservationManager {
-	
-	//Attribute
+	/**
+	 * For singleton pattern adherence. This ReservationManager instance persists throughout runtime.
+	 */
 	private static ReservationManager instance = null;
+	/**
+	 * ArrayList of Reservation objects during runtime
+	 */
 	ArrayList<Reservation> listOfReservations = new ArrayList<Reservation>();
-	
-	//Constructor
+	/**
+	 * Default constructor for ReservationManager
+	 */
 	public ReservationManager() {
 		listOfReservations=new ArrayList<Reservation>();
 	}
-	
-	//Get Instance
+	/**
+	 * For singleton pattern adherence. 
+	 * @return instance The static instance that persists throughout runtime.
+	 */
 	public static ReservationManager getInstance() {
         if (instance == null) {
             instance = new ReservationManager();
         }
         return instance;
     }
-	
-	//Adds new Reservation
+	/**
+	 * Creates and adds new Reservation object to listOfReservations
+	 * @param customerID The CustomerID of Customer coming for Reservation
+	 * @param pax The number of people coming to fill a table for the reservation
+	 * @param startDateTime The StartDateTime of the reservation booked.
+	 * @param tableID The tableID of the Table object that has the capacity to fit pax and was free during Reservation startDateTime.
+	 */
 	public void createReservation(String customerID, int pax, LocalDateTime startDateTime, int tableID) {
 		Reservation newReservationObject = new Reservation();
 		listOfReservations.add(newReservationObject); 
@@ -48,7 +61,11 @@ public class ReservationManager {
 				+ "StartTime: "+newReservationObject.getReservationStartTime().toString().substring(11,16)+ "\n"
 				+ "EndTime: " +newReservationObject.getReservationStartTime().plusHours(1).toString().substring(11,16));
 	}
-	
+	/**
+	 * Creates a Reservation object for walk-in Customer and adds to listOfReservations
+	 * @param pax The number of people coming to fill a table for the walk-in
+	 * @param customerID The CustomerID of Customer coming for Reservation
+	 */
 	public void createWalkIn(int pax,String customerID) {//creates reservation, occupies table
 		TableLayoutManager tableLayoutM=TableLayoutManager.getInstance();
 		ArrayList<Reservation> allReservationsToday=getListOfReservationsToday();
@@ -88,8 +105,12 @@ public class ReservationManager {
 				+ "StartTime: "+LocalDateTime.now().toString().substring(11,16)+ "\n"
 				+ "EndTime: " +LocalDateTime.now().plusHours(1).toString().substring(11,16));
 	}
-	
-	public Reservation getReservation(int reservationID) { //returns Reservation for Reservation ID
+	/**
+	 * Gets Reservation object from listOfReservations using ReservationID as reference
+	 * @param reservationID reservationID of target Reservation object
+	 * @return Reservation object if it exists in listOfReservations otherwise returns null
+	 */
+	public Reservation getReservation(int reservationID) { 
 		for(int i=0;i<listOfReservations.size();i++) {
 			if (listOfReservations.get(i).getReservationID()==reservationID) {
 				return listOfReservations.get(i);
@@ -97,8 +118,10 @@ public class ReservationManager {
 		}
 		return null;
 	}
-	
-	//completes reservation
+	/**
+	 * Completes reservation by setting isAppeared attribute to true
+	 * @param reservationID the targetReservation's ReservationID, used to retrieve from listOfReservations
+	 */
 	public void completeReservation(int reservationID) { //set isappeared for the reservation to true and occupies table
 		TableLayoutManager tableLayoutM=TableLayoutManager.getInstance();
 		Reservation toComplete=getReservation(reservationID);
@@ -108,11 +131,11 @@ public class ReservationManager {
 				+ "TableID:"+toComplete.getTableID()+"\n"
 				+ "StartTime: "+toComplete.getReservationStartTime().toString().substring(11,16)+ "\n"
 				+ "EndTime: " +toComplete.getReservationStartTime().plusHours(1).toString().substring(11,16));
-		
 	}
-	
-
-	
+	/**
+	 * Removes reservation by setting isFinished attribute to true
+	 * @param reservationID the targetReservation's ReservationID, used to retrieve from listOfReservations
+	 */
 	public void removeReservation(int reservationID) { //updates reservation and table
 		TableLayoutManager tableLayoutM=TableLayoutManager.getInstance();
 		Reservation toRemove=getReservation(reservationID);
@@ -120,9 +143,12 @@ public class ReservationManager {
 		tableLayoutM.updateTableStatus(toRemove.getTableID(), toRemove.getReservationStartTime(), status.EMPTY);
 		System.out.println("Reservation removed successfully!");
 	}
-	
-
-	
+	/**
+	 * Updates Reservation with new startDateTime and TableID
+	 * @param reservationID Used to get ReservationObject from listOfReservations by reference
+	 * @param newStartDateTime New StartDateTime indicated by customer otherwise otherwise the value would be old startDateTime if not changed
+	 * @param newTableID new tableID if change in pax or StartDateTime causes table change otherwise this value will be old tableID
+	 */
 	public void updateReservation(int reservationID,LocalDateTime newStartDateTime, int newTableID) {  //updates all relevant details. Updates table status if current day affected
 		Reservation toUpdate=getReservation(reservationID);
 		TableLayoutManager tableLayoutM=TableLayoutManager.getInstance();
@@ -142,7 +168,13 @@ public class ReservationManager {
 			tableLayoutM.updateTableStatus(newTableID, newStartDateTime, status.RESERVED); //if new date and current date is today. update status
 			}
 		}
-	
+	/**
+	 * Checks if Reservation is today or future or past
+	 * Only concerned with Reservation on current day
+	 * Checks if Reservation has expired(15 minutes after Reservation start time and isAppeared==false)
+	 * Expired reservation will be removed Table Object associated's hourBlock array
+	 * Table objects houBlock Arrays with current days reservations and occupancy after day change(12am strikes)
+	 */
 	public void autoUpdate(){//updates periodically 15 minutes grace period to appear
 		TableLayoutManager tableLayoutM=TableLayoutManager.getInstance();
 		LocalDateTime nowDateTime=LocalDateTime.now();
@@ -213,14 +245,18 @@ public class ReservationManager {
 			}
 		}
 	}
-	
+	/**
+	 * Looks for Reservation ID that is unfinished with associated table ID. sets isFinished boolean to true
+	 * @param tableID is the tableID that has paid for order and is associated to Reservation object
+	 */
 	public void setIsFinishedByTableID(int tableID) {
 		Reservation unfinishedToday=getUnfinishedReservationByTableIDNow(tableID);
 		unfinishedToday.setIsFinished(true);
 	}
-	
-	
-	//check methods
+	/**
+	 * Prints details of Reservation
+	 * @param reservationID of the Reservation object to look for in listOfReservations
+	 */
 	public void printReservation(int reservationID) {  //Prints reservation details
 		Reservation toPrint=getReservation(reservationID);
 		CustomerManager customerM=CustomerManager.getInstance();
@@ -236,8 +272,9 @@ public class ReservationManager {
 		System.out.println("End date time:" + toPrint.getReservationEndTime());
 		System.out.println("---All Reservation Details Displayed--- \n");
 	}
-	
-	//print method
+	/**
+	 * Prints all Unfinished Reservations
+	 */
 	public void printAllUnfinishedReservation() {
 		System.out.println("Standing Reservation(s):");
 		System.out.println("=============================================================");
@@ -253,8 +290,11 @@ public class ReservationManager {
 		}
 		}
 	}
-	
-	//Utility method
+	/**
+	 * From reservationID, get an int index relative to listOfReservations
+	 * @param reservationID of Reservation looking for
+	 * @return reservation index in listOfReservations or -1 if not existing in listOfReservations
+	 */
 	public int reservationIDToIndex(int reservationID) { //reservation ID to listOfReservations array index. Only works on the static array.
 		for (int i=0;i<listOfReservations.size();i++) {
 			if(listOfReservations.get(i).getReservationID()==reservationID) {
@@ -263,12 +303,17 @@ public class ReservationManager {
 		}
 		return -1;
 	}
-	
-	//Get methods
+	/**
+	 * Get Array List of Reservations of instance
+	 * @return listOfReservations
+	 */
 	public ArrayList<Reservation> getListOfReservations() {
 		return listOfReservations;
 	}
-	
+	/**
+	 * get Array List Of Reservations but only if Reservation objects isFInished attribute is false
+	 * @return list Of Unfinished Reservations
+	 */
 	public ArrayList<Reservation> getListOfUnfinishedReservations() { //gets arraylist of unfinished reservations
 		ArrayList<Reservation> t = new ArrayList<Reservation>(); //new array of reservation objs to store
 		for (Reservation s : listOfReservations) {
@@ -278,7 +323,10 @@ public class ReservationManager {
 		}
 		return t;
 	}
-	
+	/**
+	 * Get Array list of Unfinished Reservations which contains Reservations which Start Date Time is on current day and isFinsihed attribute is false
+	 * @return list of Unfinished Reservations today 
+	 */
 	public ArrayList<Reservation> getListOfUnfinishedReservationsToday() { //gets arraylist of unfinished reservations today
 		ArrayList<Reservation> t = new ArrayList<Reservation>(); 
 		LocalDateTime today=LocalDateTime.now();
@@ -291,7 +339,10 @@ public class ReservationManager {
 		}
 		return t;
 	}
-	
+	/**
+	 * Get Array list of Reservations which contain contain Reservations which start Start Date Time is on current day
+	 * @return list of Reservations today
+	 */
 	public ArrayList<Reservation> getListOfReservationsToday(){ //Returns reservation arraylist for current day. finished and unfinished
 		ArrayList<Reservation> t = new ArrayList<Reservation>(); 
 		for (Reservation s : listOfReservations) {
@@ -308,7 +359,11 @@ public class ReservationManager {
 			return t;
 		}
 	}
-	
+	/**
+	 * Get unfinished Reservations by table ID provided
+	 * @param tableID TableID with associated Reservation
+	 * @return Reservation object if there exists a reservation which isFinished attribute is false,isAppeared is true and tableID is the one provided
+	 */
 	public Reservation getUnfinishedReservationByTableIDNow(int tableID) { //give tableID, return Reservation now
 		ArrayList<Reservation> unfinished=getListOfUnfinishedReservations();
 		if (unfinished.size()>0) {
@@ -320,28 +375,33 @@ public class ReservationManager {
 		}
 		return null; //no reservation found for tableID now.
 	}
-	
-	//Database methods
-	public void saveDB(String fileName) { //writes to file Name by calling fwrite from ReservationDatabase
+    /**
+	 * Saves the instance's listOfReservations as string in a text file.
+	 * @param textFileName The name of the the text file.
+	 */
+	public void saveDB(String textFileName) { //writes to file Name by calling fwrite from ReservationDatabase
 		ReservationDatabase saver=new ReservationDatabase();
 		try {
-			saver.fwrite(fileName);
+			saver.fwrite(textFileName);
 		}
 		catch(IOException e) {
-			System.out.println("Failed to load "+fileName);
+			System.out.println("Failed to load "+textFileName);
 			return;
 		}
 
 	}
-	
-	public void loadDB(String fileName) { //passes file name to read to ReservationDataBase. Check table Id validility. Reserves table for the day. Replaces listOfReservations.
+    /**
+	 * Loads to instance's listOfReservations from a text file
+	 * @param textFileName The name of the text file.
+	 */
+	public void loadDB(String textFileName) { //passes file name to read to ReservationDataBase. Check table Id validility. Reserves table for the day. Replaces listOfReservations.
 		ReservationDatabase loader=new ReservationDatabase();
 		TableLayoutManager tableLayoutM=TableLayoutManager.getInstance();
 		ArrayList<Reservation> databaseReservations;
 		try {
-			databaseReservations = loader.fread(fileName);
+			databaseReservations = loader.fread(textFileName);
 		} catch (IOException e1) {
-			System.out.println("Failed to load "+fileName);
+			System.out.println("Failed to load "+textFileName);
 			return;
 		} 
 		ArrayList<Integer> allTableIds=new ArrayList<Integer>(); //loaded reservations
@@ -396,11 +456,11 @@ public class ReservationManager {
 			}
 		}
 		try {
-			listOfReservations=loader.fread(fileName);
+			listOfReservations=loader.fread(textFileName);
 		} catch (IOException e) {
-			System.out.println("Failed to load "+fileName);
+			System.out.println("Failed to load "+textFileName);
 			return;
 		}
-		System.out.println("Loaded successfully from "+fileName);
+		System.out.println("Loaded successfully from "+textFileName);
 	}
 }
