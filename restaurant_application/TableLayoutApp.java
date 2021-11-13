@@ -11,7 +11,8 @@ import restaurant_manager.TableLayoutManager;
 /**
  * manages the table layout of the restaurant by creating new tables and removing tables.
  * @author yi ze
- *
+ * @version 4.5
+ * @since 13-11-2021
  */
 public class TableLayoutApp {
 	/**
