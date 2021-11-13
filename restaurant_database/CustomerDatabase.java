@@ -3,16 +3,33 @@ package restaurant_database;
 
 // import relevant java libraries to be updated as we go..
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 //import Customer class
 import restaurant_entity.Customer;
 import restaurant_manager.CustomerManager;
+/** 
+ * Sub class of DatabaseFunction
+ * CustomerDatabase reads and write to customerDB.txt
+ * @author Joshua Khoo
+ * @version 4.5
+ * @since 2021-11-13
+ */
 
 public class CustomerDatabase implements DatabaseFunction {
+	/**
+	 * DELIMITER used to split tokens
+	 */
 	public static final String DELIMITER = ";";
-
+	
+	/**
+	 * Reads data from customerDB.txt into ArrayList<Customer>
+	 * @param textfilename customerDB.txt
+	 * @return customerlist of Customer class
+	 * @throws IOException Signals that an I/O exception of some sort has occurred
+	 */
 	@Override
 	public ArrayList<Customer> fread(String textfilename) throws IOException { //Jacques-specified type of ArrayList return
 
@@ -43,7 +60,11 @@ public class CustomerDatabase implements DatabaseFunction {
 		return customerlist;
 
 	}
-
+	/**
+	 * Writes data from customerM to customerDB.txt
+	 * @param textfilename customerDB.txt
+	 * @throws IOException Signals that an I/O exception of some sort has occurred
+	 */
 	@Override
 	public void fwrite(String textfilename) throws IOException { //Jacques-fixed empty file creation
 

@@ -15,9 +15,26 @@ import restaurant_entity.MenuItem.type;
 import restaurant_entity.PromotionPackage;
 import restaurant_manager.MenuManager;
 
+/** 
+ * Sub class of DatabaseFunction
+ * MenuDatabase reads and write to menuDB.txt
+ * @author Jacques
+ * @version 4.5
+ * @since 2021-11-13
+ */
+
 public class MenuDatabase implements DatabaseFunction{
+	
+	/**
+	 * DELIMITER used to split tokens
+	 */
 	public static final String DELIMITER = ";";
 
+	/**
+	 * Writes data from menuM to menuDB.txt
+	 * @param textfilename menuDB.txt
+	 * @throws IOException Signals that an I/O exception of some sort has occurred
+	 */
 	public void fwrite(String saveFileName) throws IOException {
 
 		FileWriter myWriter = new FileWriter(saveFileName);
@@ -49,6 +66,12 @@ public class MenuDatabase implements DatabaseFunction{
 			myWriter.write(pusher);
 			myWriter.close();
 			}
+	/**
+	 * Reads data from menuDB.txt to ArrayList<MenuItem>
+	 * @param loadFileName menuDB.txt
+	 * @return sortedMenu Arraylist of sorted MenuItem class 
+	 * @throws IOException Signals that an I/O exception of some sort has occurred
+	 */
 	
 	public ArrayList<MenuItem> fread(String loadFileName) throws IOException {									
 		      File menuDB = new File(loadFileName);

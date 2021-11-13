@@ -7,7 +7,13 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.FileInputStream;
-
+/**
+ * For reading and writing methods
+ * @author Joshua Khoo 
+ * @version 4.5
+ * @since 2021-11-13
+ * 
+ */
 public class FileRead {
 
 
@@ -20,7 +26,7 @@ public class FileRead {
 	 *            
 	 *            
 	 * @return the repsective records to read from textfilename
-	 * 
+	 * @throws IOException Signals that an I/O exception of some sort has occurred
 	 * 
 	 */
 	public static ArrayList<String> fread(String textfilename) throws IOException {
@@ -48,6 +54,7 @@ public class FileRead {
 	 * @param textfilename
 	 *            To determine the file to write into.
 	 *            Name of textfile for write
+	 * @throws IOException Signals that an I/O exception of some sort has occurred
 	 */
 	
 	

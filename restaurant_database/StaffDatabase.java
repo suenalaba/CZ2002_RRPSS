@@ -11,10 +11,27 @@ import restaurant_entity.Staff;
 import restaurant_entity.Staff.Gender;
 import restaurant_manager.StaffManager;
 
-
+/**
+ * Subclass of DatabaseFunction
+ * StaffDatabase reads and write to staffDB.txt
+ * @author Lek Jie Kai
+ * @version 4.5
+ * @since 2021-11-13
+ *
+ */
 public class StaffDatabase implements DatabaseFunction{
+	/**
+	 * DELIMITER to split tokens
+	 */
 	public static final String DELIMITER = ";";
 	
+	
+	/**
+	 * Reads data from staffDB.txt into ArrayList<Staff>
+	 * @param textfilename staffDB.txt
+	 * @return listOfStaffMembers Arraylist of Staff class
+	 * @throws IOException Signals that an I/O exception of some sort has occurred
+	 */
 	public ArrayList<Staff> fread(String textfilename) throws IOException {
 
 		ArrayList<String> fileasstring = FileRead.fread(textfilename);
@@ -43,6 +60,11 @@ public class StaffDatabase implements DatabaseFunction{
 		return listOfStaffMembers; 
 	}
 	
+	/**
+	 * Writes data from listOfStaffMembers to staffDB.txt
+	 * @param textfilename
+	 * @throws IOException Signals that an I/O exception of some sort has occurred
+	 */
 	public void fwrite(String textfilename) throws IOException {
 
 		ArrayList<String> stafflist = new ArrayList<String>();// array list to store staffdata

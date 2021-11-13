@@ -11,10 +11,26 @@ import java.io.FileWriter;
 //import Reservation Classes
 import restaurant_entity.Reservation;
 import restaurant_manager.ReservationManager;
+/**
+ * Subclass of DatabaseFunction
+ * ReservationDatabase reads and write to reservationDB.txt
+ * @author Wong Xin Pei
+ * @version 4.5
+ * @since 2021-11-13
+ *
+ */
 
 public class ReservationDatabase implements DatabaseFunction{
+	/**
+	 * DELIMITER to split tokens
+	 */
 	public static final String DELIMITER = ";";
 	
+	/**
+	 * Writes data from reservationM to reservationDB.txt
+	 * @param saveFileName reservationDB.txt
+	 * @throws IOException Signals that an I/O exception of some sort has occurred
+	 */
 	@Override
 	public void fwrite(String saveFileName) throws IOException {
 			ReservationManager reservationM=ReservationManager.getInstance();
@@ -36,6 +52,12 @@ public class ReservationDatabase implements DatabaseFunction{
 		    myWriter.close();
 	}
 	
+	/**
+	 * Reads data from reservationDB.txt to ArrayList<Reservation>
+	 * @param loadFileName reservationDB.txt
+	 * @return sortedReservation Arraylist of sorted Reservation class
+	 * @throws IOException Signals that an I/O exception of some sort has occurred
+	 */
 	@Override
 	public ArrayList<Reservation> fread(String loadFileName) throws IOException {
 		      File menuDB = new File(loadFileName);

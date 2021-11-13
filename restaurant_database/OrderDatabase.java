@@ -14,11 +14,30 @@ import restaurant_entity.Order;
 import restaurant_manager.MenuManager;
 import restaurant_manager.OrderManager;
 
+/**
+ * Subclass of DatabaseFunction
+ * OrderDatabase reads and write to orderDB.txt
+ * @author Lek Jie Kai
+ * @version 4.5
+ * @since 2021-11-13
+ *
+ */
 
 
 public class OrderDatabase implements DatabaseFunction {
+	
+	/**
+	 * DELIMITER to split tokens
+	 */
 	public static final String DELIMITER = ";";
 	
+	
+	/**
+	 * Reads data from orderDB.txt into ArrayList<Order>
+	 * @param textfilename orderDB.txt
+	 * @return listofOrders Arraylist of Order class
+	 * @throws IOException Signals that an I/O exception of some sort has occurred
+	 */
 	public ArrayList<Order> fread(String textfilename) throws IOException {
 		MenuManager menuM=MenuManager.getInstance();
 		ArrayList<String> fileasstring = (ArrayList<String>) FileRead.fread(textfilename);
@@ -65,6 +84,11 @@ public class OrderDatabase implements DatabaseFunction {
 		return listofOrders; 
 	}
 	
+	/**
+	 * Writes data from orderM to orderDB.txt
+	 * @param textfilename orderDB.txt
+	 * @throws IOException Signals that an I/O exception of some sort has occurred
+	 */
 	public void fwrite(String textfilename) throws IOException {
 		OrderManager orderM=OrderManager.getInstance();
 		ArrayList<String> fwritepayment = new ArrayList<String>(); //Initialize new arraylist of String type. Used to store list of order objects in string.

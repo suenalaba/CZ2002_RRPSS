@@ -14,11 +14,28 @@ import restaurant_entity.Order;
 //import restaurant_entity.MenuItem;
 //import restaurant_entity.MenuItem.type;
 
+
+/**
+ * Subclass of DatabaseFunction
+ * PaymentDatabase reads and write to paymentDB.txt
+ * @author Joshua Khoo
+ * @version 4.5
+ * @since 2021-11-13
+ *
+ */
 public class PaymentDatabase implements DatabaseFunction {
 	
+	/**
+	 * DELIMITER to split tokens
+	 */
 	public static final String delimiter = ";";
 
-
+	/**
+	 * Reads data from paymentDB.txt to ArrayList<Payment>
+	 * @param textfilename paymentDB.txt
+	 * @retun paymentlist Arraylist of Payment class 
+	 * @throws IOException Signals that an I/O exception of some sort has occurred
+	 */
 	@Override
 	public ArrayList<Payment> fread(String textfilename) throws IOException {
 		OrderManager orderM=OrderManager.getInstance();
@@ -75,6 +92,12 @@ public class PaymentDatabase implements DatabaseFunction {
 		return paymentlist;
 	}
 	
+	
+	/**
+	 * Writes data from paymentM to paymentDB.txt
+	 * @param textfilename paymentDB.txt
+	 * @throws IOException Signals that an I/O exception of some sort has occurred
+	 */
 	@Override
 	public void fwrite(String textfilename) throws IOException {
 		PaymentManager paymentM=PaymentManager.getInstance();
