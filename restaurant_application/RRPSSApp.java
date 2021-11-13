@@ -34,7 +34,16 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
-
+/**
+ * Stores main method
+ * Reads in data from respective txt files at the start
+ * Writes to respective txt files in the end 
+ * 6 main switch cases to navigate RRPSS
+ * @author Joshua Khoo
+ * @version 4.5
+ * @since 2021-11-13
+ *
+ */
 
 public class RRPSSApp {
 

@@ -31,12 +31,25 @@ import restaurant_entity.Reservation;
 
 //import other restaurant classes...
 import restaurant_manager.TableLayoutManager;
-
+/**
+ * PaymentApp used to make payment and to generate sales report
+ * @author Joshua Khoo 
+ * @version 4.5
+ * @since 2021-11-13
+ */
 public class PaymentApp {
     final static double GST = 0.07;
     final static double SERVICE_CHARGE = 0.10; 
 	
-	
+	/**
+	 * Retrieves unpaid orders before matching tableID to unpaid orders
+	 * Calculates gst, subtotal, memberdiscount, service charge before creating a new payment 
+	 * Prints out receipt
+	 * Frees table after payment
+	 * Sets reservation to finish
+	 * Update order paid status
+	 * 
+	 */
 	public void makePayment() {
 		TableLayoutManager tableLayoutM=TableLayoutManager.getInstance();
 		 OrderManager orderM=OrderManager.getInstance();
@@ -109,7 +122,10 @@ public class PaymentApp {
 		paymentM.addPayment(payment);
 	}
 	
-	
+	/**
+	 * Prints sales report by day or by month 
+	 * 
+	 */
     public void printSaleReport() {
     	PaymentManager paymentM=PaymentManager.getInstance();
     	ArrayList<Payment> paymentinvoices = paymentM.getPaymentInvoices();
