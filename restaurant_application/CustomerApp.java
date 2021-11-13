@@ -19,7 +19,9 @@ import restaurant_manager.CustomerManager;
 
 /**
  * define methods to create customer, Retrieve customer details, Update Customer Details and Delete Customer Details.
- * @author joshua
+ * @author Joshua
+ * @version 4.5
+ * @since 13-11-2021
  *
  */
 public class CustomerApp {
