@@ -6,8 +6,8 @@ package restaurant_entity;
  * @since 13-11-2021
  */
 public class Table {
-	private static int OPENING_TIME=9; //declares integer hour where table starts to be available. 
-	private static int CLOSING_TIME=22; //declares integer hour where table starts to be unavailable.
+	private static final int OPENING_TIME=9; //declares integer hour where table starts to be available. 
+	private static final int CLOSING_TIME=22; //declares integer hour where table starts to be unavailable.
 	private int tableID; 
 	private int tableCapacity; 
 	private status[] hourBlock; //an array of type enum status. 
