@@ -74,7 +74,7 @@ public class Staff {
 	}
 	/**
 	 * Set staffID of staff object. Public method.
-	 * @param staffID
+	 * @param integer staffID
 	 */
 	public void setStaffID(int staffID) {
 		this.staffID = staffID;
