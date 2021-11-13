@@ -1,6 +1,6 @@
 package restaurant_entity;
 /**
- * A class defining a payment object.
+ * A class defining a MenuItem object.
  * @author Jacques
  * @version 4.5
  * @since 13-11-2021
