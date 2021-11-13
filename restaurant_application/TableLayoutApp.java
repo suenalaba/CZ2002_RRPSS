@@ -8,8 +8,18 @@ import restaurant_entity.Reservation;
 import restaurant_manager.ReservationManager;
 import restaurant_manager.TableLayoutManager;
 
+/**
+ * manages the table layout of the restaurant by creating new tables and removing tables.
+ * @author yi ze
+ *
+ */
 public class TableLayoutApp {
-	public void createTableQuery() { //creates table with tableID and pax of 2 increment
+	/**
+	 * creates table with tableID and the table capacity for the number of pax of each table 
+	 * number of pax of each table is of even number (2/4/6/8 or 10)
+	 * tableID range from 0 to 100
+	 */
+	public void createTableQuery() { 
 		Scanner sc=new Scanner(System.in);
 		int tableID=-1, tableCapacity; 
 		TableLayoutManager tableM=TableLayoutManager.getInstance();
@@ -54,6 +64,10 @@ public class TableLayoutApp {
 		}
 	} 
 	
+	/**
+	 * remove table from system based on table Id
+	 * table ID that has a future reservation or is currently occupied will be unable to be removed
+	 */
 	public void removeTableQuery() {
 		TableLayoutManager tableM=TableLayoutManager.getInstance();
 		ReservationManager reservationM=ReservationManager.getInstance();
