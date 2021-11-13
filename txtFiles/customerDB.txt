@@ -1,0 +1,15 @@
+93851;Jack Bo;Male;98639324;false;false;
+41024;Judy See;Female;98206512;false;false;
+21213;Loh Yi Ze;Female;92840142;false;false;
+65743;Bobby;Male;12095034;true;true;
+32821;Joshua Khoo;Male;95430253;true;false;
+97368;Tammy;Female;97504943;true;true;
+65679;Mah Jedi;Male;87643022;true;true;
+43576;Num Mary;Male;XXXXXXXX;false;false;
+33622;Olivia;Female;95438215;true;false;
+42287;Trent Aaron;Male;89322346;false;false;
+99174;Wendy Cheng;Female;92018567;true;false;
+59646;Polly;Female;88893203;true;true;
+16095;Benny;Male;97032486;false;false;
+71898;Yuming;Female;88793420;true;false;
+31684;Ponthan;Male;98849234;false;false;
