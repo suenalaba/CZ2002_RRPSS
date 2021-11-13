@@ -15,7 +15,7 @@ import restaurant_manager.ReservationManager;
 import restaurant_manager.TableLayoutManager;
 /**
  * An app for managing reservations.
- * @author Josh, Jacques, JieKai, YiZe, Xin Pei
+ * @author Xin Pei
  * @version 4.5
  * @since 13-11-2021
  */
