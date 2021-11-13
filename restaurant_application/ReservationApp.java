@@ -83,6 +83,7 @@ public class ReservationApp {
 			ArrayList<String> allCustomerIds=new ArrayList<String>();
 			for (int i=0;i<allCustomers.size();i++) {
 				allCustomerIds.add(allCustomers.get(i).getcustomerID());
+				System.out.println(allCustomers.get(i).getcustomerID() + "\t" + allCustomers.get(i).getcustomerName());
 				}
 			while (customerID==null) {
 				try {
