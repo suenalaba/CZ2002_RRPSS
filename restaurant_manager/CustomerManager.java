@@ -1,12 +1,12 @@
 package restaurant_manager;
 
-//import java packages.... to be updated as we go
+
 import java.util.Scanner;
 import java.io.IOException;
 import java.util.ArrayList;
 
 
-//import other class.....
+
 import restaurant_entity.Customer;
 import restaurant_database.CustomerDatabase;
 /**
@@ -132,9 +132,8 @@ public class CustomerManager {
 	public void loadDB(String textFileName) { 
 		ArrayList<Customer> newListOfCustomers = null;
 		try {
-			// read file containing Guest records
 			CustomerDatabase customerdatabase = new CustomerDatabase();
-			newListOfCustomers = customerdatabase.fread(textFileName); //create read function from database
+			newListOfCustomers = customerdatabase.fread(textFileName); 
 
 		} catch (IOException e) {
 			System.out.println("Failed to load "+textFileName);

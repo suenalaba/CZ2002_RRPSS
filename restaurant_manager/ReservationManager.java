@@ -66,13 +66,13 @@ public class ReservationManager {
 	 * @param pax The number of people coming to fill a table for the walk-in
 	 * @param customerID The CustomerID of Customer coming for Reservation
 	 */
-	public void createWalkIn(int pax,String customerID) {//creates reservation, occupies table
+	public void createWalkIn(int pax,String customerID) {
 		TableLayoutManager tableLayoutM=TableLayoutManager.getInstance();
 		ArrayList<Reservation> allReservationsToday=getListOfReservationsToday();
 		ArrayList<Reservation> unfinishedReservationsToday=new ArrayList<Reservation>();
 		ArrayList<Reservation> protectedReservationsToday=new ArrayList<Reservation>();
 		TableLayoutManager tableManager=TableLayoutManager.getInstance();
-		ArrayList<Integer> possibleTables=tableManager.getMinTableList(pax); //table id list of sorted minimum tables
+		ArrayList<Integer> possibleTables=tableManager.getMinTableList(pax); 
 		int tableId;
 		LocalDateTime nowDate=LocalDateTime.now();
 		for (int i=0;i<allReservationsToday.size();i++) {
@@ -82,7 +82,7 @@ public class ReservationManager {
 		}
 		for (int i=0;i<unfinishedReservationsToday.size();i++) {
 			if (unfinishedReservationsToday.get(i).getReservationStartTime().minusMinutes(60).isBefore(nowDate)) {
-				protectedReservationsToday.add(unfinishedReservationsToday.get(i)); //table list of reserved tables
+				protectedReservationsToday.add(unfinishedReservationsToday.get(i)); 
 			}
 		}
 		for (int i=0;i<protectedReservationsToday.size();i++) {
@@ -122,7 +122,7 @@ public class ReservationManager {
 	 * Completes reservation by setting isAppeared attribute to true
 	 * @param reservationID the targetReservation's ReservationID, used to retrieve from listOfReservations
 	 */
-	public void completeReservation(int reservationID) { //set isappeared for the reservation to true and occupies table
+	public void completeReservation(int reservationID) { 
 		TableLayoutManager tableLayoutM=TableLayoutManager.getInstance();
 		Reservation toComplete=getReservation(reservationID);
 		toComplete.setIsAppeared(true);
@@ -136,10 +136,10 @@ public class ReservationManager {
 	 * Removes reservation by setting isFinished attribute to true
 	 * @param reservationID the targetReservation's ReservationID, used to retrieve from listOfReservations
 	 */
-	public void removeReservation(int reservationID) { //updates reservation and table
+	public void removeReservation(int reservationID) {
 		TableLayoutManager tableLayoutM=TableLayoutManager.getInstance();
 		Reservation toRemove=getReservation(reservationID);
-		toRemove.setIsFinished(true);//reservation cleared
+		toRemove.setIsFinished(true);
 		tableLayoutM.updateTableStatus(toRemove.getTableID(), toRemove.getReservationStartTime(), status.EMPTY);
 		System.out.println("Reservation removed successfully!");
 	}
@@ -149,15 +149,15 @@ public class ReservationManager {
 	 * @param newStartDateTime New StartDateTime indicated by customer otherwise otherwise the value would be old startDateTime if not changed
 	 * @param newTableID new tableID if change in pax or StartDateTime causes table change otherwise this value will be old tableID
 	 */
-	public void updateReservation(int reservationID,LocalDateTime newStartDateTime, int newTableID) {  //updates all relevant details. Updates table status if current day affected
+	public void updateReservation(int reservationID,LocalDateTime newStartDateTime, int newTableID) { 
 		Reservation toUpdate=getReservation(reservationID);
 		TableLayoutManager tableLayoutM=TableLayoutManager.getInstance();
 		LocalDateTime oldStartDateTime=toUpdate.getReservationStartTime();
-		int oldTableID=toUpdate.getTableID(); //reservation attribute update (start)
+		int oldTableID=toUpdate.getTableID(); 
 		toUpdate.setTableID(newTableID);
 		toUpdate.setReservationStartTime(newStartDateTime);
 		LocalDateTime newEndStartDateTime=newStartDateTime.plusHours(1);
-		toUpdate.setReservationEndTime(newEndStartDateTime); //reservation attribute update (end)
+		toUpdate.setReservationEndTime(newEndStartDateTime); 
 		String currentDate = LocalDateTime.now().toString().substring(0,10);
 		String oldDate =oldStartDateTime.toString().substring(0,10);
 		String compareDate = newStartDateTime.toString().substring(0,10);
@@ -175,7 +175,7 @@ public class ReservationManager {
 	 * Expired reservation will be removed Table Object associated's hourBlock array
 	 * Table objects houBlock Arrays with current days reservations and occupancy after day change(12am strikes)
 	 */
-	public void autoUpdate(){//updates periodically 15 minutes grace period to appear
+	public void autoUpdate(){
 		TableLayoutManager tableLayoutM=TableLayoutManager.getInstance();
 		LocalDateTime nowDateTime=LocalDateTime.now();
 		ArrayList<Reservation> allReservations=getListOfReservations();
@@ -205,7 +205,7 @@ public class ReservationManager {
 		}
 		String nowDate=LocalDateTime.now().toString().substring(0, 10);
 		LocalDateTime targetTime;
-		for (int i=0;i<listOfReservations.size();i++) { //reserve tables for the day
+		for (int i=0;i<listOfReservations.size();i++) { 
 			if (!listOfReservations.get(i).getReservationStartTime().toString().substring(0,10).equals(nowDate)) {
 				continue;
 			}
@@ -257,7 +257,7 @@ public class ReservationManager {
 	 * Prints details of Reservation
 	 * @param reservationID of the Reservation object to look for in listOfReservations
 	 */
-	public void printReservation(int reservationID) {  //Prints reservation details
+	public void printReservation(int reservationID) {  
 		Reservation toPrint=getReservation(reservationID);
 		CustomerManager customerM=CustomerManager.getInstance();
 		System.out.println("\n" + "Checking Reservation " + reservationID + "...");
@@ -281,7 +281,7 @@ public class ReservationManager {
 		ArrayList<Reservation> standingReservationList=getListOfUnfinishedReservations();
 		if (standingReservationList.size()>0) {
 		for (Reservation o:standingReservationList) {
-			System.out.println("Reservation ID:"+o.getReservationID());//reservation ID
+			System.out.println("Reservation ID:"+o.getReservationID());
 			System.out.println("Customer ID:"+o.getCustomerID());
 			System.out.println("Table ID:"+o.getTableID());
 			System.out.println("Pax:"+o.getPax());
@@ -295,7 +295,7 @@ public class ReservationManager {
 	 * @param reservationID of Reservation looking for
 	 * @return reservation index in listOfReservations or -1 if not existing in listOfReservations
 	 */
-	public int reservationIDToIndex(int reservationID) { //reservation ID to listOfReservations array index. Only works on the static array.
+	public int reservationIDToIndex(int reservationID) { 
 		for (int i=0;i<listOfReservations.size();i++) {
 			if(listOfReservations.get(i).getReservationID()==reservationID) {
 				return i;
@@ -314,8 +314,8 @@ public class ReservationManager {
 	 * get Array List Of Reservations but only if Reservation objects isFInished attribute is false
 	 * @return list Of Unfinished Reservations
 	 */
-	public ArrayList<Reservation> getListOfUnfinishedReservations() { //gets arraylist of unfinished reservations
-		ArrayList<Reservation> t = new ArrayList<Reservation>(); //new array of reservation objs to store
+	public ArrayList<Reservation> getListOfUnfinishedReservations() { 
+		ArrayList<Reservation> t = new ArrayList<Reservation>(); 
 		for (Reservation s : listOfReservations) {
 			if (s.getIsFinished()==false) {
 				t.add(s);
@@ -327,7 +327,7 @@ public class ReservationManager {
 	 * Get Array list of Unfinished Reservations which contains Reservations which Start Date Time is on current day and isFinsihed attribute is false
 	 * @return list of Unfinished Reservations today 
 	 */
-	public ArrayList<Reservation> getListOfUnfinishedReservationsToday() { //gets arraylist of unfinished reservations today
+	public ArrayList<Reservation> getListOfUnfinishedReservationsToday() { 
 		ArrayList<Reservation> t = new ArrayList<Reservation>(); 
 		LocalDateTime today=LocalDateTime.now();
 		int todayDay=today.getDayOfYear();
@@ -343,7 +343,7 @@ public class ReservationManager {
 	 * Get Array list of Reservations which contain contain Reservations which start Start Date Time is on current day
 	 * @return list of Reservations today
 	 */
-	public ArrayList<Reservation> getListOfReservationsToday(){ //Returns reservation arraylist for current day. finished and unfinished
+	public ArrayList<Reservation> getListOfReservationsToday(){ 
 		ArrayList<Reservation> t = new ArrayList<Reservation>(); 
 		for (Reservation s : listOfReservations) {
 			String reservationTime = s.getReservationStartTime().toString().substring(0,10);
@@ -364,7 +364,7 @@ public class ReservationManager {
 	 * @param tableID TableID with associated Reservation
 	 * @return Reservation object if there exists a reservation which isFinished attribute is false,isAppeared is true and tableID is the one provided
 	 */
-	public Reservation getUnfinishedReservationByTableIDNow(int tableID) { //give tableID, return Reservation now
+	public Reservation getUnfinishedReservationByTableIDNow(int tableID) { 
 		ArrayList<Reservation> unfinished=getListOfUnfinishedReservations();
 		if (unfinished.size()>0) {
 			for (Reservation o:unfinished) {
@@ -373,13 +373,13 @@ public class ReservationManager {
 				}
 			}
 		}
-		return null; //no reservation found for tableID now.
+		return null; 
 	}
     /**
 	 * Saves the instance's listOfReservations as string in a text file.
 	 * @param textFileName The name of the the text file.
 	 */
-	public void saveDB(String textFileName) { //writes to file Name by calling fwrite from ReservationDatabase
+	public void saveDB(String textFileName) { 
 		ReservationDatabase saver=new ReservationDatabase();
 		try {
 			saver.fwrite(textFileName);
@@ -394,7 +394,7 @@ public class ReservationManager {
 	 * Loads to instance's listOfReservations from a text file
 	 * @param textFileName The name of the text file.
 	 */
-	public void loadDB(String textFileName) { //passes file name to read to ReservationDataBase. Check table Id validility. Reserves table for the day. Replaces listOfReservations.
+	public void loadDB(String textFileName) { 
 		ReservationDatabase loader=new ReservationDatabase();
 		TableLayoutManager tableLayoutM=TableLayoutManager.getInstance();
 		ArrayList<Reservation> databaseReservations;
@@ -404,11 +404,11 @@ public class ReservationManager {
 			System.out.println("Failed to load "+textFileName);
 			return;
 		} 
-		ArrayList<Integer> allTableIds=new ArrayList<Integer>(); //loaded reservations
+		ArrayList<Integer> allTableIds=new ArrayList<Integer>(); 
 		for (int i=0;i<tableLayoutM.getAllTables().size();i++) {
 			allTableIds.add(tableLayoutM.getAllTables().get(i).getTableID());
 		}
-		for (int i=0;i<databaseReservations.size();i++) { //check for corresponding tableIds in reservatios loaded. Indicates Table was not loaded otherwise.
+		for (int i=0;i<databaseReservations.size();i++) {
 			if (!allTableIds.contains(databaseReservations.get(i).getTableID())&&databaseReservations.get(i).getIsFinished()==false) {
 				System.out.println("Error. Not all Reservations have a corresponding TableID.\n Please load Table DataBase before loading Reservations. Loading aborted.");
 				return;
@@ -416,7 +416,7 @@ public class ReservationManager {
 		}
 		String nowDate=LocalDateTime.now().toString().substring(0, 10);
 		LocalDateTime targetTime;
-		for (int i=0;i<databaseReservations.size();i++) { //reserve tables for the day
+		for (int i=0;i<databaseReservations.size();i++) { 
 			if (!databaseReservations.get(i).getReservationStartTime().toString().substring(0,10).equals(nowDate)) {
 				continue;
 			}
