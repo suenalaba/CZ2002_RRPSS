@@ -5,8 +5,8 @@ This is a console-based backend restaurant reservation system designed to allow 
 
 
 Done by:
-Joshua
-Jacques
-Yize
-Xinpei
-Jiekai
+Joshua<br>
+Jacques<br>
+Yize<br>
+Xinpei<br>
+Jiekai<br>
